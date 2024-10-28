@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  background-color: #f0f0f0; /* Light background for contrast */
+  min-height: 100vh; /* Full viewport height */
 }
 
 .App-logo {
@@ -14,14 +16,42 @@
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  background-color: #282c34; /* Dark background for header */
+  min-height: 100vh; /* Full viewport height */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px; /* Spacing above buttons */
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #61dafb; /* Button background color */
+  color: white; /* Button text color */
+  transition: background-color 0.3s ease; /* Smooth background transition */
+}
+
+button:hover {
+  background-color: #4fb3db; /* Darker shade on hover */
+}
+
+.component-view {
+  text-align: center;
+  margin-top: 20px; /* Spacing above components */
 }
 
 .App-link {
