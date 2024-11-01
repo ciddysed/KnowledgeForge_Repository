@@ -1,94 +1,67 @@
-// src/components/Register.jsx
-import React, { useState } from 'react';
-import { TextField, Button, Typography, Snackbar } from '@mui/material';
-import MuiAlert from '@mui/material/Alert';
+// src/components/StudentRegister.jsx
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Button, IconButton, TextField, Typography } from '@mui/material';
 import axios from 'axios';
+import React, { useState } from 'react';
 
-// Create an Alert component for Snackbar
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+const StudentRegister = ({ goToLoginPage }) => {
+    const [formData, setFormData] = useState({
+        studentName: '',
+        email: '',
+        username: '',
+        password: '',
+        course: '',
+        city: '',
+        age: '',
+    });
 
-const StudentRegister = () => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
-    const [severity, setSeverity] = useState('success'); // 'success' or 'error'
-    const [open, setOpen] = useState(false);
-
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        const studentData = { username, email, password };
-
-        try {
-            const response = await axios.post('/api/students/register', studentData);
-            console.log("Registration successful:", response.data);
-            setMessage("Registration successful!"); // Set success message
-            setSeverity('success');
-            setOpen(true);
-            // Optionally reset form or redirect to login
-            setUsername('');
-            setEmail('');
-            setPassword('');
-        } catch (error) {
-            console.error("There was an error registering the student!", error);
-            setMessage("Registration failed! Please try again."); // Set error message
-            setSeverity('error');
-            setOpen(true);
-        }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
 
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post('/api/students/register', formData);
+            alert('Student registered successfully');
+        } catch (error) {
+            alert('Error registering student');
         }
-        setOpen(false);
     };
 
     return (
         <div>
-            <form onSubmit={handleRegister}>
+            {/* Back to Student Login Button */}
+            <IconButton onClick={goToLoginPage} style={{ position: 'absolute', top: '10px', left: '10px' }}>
+                <ArrowBackIcon fontSize="large" color="primary" />
+            </IconButton>
+
+            <form onSubmit={handleSubmit}>
                 <Typography variant="h5">Register Student</Typography>
-                <TextField
-                    label="Username"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-                <TextField
-                    label="Email"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-                <TextField
-                    label="Password"
-                    type="password"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
+                {Object.keys(formData).map((key) => (
+                    <TextField
+                        key={key}
+                        label={key.charAt(0).toUpperCase() + key.slice(1)}
+                        name={key}
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={formData[key]}
+                        onChange={handleChange}
+                        required
+                    />
+                ))}
                 <Button type="submit" variant="contained" color="primary">
                     Register
                 </Button>
             </form>
 
-            {/* Snackbar for feedback messages */}
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity={severity}>
-                    {message}
-                </Alert>
-            </Snackbar>
+            {/* Already have an account? */}
+            <Typography variant="body2" style={{ marginTop: '10px' }}>
+                Already have an account?{' '}
+                <Button onClick={goToLoginPage} color="primary">Login</Button>
+            </Typography>
         </div>
     );
 };

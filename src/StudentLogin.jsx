@@ -1,51 +1,82 @@
-// src/components/Login.jsx
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Alert, Button, CircularProgress, IconButton, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { TextField, Button, Typography } from '@mui/material';
-import axios from 'axios';
 
-const StudentLogin = ({ onLoginSuccess }) => {
+const sampleUserData = {
+    username: 'student123',
+    password: 'password123', // Simple password for testing
+};
+
+const StudentLogin = ({ onLoginSuccess, goToLandingPage, onRegisterClick }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.post('/api/students/login', null, {
-                params: { username, password },
-            });
-            console.log("Login successful:", response.data);
-            onLoginSuccess(response.data); // Handle successful login
-        } catch (error) {
-            console.error("Login failed!", error);
+        setLoading(true);
+        setError(null);
+    
+        // Validate user input against sample data
+        if (username === sampleUserData.username && password === sampleUserData.password) {
+            // Simulate successful login
+            onLoginSuccess(); // Call onLoginSuccess to navigate to homepage
+        } else {
+            setError("Invalid username or password. Please try again.");
         }
+        
+        setLoading(false);
     };
-
+    
     return (
-        <form onSubmit={handleLogin}>
-            <Typography variant="h5">Login</Typography>
-            <TextField
-                label="Username"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-            />
-            <TextField
-                label="Password"
-                type="password"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-            />
-            <Button type="submit" variant="contained" color="primary">
-                Login
-            </Button>
-        </form>
+        <div>
+            <IconButton onClick={goToLandingPage} style={{ position: 'absolute', top: '10px', left: '10px' }}>
+                <ArrowBackIcon fontSize="large" color="primary" />
+            </IconButton>
+            <form onSubmit={handleLogin} style={{ marginTop: '50px' }}>
+                <Typography variant="h5" gutterBottom>Student Login</Typography>
+                {error && <Alert severity="error" style={{ marginBottom: '1rem' }}>{error}</Alert>}
+                <TextField
+                    label="Username"
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+                <TextField
+                    label="Password"
+                    type="password"
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <Button 
+                    type="submit" 
+                    variant="contained" 
+                    color="primary" 
+                    fullWidth
+                    disabled={loading}
+                    style={{ marginTop: '1rem', position: 'relative' }}
+                >
+                    {loading ? <CircularProgress size={24} style={{ color: 'white' }} /> : 'Login'}
+                </Button>
+                <Button 
+                    onClick={onRegisterClick} 
+                    variant="outlined" 
+                    color="primary" 
+                    fullWidth 
+                    style={{ marginTop: '1rem' }}
+                >
+                    Don't have an account? Register
+                </Button>
+            </form>
+        </div>
     );
 };
 

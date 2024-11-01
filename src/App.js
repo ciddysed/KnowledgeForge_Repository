@@ -1,51 +1,98 @@
+import { useState } from 'react';
 import './App.css';
-// Import your components
+import placeholderImage from './assets/home-banner-image.png';
 import Course from './Course.jsx';
-import TutorRegister from './TutorRegister.jsx';
+import Footer from './Footer.jsx';
+import Homepage from './Homepage.jsx';
+import Navbar from './Navbar.jsx';
+import StudentLogin from './StudentLogin.jsx';
 import StudentRegister from './StudentRegister.jsx';
 import TutorLogin from './TutorLogin.jsx';
-import StudentLogin from './StudentLogin.jsx';
-import { useState } from 'react';
+import TutorRegister from './TutorRegister.jsx';
 
 function App() {
   const [selectedComponent, setSelectedComponent] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const goToLandingPage = () => setSelectedComponent(null);
+
+  const handleLoginSelection = (type) => {
+    setSelectedComponent(type === 'Tutor' ? 'TutorLogin' : 'StudentLogin');
+  };
+
+  const handleStudentRegister = () => setSelectedComponent('StudentRegister');
+  const handleTutorRegister = () => setSelectedComponent('TutorRegister');
+  const goToTutorLogin = () => setSelectedComponent('TutorLogin');
+  const goToStudentLogin = () => setSelectedComponent('StudentLogin');
 
   const renderComponent = () => {
+    if (isLoggedIn) {
+      return <Homepage goToLandingPage={goToLandingPage} />;
+    }
+
     switch (selectedComponent) {
       case 'Course':
-        return <Course />;
+        return <Course goToLandingPage={goToLandingPage} />;
       case 'TutorRegister':
-        return <TutorRegister />;
+        return <TutorRegister goToLoginPage={goToTutorLogin} />;
       case 'StudentRegister':
-        return <StudentRegister />;
+        return <StudentRegister goToLoginPage={goToStudentLogin} />;
       case 'TutorLogin':
-        return <TutorLogin />;
+        return (
+          <TutorLogin 
+            goToLandingPage={goToLandingPage} 
+            goToRegisterPage={handleTutorRegister} 
+            onLoginSuccess={handleLoginSuccess}
+          />
+        );
       case 'StudentLogin':
-        return <StudentLogin />;
+        return (
+          <StudentLogin 
+            goToLandingPage={goToLandingPage} 
+            onRegisterClick={handleStudentRegister} 
+            onLoginSuccess={handleLoginSuccess}
+          />
+        );
       default:
         return null;
     }
   };
 
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+    setSelectedComponent('Homepage');
+  };
+
   return (
     <div className="App">
+      <Navbar />
       {!selectedComponent ? (
         <div className="landing-page">
-          <h1>Welcome to the Learning Platform</h1>
-          <div className="button-container">
-            <button onClick={() => setSelectedComponent('Course')}>Course</button>
-            <button onClick={() => setSelectedComponent('TutorRegister')}>Tutor Register</button>
-            <button onClick={() => setSelectedComponent('StudentRegister')}>Student Register</button>
-            <button onClick={() => setSelectedComponent('TutorLogin')}>Tutor Login</button>
-            <button onClick={() => setSelectedComponent('StudentLogin')}>Student Login</button>
+          <h1>Welcome to KnowledgeForge</h1>
+          <h2>Your Online Tutoring System & Tutor Finder</h2>
+          <img src={placeholderImage} alt="Education" className="image-zoom" />
+          <div className="login-selection">
+            <h2>Are you a...</h2>
+            <button 
+              onClick={() => handleLoginSelection('Tutor')} 
+              className="login-button"
+            >
+              Tutor
+            </button>
+            <button 
+              onClick={() => handleLoginSelection('Student')} 
+              className="login-button"
+            >
+              Student
+            </button>
           </div>
         </div>
       ) : (
         <div className="component-view">
-          <button onClick={() => setSelectedComponent(null)}>Back to Landing Page</button>
           {renderComponent()}
         </div>
       )}
+      <Footer />
     </div>
   );
 }
