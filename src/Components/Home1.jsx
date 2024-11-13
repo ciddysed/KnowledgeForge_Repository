@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom"; // Import Link for navigation
 import BannerBackground from "../Assets/home-banner-background.png";
 import BannerImage from "../Assets/home-banner-image.png";
 
 const Home1 = () => {
   const [username, setUsername] = useState('');
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('loggedInUser');
     if (storedUsername) {
       const userData = JSON.parse(storedUsername);
-      setUsername(userData.username); // Assuming userData contains username
+      setUsername(userData.username);
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('loggedInUser'); // Clear the logged-in user data
-    navigate('/loginStudent'); // Redirect to the login page
+    localStorage.removeItem('loggedInUser');
+    navigate('/loginStudent');
   };
 
   return (
@@ -32,7 +32,22 @@ const Home1 = () => {
           </h1>
           <button onClick={handleLogout} className="logout-button">
             Logout
-          </button> {/* Logout button */}
+          </button>
+          <div className="management-links">
+            <h2>Management Pages</h2>
+            <Link to="/courseManagement" className="management-link">
+              Course Management
+            </Link>
+            <Link to="/topicManagement" className="management-link">
+              Topic Management
+            </Link>
+            <Link to="/quizManagement" className="management-link">
+              Quiz Management
+            </Link>
+            <Link to="/moduleManagement" className="management-link">
+              Module Management
+            </Link>
+          </div>
         </div>
         <div className="home-image-section">
           <img src={BannerImage} alt="" />

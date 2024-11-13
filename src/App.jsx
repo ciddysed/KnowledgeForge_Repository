@@ -1,19 +1,22 @@
-// App.jsx
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import Navbar from "./Components/Navbar";
-import Home from "./Components/Home";
 import About from "./Components/About";
-import Work from "./Components/Work";
-import Testimonial from "./Components/Testimonial";
 import Contact from "./Components/Contact";
+import CourseManagement from "./Components/CourseManagement";
 import Footer from "./Components/Footer";
+import Home from "./Components/Home";
+import Home1 from "./Components/Home1";
 import LoginPage from "./Components/LoginPage";
-import LoginStudent from "./Components/LoginStudent"
-import RegisterStudent from "./Components/RegisterStudent"
+import LoginStudent from "./Components/LoginStudent";
 import LoginTutor from "./Components/LoginTutor";
+import ModuleManagement from "./Components/ModuleManagement";
+import Navbar from "./Components/Navbar";
+import QuizManagement from "./Components/QuizManagement";
+import RegisterStudent from "./Components/RegisterStudent";
 import RegisterTutor from "./Components/RegisterTutor";
-import Home1 from "./Components/Home1"
-import { Routes, Route } from "react-router-dom";
+import Testimonial from "./Components/Testimonial";
+import TopicManagement from "./Components/TopicManagement";
+import Work from "./Components/Work";
 
 function App() {
   return (
@@ -31,6 +34,10 @@ function App() {
         <Route path="/loginTutor" element={<LoginTutor />} />
         <Route path="/registerTutor" element={<RegisterTutor />} />
         <Route path="/home1" element={<Home1 />} />
+        <Route path="/courseManagement" element={<CourseManagement />} />
+        <Route path="/topicManagement" element={<TopicManagement />} />
+        <Route path="/quizManagement" element={<QuizManagement />} />
+        <Route path="/moduleManagement" element={<ModuleManagement />} />
       </Routes>
       <Footer />
     </div>
