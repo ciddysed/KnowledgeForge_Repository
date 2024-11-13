@@ -21,7 +21,6 @@ function Course() {
   const fetchTutors = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/tutors');
-      console.log("Fetched tutors:", response.data); // Log to check if tutors are fetched correctly
       setTutors(response.data);
     } catch (error) {
       console.error("Error fetching tutors:", error);
@@ -36,7 +35,7 @@ function Course() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const courseData = { courseName, tutor: { tutorID } };
-    
+
     try {
       if (selectedCourse) {
         await axios.put(`http://localhost:8080/Course/updateCourse/${selectedCourse.courseID}`, courseData);
@@ -77,21 +76,23 @@ function Course() {
   };
 
   return (
-    <div>
-      <h2>Course Management</h2>
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <h2 style={{ color: '#2c3e50' }}>Course Management</h2>
       
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px' }}>
         <input 
           type="text" 
           placeholder="Course Name" 
           value={courseName} 
           onChange={(e) => setCourseName(e.target.value)} 
           required 
+          style={{ padding: '10px', fontSize: '16px', border: '1px solid #ccc', borderRadius: '4px' }}
         />
         <select 
           value={tutorID} 
           onChange={(e) => setTutorID(e.target.value)} 
           required
+          style={{ padding: '10px', fontSize: '16px', border: '1px solid #ccc', borderRadius: '4px' }}
         >
           <option value="">Select Tutor ID</option>
           {tutors.map(tutor => (
@@ -100,16 +101,36 @@ function Course() {
             </option>
           ))}
         </select>
-        <button type="submit">{selectedCourse ? "Update Course" : "Add Course"}</button>
+        <button 
+          type="submit" 
+          style={{ padding: '10px', fontSize: '16px', backgroundColor: '#3498db', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+        >
+          {selectedCourse ? "Update Course" : "Add Course"}
+        </button>
       </form>
 
-      <h3>Course List</h3>
-      <ul>
+      <h3 style={{ color: '#2c3e50', marginTop: '30px' }}>Course List</h3>
+      <ul style={{ listStyleType: 'none', paddingLeft: '0' }}>
         {courses.map((course) => (
-          <li key={course.courseID}>
-            {course.courseName} (Tutor ID: {course.tutor?.tutorID || "N/A"})
-            <button onClick={() => handleEdit(course)}>Edit</button>
-            <button onClick={() => handleDelete(course.courseID)}>Delete</button>
+          <li 
+            key={course.courseID} 
+            style={{ padding: '10px', marginBottom: '10px', border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}
+          >
+            <strong>{course.courseName}</strong> (Tutor ID: {course.tutor?.tutorID || "N/A"})
+            <div style={{ marginTop: '10px' }}>
+              <button 
+                onClick={() => handleEdit(course)} 
+                style={{ padding: '5px 10px', marginRight: '10px', backgroundColor: '#3498db', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              >
+                Edit
+              </button>
+              <button 
+                onClick={() => handleDelete(course.courseID)} 
+                style={{ padding: '5px 10px', backgroundColor: 'white', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              >
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
