@@ -1,155 +1,204 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-// Topic Management Component
+// Main Component
 const TopicManagement = () => {
   const [topics, setTopics] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [formData, setFormData] = useState({
     topicName: '',
     description: '',
-    courseId: '', // Assuming you will pass the course ID
+    courseId: '',
   });
-  const [editing, setEditing] = useState(false);
-  const [currentTopicId, setCurrentTopicId] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Fetch all topics when the component is mounted
+  // Load topics and courses on component mount
   useEffect(() => {
     fetchTopics();
+    fetchCourses();
   }, []);
 
-  // Fetch Topics from API
+  // Fetch all topics from backend
   const fetchTopics = async () => {
+    setLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/api/topics');
-      const data = await response.json();
-      setTopics(data);
+      const response = await axios.get(`http://localhost:8080/api/topics`);
+      setTopics(response.data);
     } catch (error) {
       console.error('Error fetching topics:', error);
+      setError('Could not fetch topics.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Handle form data change
+  // Fetch all courses from backend
+  const fetchCourses = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/Course/getCourse`);
+      setCourses(response.data);
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+      setError('Could not fetch courses.');
+    }
+  };
+
+  // Handle input change for form fields
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission to create or update topic
+  // Create or update a topic
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const apiUrl = editing
-      ? `http://localhost:8080/api/topics/${currentTopicId}`
-      : 'http://localhost:8080/api/topics';
-    const method = editing ? 'PUT' : 'POST';
-
+  
+    // Confirmation prompt for updating a topic
+    if (isEditing) {
+      const isConfirmed = window.confirm("Are you sure you want to update this topic?");
+      if (!isConfirmed) return; // If user cancels, exit the function
+    }
+  
     try {
-      const response = await fetch(apiUrl, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setEditing(false);
-        setCurrentTopicId(null);
-        fetchTopics();
-        setFormData({
-          topicName: '',
-          description: '',
-          courseId: '',
-        });
-        alert('Topic saved successfully');
+      if (isEditing) {
+        await axios.put(`http://localhost:8080/api/topics/${editId}`, formData);
+        alert('Topic updated successfully');
       } else {
-        alert('Failed to save topic');
+        await axios.post(`http://localhost:8080/api/topics/addTopic`, formData);
+        alert('Topic added successfully');
       }
+      setFormData({ topicName: '', description: '', courseId: '' });
+      setIsEditing(false);
+      fetchTopics();
     } catch (error) {
-      console.error('Error saving topic:', error);
+      console.error('Error submitting form:', error);
+      setError('Error submitting form.');
     }
   };
+  
 
-  // Handle edit topic
+  // Delete a topic
+  const deleteTopic = async (id) => {
+    // Confirmation prompt for deleting a topic
+    const isConfirmed = window.confirm("Are you sure you want to delete this topic?");
+    if (!isConfirmed) return; // If user cancels, exit the function
+  
+    try {
+      await axios.delete(`http://localhost:8080/api/topics/${id}`);
+      alert('Topic deleted successfully');
+      fetchTopics();
+    } catch (error) {
+      console.error('Error deleting topic:', error);
+      setError('Error deleting topic.');
+    }
+  };
+  
+
+  // Edit a topic
   const handleEdit = (topic) => {
-    setEditing(true);
-    setCurrentTopicId(topic.topicID);
     setFormData({
       topicName: topic.topicName,
       description: topic.description,
-      courseId: topic.course ? topic.course.courseID : '', // Assuming course ID is available
+      courseId: topic.course.courseID,
     });
-  };
-
-  // Handle delete topic
-  const handleDelete = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/topics/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        fetchTopics();
-        alert('Topic deleted successfully');
-      } else {
-        alert('Failed to delete topic');
-      }
-    } catch (error) {
-      console.error('Error deleting topic:', error);
-    }
+    setIsEditing(true);
+    setEditId(topic.topicID);
   };
 
   return (
-    <div className="topic-management">
-      <h2>{editing ? 'Edit Topic' : 'Add New Topic'}</h2>
+    <div className="container">
+      <h2>Topic Management</h2>
+      {error && <p className="text-danger">{error}</p>}
+      {/* Form for adding or updating topics */}
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="topicName">Topic Name:</label>
+        <div className="form-group">  
+          <label>Topic Name:</label>
           <input
             type="text"
-            id="topicName"
             name="topicName"
             value={formData.topicName}
             onChange={handleChange}
+            className="form-control"
             required
           />
         </div>
         <div className="form-group">
-          <label htmlFor="description">Description:</label>
+          <label>Description:</label>
           <textarea
-            id="description"
             name="description"
             value={formData.description}
             onChange={handleChange}
-            required
-          />
+            className="form-control"
+          ></textarea>
         </div>
         <div className="form-group">
-          <label htmlFor="courseId">Course ID:</label>
-          <input
-            type="text"
-            id="courseId"
+          <label>Course:</label>
+          <select
             name="courseId"
             value={formData.courseId}
             onChange={handleChange}
+            className="form-control"
             required
-          />
+          >
+            <option value="">Select a course</option>
+            {courses.map((course) => (
+              <option key={course.courseID} value={course.courseID}>
+                {course.courseName}
+              </option>
+            ))}
+          </select>
         </div>
-        <button type="submit">{editing ? 'Update Topic' : 'Add Topic'}</button>
+        <button type="submit" className="btn btn-success">
+          {isEditing ? 'Update Topic' : 'Add Topic'}
+        </button>
       </form>
 
-      <h3>Existing Topics</h3>
-      <ul>
-        {topics.map((topic) => (
-          <li key={topic.topicID}>
-            <strong>{topic.topicName}</strong> - {topic.description}
-            <button onClick={() => handleEdit(topic)}>Edit</button>
-            <button onClick={() => handleDelete(topic.topicID)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <hr />
+
+      {/* Display list of topics */}
+      {loading ? (
+        <p>Loading topics...</p>
+      ) : (
+        <table className="table">
+  <thead>
+    <tr>
+      <th style={{ padding: '10px' }}>ID</th>
+      <th style={{ padding: '10px' }}>Topic Name</th>
+      <th style={{ padding: '10px' }}>Description</th>
+      <th style={{ padding: '10px' }}>Course</th>
+      <th style={{ padding: '10px' }}>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {topics.map((topic) => (
+      <tr key={topic.topicID}>
+        <td style={{ padding: '10px' }}>{topic.topicID}</td>
+        <td style={{ padding: '10px' }}>{topic.topicName}</td>
+        <td style={{ padding: '10px' }}>{topic.description}</td>
+        <td style={{ padding: '10px' }}>{topic.course.courseName}</td>
+        <td style={{ padding: '10px' }}>
+        <button 
+                onClick={() => handleEdit(topic)} 
+                style={{ padding: '5px 10px', marginRight: '10px', backgroundColor: '#3498db', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              >
+                Edit
+              </button>
+              <button 
+                onClick={() => deleteTopic(topic.topicID)} 
+                style={{ padding: '5px 10px', backgroundColor: 'white', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              >
+                Delete
+              </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+      )}
     </div>
   );
 };

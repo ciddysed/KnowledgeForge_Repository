@@ -35,26 +35,31 @@ function Course() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const courseData = { courseName, tutor: { tutorID } };
-
+  
     try {
       if (selectedCourse) {
+        // Confirmation prompt before updating
+        const isConfirmed = window.confirm("Are you sure you want to update this course?");
+        if (!isConfirmed) return;
+  
         await axios.put(`http://localhost:8080/Course/updateCourse/${selectedCourse.courseID}`, courseData);
+        alert('Course updated successfully');
       } else {
-        try {
-          await axios.post('http://localhost:8080/Course/addCourses', courseData);
-          alert('Adding Course Successful');
-        } catch (error) {
-          alert('TutorID does not Exist');
-        }
+        await axios.post('http://localhost:8080/Course/addCourses', courseData);
+        alert('Course added successfully');
       }
       fetchCourses();
       resetForm();
     } catch (error) {
       console.error("Error saving course:", error);
+      alert('An error occurred while saving the course');
     }
   };
 
   const handleDelete = async (courseID) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this course?");
+    if (!isConfirmed) return;
+  
     try {
       await axios.delete(`http://localhost:8080/Course/deleteCourse/${courseID}`);
       fetchCourses();

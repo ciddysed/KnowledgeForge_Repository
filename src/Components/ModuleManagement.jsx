@@ -15,7 +15,7 @@ const ModuleManagement = () => {
 
   const fetchModules = async () => {
     try {
-      const response = await axios.get('/api/modules');
+      const response = await axios.get('http://localhost:8080/api/modules');
       setModules(response.data);
     } catch (error) {
       console.error('Error fetching modules:', error);
@@ -44,25 +44,37 @@ const ModuleManagement = () => {
 
   const handleUpdateModule = async () => {
     if (!moduleName || !topicID) return alert('Please fill in all fields.');
-
+  
+    // Confirmation prompt for updating a module
+    const isConfirmed = window.confirm("Are you sure you want to update this module?");
+    if (!isConfirmed) return; // If user cancels, exit the function
+  
     try {
       const updatedModule = { moduleName, topic: { id: topicID } }; // Adjusted for structure
       await axios.put(`/api/modules/${moduleID}`, updatedModule);
       fetchModules();
       resetForm();
+      alert('Module updated successfully');
     } catch (error) {
       console.error('Error updating module:', error);
     }
   };
+  
 
   const handleDeleteModule = async (id) => {
+    // Confirmation prompt for deleting a module
+    const isConfirmed = window.confirm("Are you sure you want to delete this module?");
+    if (!isConfirmed) return; // If user cancels, exit the function
+  
     try {
       await axios.delete(`/api/modules/${id}`);
       fetchModules();
+      alert('Module deleted successfully');
     } catch (error) {
       console.error('Error deleting module:', error);
     }
   };
+  
 
   const resetForm = () => {
     setModuleName('');

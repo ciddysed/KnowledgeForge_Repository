@@ -28,7 +28,9 @@ const Navbar = () => {
   return (
     <nav>
       <div className="nav-logo-container">
+        <Link to="/">
         <img src={Logo} alt="KnowledgeForge Logo" />
+        </Link>
       </div>
       <div className="navbar-links-container">
         <Link to="/">Home</Link>

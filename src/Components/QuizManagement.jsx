@@ -38,12 +38,18 @@ const QuizManagement = () => {
   // Handle form submission to create or update quiz
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    // Confirmation prompt for updating a quiz
+    if (editing) {
+      const isConfirmed = window.confirm("Are you sure you want to update this quiz?");
+      if (!isConfirmed) return; // If user cancels, exit the function
+    }
+  
     const apiUrl = editing
       ? `http://localhost:8080/api/quizzes/${currentQuizId}`
       : 'http://localhost:8080/api/quizzes';
     const method = editing ? 'PUT' : 'POST';
-
+  
     try {
       const response = await fetch(apiUrl, {
         method,
@@ -52,15 +58,12 @@ const QuizManagement = () => {
         },
         body: JSON.stringify(formData),
       });
-
+  
       if (response.ok) {
         setEditing(false);
         setCurrentQuizId(null);
         fetchQuizzes();
-        setFormData({
-          title: '',
-          topicId: '',
-        });
+        setFormData({ title: '', topicId: '' });
         alert('Quiz saved successfully');
       } else {
         alert('Failed to save quiz');
@@ -69,6 +72,7 @@ const QuizManagement = () => {
       console.error('Error saving quiz:', error);
     }
   };
+  
 
   // Handle edit quiz
   const handleEdit = (quiz) => {
@@ -82,11 +86,15 @@ const QuizManagement = () => {
 
   // Handle delete quiz
   const handleDelete = async (id) => {
+    // Confirmation prompt for deleting a quiz
+    const isConfirmed = window.confirm("Are you sure you want to delete this quiz?");
+    if (!isConfirmed) return; // If user cancels, exit the function
+  
     try {
       const response = await fetch(`http://localhost:8080/api/quizzes/${id}`, {
         method: 'DELETE',
       });
-
+  
       if (response.ok) {
         fetchQuizzes();
         alert('Quiz deleted successfully');
@@ -97,6 +105,7 @@ const QuizManagement = () => {
       console.error('Error deleting quiz:', error);
     }
   };
+  
 
   return (
     <div className="quiz-management">
