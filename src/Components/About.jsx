@@ -18,12 +18,10 @@ const About = () => {
           Online Tutor Is An Important Part Of A Knowledge
         </h1>
         <p className="primary-text">
-          Lorem ipsum dolor sit amet consectetur. Non tincidunt magna non et
-          elit. Dolor turpis molestie dui magnis facilisis at fringilla quam.
+          Welcome to KnowledgeForge, your trusted platform for connecting learners with tutors. At Knowledge Forge, we believe that quality education should be accessible, personalized, and convenient. 
         </p>
         <p className="primary-text">
-          Non tincidunt magna non et elit. Dolor turpis molestie dui magnis
-          facilisis at fringilla quam.
+        KnowledgeForge empowers students to find the perfect tutor based on their specific learning needs, subjects, and goals.
         </p>
         <div className="about-buttons-container">
           <button className="secondary-button">Learn More</button>

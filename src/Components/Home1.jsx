@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import Link for navigation
+import { FaBook, FaLayerGroup, FaQuestionCircle, FaSignOutAlt, FaTasks } from "react-icons/fa"; // Importing icons
+import { Link, useNavigate } from "react-router-dom";
 import BannerBackground from "../Assets/home-banner-background.png";
 import BannerImage from "../Assets/home-banner-image.png";
 
@@ -30,21 +31,28 @@ const Home1 = () => {
           <h1 className="primary-heading">
             {username && <p>Welcome, {username}!</p>}
           </h1>
-          <button onClick={handleLogout} className="logout-button">
+
+          <button onClick={handleLogout} className="logout-button creative-btn">
+            <FaSignOutAlt className="logout-icon" /> {/* Logout icon */}
             Logout
           </button>
+
           <div className="management-links">
-            <h2>Management Pages</h2>
-            <Link to="/courseManagement" className="management-link">
+            <h2 className="management-heading">Management Pages</h2>
+            <Link to="/courseManagement" className="management-link creative-link">
+              <FaBook className="link-icon" /> {/* Icon for Course Management */}
               Course Management
             </Link>
-            <Link to="/topicManagement" className="management-link">
+            <Link to="/topicManagement" className="management-link creative-link">
+              <FaLayerGroup className="link-icon" /> {/* Icon for Topic Management */}
               Topic Management
             </Link>
-            <Link to="/quizManagement" className="management-link">
+            <Link to="/quizManagement" className="management-link creative-link">
+              <FaQuestionCircle className="link-icon" /> {/* Icon for Quiz Management */}
               Quiz Management
             </Link>
-            <Link to="/moduleManagement" className="management-link">
+            <Link to="/moduleManagement" className="management-link creative-link">
+              <FaTasks className="link-icon" /> {/* Icon for Module Management */}
               Module Management
             </Link>
           </div>

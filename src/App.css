@@ -693,3 +693,73 @@ input {
 .primary-button:hover {
   background-color: #0039a6; /* Darker shade on hover */
 }
+
+.home-container {
+  /* Add some general styling if needed */
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  background-color: #ff6f61;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.logout-button:hover {
+  background-color: #e65c54;
+  transform: translateY(-2px);
+}
+
+.logout-icon {
+  margin-right: 8px; /* Space between icon and text */
+  font-size: 18px;
+}
+
+.management-links {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.management-heading {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.management-link {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  color: #007bff;
+  text-decoration: none;
+  margin: 8px 0;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.management-link:hover {
+  color: #0056b3;
+  transform: translateX(5px);
+}
+
+.creative-link {
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.creative-link:hover {
+  background-color: #e8e8e8;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.link-icon {
+  margin-right: 8px;
+  font-size: 20px;
+  color: #ff6f61;
+}
