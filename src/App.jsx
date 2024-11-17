@@ -6,6 +6,7 @@ import CourseManagement from "./Components/CourseManagement";
 import Footer from "./Components/Footer";
 import Home from "./Components/Home";
 import Home1 from "./Components/Home1";
+import Home2 from "./Components/Home2";
 import LoginPage from "./Components/LoginPage";
 import LoginStudent from "./Components/LoginStudent";
 import LoginTutor from "./Components/LoginTutor";
@@ -14,8 +15,10 @@ import Navbar from "./Components/Navbar";
 import QuizManagement from "./Components/QuizManagement";
 import RegisterStudent from "./Components/RegisterStudent";
 import RegisterTutor from "./Components/RegisterTutor";
+import Students from "./Components/Students";
 import Testimonial from "./Components/Testimonial";
 import TopicManagement from "./Components/TopicManagement";
+import Search from "./Components/TutorSearch";
 import Work from "./Components/Work";
 
 function App() {
@@ -38,6 +41,9 @@ function App() {
         <Route path="/topicManagement" element={<TopicManagement />} />
         <Route path="/quizManagement" element={<QuizManagement />} />
         <Route path="/moduleManagement" element={<ModuleManagement />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/students" element={<Students />} />
+        <Route path="/home2" element={<Home2 />} />
       </Routes>
       <Footer />
     </div>

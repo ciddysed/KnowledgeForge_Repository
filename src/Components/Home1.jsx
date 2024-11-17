@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FaBook, FaLayerGroup, FaQuestionCircle, FaSignOutAlt, FaTasks } from "react-icons/fa"; // Importing icons
-import { Link, useNavigate } from "react-router-dom";
+import { FaSearch } from "react-icons/fa"; // Only keep the FaSearch icon
+import { Link } from "react-router-dom";
 import BannerBackground from "../Assets/home-banner-background.png";
 import BannerImage from "../Assets/home-banner-image.png";
 
 const Home1 = () => {
   const [username, setUsername] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('loggedInUser');
@@ -16,10 +15,7 @@ const Home1 = () => {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('loggedInUser');
-    navigate('/loginStudent');
-  };
+  
 
   return (
     <div className="home-container">
@@ -32,28 +28,11 @@ const Home1 = () => {
             {username && <p>Welcome, {username}!</p>}
           </h1>
 
-          <button onClick={handleLogout} className="logout-button creative-btn">
-            <FaSignOutAlt className="logout-icon" /> {/* Logout icon */}
-            Logout
-          </button>
-
           <div className="management-links">
             <h2 className="management-heading">Management Pages</h2>
-            <Link to="/courseManagement" className="management-link creative-link">
-              <FaBook className="link-icon" /> {/* Icon for Course Management */}
-              Course Management
-            </Link>
-            <Link to="/topicManagement" className="management-link creative-link">
-              <FaLayerGroup className="link-icon" /> {/* Icon for Topic Management */}
-              Topic Management
-            </Link>
-            <Link to="/quizManagement" className="management-link creative-link">
-              <FaQuestionCircle className="link-icon" /> {/* Icon for Quiz Management */}
-              Quiz Management
-            </Link>
-            <Link to="/moduleManagement" className="management-link creative-link">
-              <FaTasks className="link-icon" /> {/* Icon for Module Management */}
-              Module Management
+            <Link to="/Search" className="management-link creative-link"> {/* New link for Tutor Search */}
+              <FaSearch className="link-icon" /> {/* Icon for Tutor Search */}
+              Search Tutors
             </Link>
           </div>
         </div>
@@ -66,3 +45,5 @@ const Home1 = () => {
 };
 
 export default Home1;
+
+

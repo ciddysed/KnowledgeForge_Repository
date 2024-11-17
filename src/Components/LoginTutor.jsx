@@ -21,7 +21,7 @@ const LoginTutor = () => {
                 const userData = await response.json();
                 localStorage.setItem('loggedInUser', JSON.stringify(userData));
                 console.log('Logged in successfully');
-                navigate('/home1');
+                navigate('/home2');
             } else if (response.status === 401) {
                 setError('Invalid username or password.');
             } else {

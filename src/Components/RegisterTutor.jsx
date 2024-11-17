@@ -1,4 +1,7 @@
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import IconButton from '@mui/material/IconButton';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterTutor = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +14,14 @@ const RegisterTutor = () => {
     age: '',
     degrees: '',
   });
+
+  // Initialize the navigate function
+  const navigate = useNavigate();
+
+  // Function to handle going back to the previous page
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,9 +46,9 @@ const RegisterTutor = () => {
         throw new Error("Registration failed");
       }
 
-      const data = await response.json(); // Get response data
-      console.log("Tutor registered successfully:", data); // Log the successful response
-      alert("Tutor registered successfully!"); // Show success message
+      const data = await response.json();
+      console.log("Tutor registered successfully:", data);
+      alert("Tutor registered successfully!");
 
       // Reset form fields after successful registration
       setFormData({
@@ -50,108 +61,172 @@ const RegisterTutor = () => {
         age: '',
         degrees: '',
       });
+
+      navigate('/login'); // Navigate to the login page
     } catch (error) {
       console.error('Registration failed:', error);
-      alert("Registration failed: " + error.message); // Show error message
+      alert("Registration failed: " + error.message);
     }
   };
 
+  // Inline CSS for styling
+  const styles = {
+    container: {
+      padding: '20px',
+      maxWidth: '500px',
+      margin: '0 auto',
+      border: '1px solid #ddd',
+      borderRadius: '5px',
+      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+      backgroundColor: '#f9f9f9',
+    },
+    header: {
+      textAlign: 'center',
+      marginBottom: '20px',
+      color: '#333',
+    },
+    formGroup: {
+      marginBottom: '15px',
+    },
+    label: {
+      display: 'block',
+      marginBottom: '5px',
+      fontWeight: 'bold',
+      color: '#555',
+    },
+    input: {
+      width: '100%',
+      padding: '8px',
+      border: '1px solid #ccc',
+      borderRadius: '4px',
+    },
+    button: {
+      width: '100%',
+      padding: '10px',
+      backgroundColor: '#007bff',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      fontWeight: 'bold',
+    },
+    iconButton: {
+      color: '#007bff',
+      marginBottom: '10px',
+    },
+  };
+
   return (
-    <div className="tutor-register-container">
-      <h2>Tutor Registration</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="tutorName">Tutor Name:</label>
-          <input
-            type="text"
-            id="tutorName"
-            name="tutorName"
-            value={formData.tutorName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="courseMajor">Course Major:</label>
-          <input
-            type="text"
-            id="courseMajor"
-            name="courseMajor"
-            value={formData.courseMajor}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="city">City:</label>
-          <input
-            type="text"
-            id="city"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="age">Age:</label>
-          <input
-            type="number"
-            id="age"
-            name="age"
-            value={formData.age}
-            onChange={handleChange}
-            required
-            min="1"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="degrees">Degrees:</label>
-          <input
-            type="text"
-            id="degrees"
-            name="degrees"
-            value={formData.degrees}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit" className="primary-button">Register</button>
-      </form>
-    </div>
+    <>
+      {/* Icon Button for Back Navigation */}
+      <IconButton onClick={handleBack} aria-label="Go back" style={styles.iconButton}>
+        <ArrowBackIcon />
+      </IconButton>
+
+      <div style={styles.container}>
+        <h2 style={styles.header}>Tutor Registration</h2>
+        <form onSubmit={handleSubmit}>
+          <div style={styles.formGroup}>
+            <label htmlFor="username" style={styles.label}>Username:</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label htmlFor="tutorName" style={styles.label}>Tutor Name:</label>
+            <input
+              type="text"
+              id="tutorName"
+              name="tutorName"
+              value={formData.tutorName}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label htmlFor="password" style={styles.label}>Password:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label htmlFor="email" style={styles.label}>Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label htmlFor="courseMajor" style={styles.label}>Course Major:</label>
+            <input
+              type="text"
+              id="courseMajor"
+              name="courseMajor"
+              value={formData.courseMajor}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label htmlFor="city" style={styles.label}>City:</label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label htmlFor="age" style={styles.label}>Age:</label>
+            <input
+              type="number"
+              id="age"
+              name="age"
+              value={formData.age}
+              onChange={handleChange}
+              required
+              min="1"
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label htmlFor="degrees" style={styles.label}>Degrees:</label>
+            <input
+              type="text"
+              id="degrees"
+              name="degrees"
+              value={formData.degrees}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+          </div>
+          <button type="submit" style={styles.button}>Register</button>
+        </form>
+      </div>
+    </>
   );
 };
 

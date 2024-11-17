@@ -1,3 +1,5 @@
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // ArrowBackIcon for the back button
+import IconButton from '@mui/material/IconButton';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 
@@ -11,7 +13,7 @@ const RegisterStudent = () => {
     city: '',
     age: '',
   });
-  
+
   const navigate = useNavigate(); // Initialize the navigate function
 
   const handleChange = (e) => {
@@ -46,8 +48,17 @@ const RegisterStudent = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate(-1); // Navigate back to the previous page
+  };
+
   return (
     <div className="student-register-container">
+      {/* Back Button */}
+      <IconButton onClick={handleBack} aria-label="Go back" style={{ position: 'absolute', top: 20, left: 20, color: '#007bff' }}>
+        <ArrowBackIcon />
+      </IconButton>
+
       <h2>Student Registration</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
