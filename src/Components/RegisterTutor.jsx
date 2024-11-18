@@ -1,5 +1,7 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,6 +16,8 @@ const RegisterTutor = () => {
     age: '',
     degrees: '',
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   // Initialize the navigate function
   const navigate = useNavigate();
@@ -62,14 +66,17 @@ const RegisterTutor = () => {
         degrees: '',
       });
 
-      navigate('/login'); // Navigate to the login page
+      navigate('/loginTutor');
     } catch (error) {
       console.error('Registration failed:', error);
       alert("Registration failed: " + error.message);
     }
   };
 
-  // Inline CSS for styling
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   const styles = {
     container: {
       padding: '20px',
@@ -87,6 +94,7 @@ const RegisterTutor = () => {
     },
     formGroup: {
       marginBottom: '15px',
+      position: 'relative',
     },
     label: {
       display: 'block',
@@ -113,6 +121,13 @@ const RegisterTutor = () => {
     iconButton: {
       color: '#007bff',
       marginBottom: '10px',
+    },
+    passwordToggle: {
+      position: 'absolute',
+      right: '10px',
+      top: '30px',
+      cursor: 'pointer',
+      color: '#555',
     },
   };
 
@@ -153,7 +168,7 @@ const RegisterTutor = () => {
           <div style={styles.formGroup}>
             <label htmlFor="password" style={styles.label}>Password:</label>
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               value={formData.password}
@@ -161,6 +176,9 @@ const RegisterTutor = () => {
               required
               style={styles.input}
             />
+            <span onClick={handleTogglePasswordVisibility} style={styles.passwordToggle}>
+              {showPassword ? <VisibilityOff /> : <Visibility />}
+            </span>
           </div>
           <div style={styles.formGroup}>
             <label htmlFor="email" style={styles.label}>Email:</label>

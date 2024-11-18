@@ -1,7 +1,9 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // ArrowBackIcon for the back button
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { useNavigate } from 'react-router-dom';
 
 const RegisterStudent = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +16,8 @@ const RegisterStudent = () => {
     age: '',
   });
 
-  const navigate = useNavigate(); // Initialize the navigate function
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,28 +31,32 @@ const RegisterStudent = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8080/api/students/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('http://localhost:8080/api/students/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
-        throw new Error("Error in registration");
+        throw new Error('Error in registration');
       }
 
       const data = await response.json();
-      console.log("Registered successfully:", data);
-      alert("Registration successful!"); // Show success message
-      navigate('/loginStudent'); // Redirect to LoginStudent page after successful registration
+      console.log('Registered successfully:', data);
+      alert('Registration successful!');
+      navigate('/loginStudent');
     } catch (error) {
-      console.error("Registration failed:", error);
-      alert("Registration failed: " + error.message); // Show error message
+      console.error('Registration failed:', error);
+      alert('Registration failed: ' + error.message);
     }
   };
 
   const handleBack = () => {
-    navigate(-1); // Navigate back to the previous page
+    navigate(-1);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
   };
 
   return (
@@ -72,16 +79,24 @@ const RegisterStudent = () => {
             required
           />
         </div>
-        <div className="form-group">
+        <div className="form-group" style={{ position: 'relative' }}>
           <label htmlFor="password">Password:</label>
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             id="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
             required
           />
+          {/* Password visibility toggle button */}
+          <IconButton
+            onClick={togglePasswordVisibility}
+            style={{ position: 'absolute', right: 0, top: '70%', transform: 'translateY(-50%)' }}
+            aria-label="Toggle password visibility"
+          >
+            {showPassword ? <VisibilityOff /> : <Visibility />}
+          </IconButton>
         </div>
         <div className="form-group">
           <label htmlFor="studentName">Student Name:</label>
