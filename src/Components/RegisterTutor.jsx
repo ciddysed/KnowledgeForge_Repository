@@ -176,9 +176,9 @@ const RegisterTutor = () => {
               required
               style={styles.input}
             />
-            <span onClick={handleTogglePasswordVisibility} style={styles.passwordToggle}>
+            {/* <span onClick={handleTogglePasswordVisibility} style={styles.passwordToggle}>
               {showPassword ? <VisibilityOff /> : <Visibility />}
-            </span>
+            </span> */}
           </div>
           <div style={styles.formGroup}>
             <label htmlFor="email" style={styles.label}>Email:</label>

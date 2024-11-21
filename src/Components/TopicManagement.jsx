@@ -188,7 +188,7 @@ const TopicManagement = () => {
               </button>
               <button 
                 onClick={() => deleteTopic(topic.topicID)} 
-                style={{ padding: '5px 10px', backgroundColor: 'white', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                style={{ padding: '5px 10px', backgroundColor: 'red', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
               >
                 Delete
               </button>
