@@ -1,7 +1,7 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+// import Visibility from '@mui/icons-material/Visibility';
+// import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -90,13 +90,13 @@ const RegisterStudent = () => {
             required
           />
           {/* Password visibility toggle button */}
-          <IconButton
+          {/* <IconButton
             onClick={togglePasswordVisibility}
             style={{ position: 'absolute', right: 0, top: '70%', transform: 'translateY(-50%)' }}
             aria-label="Toggle password visibility"
           >
             {showPassword ? <VisibilityOff /> : <Visibility />}
-          </IconButton>
+          </IconButton> */}
         </div>
         <div className="form-group">
           <label htmlFor="studentName">Student Name:</label>

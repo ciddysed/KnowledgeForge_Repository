@@ -99,10 +99,10 @@ function Course() {
           required
           style={{ padding: '10px', fontSize: '16px', border: '1px solid #ccc', borderRadius: '4px' }}
         >
-          <option value="">Select Tutor ID</option>
+          <option value="">Select Tutor</option>
           {tutors.map(tutor => (
             <option key={tutor.tutorID} value={tutor.tutorID}>
-              {tutor.tutorID}
+              {tutor.tutorName}
             </option>
           ))}
         </select>
@@ -121,7 +121,7 @@ function Course() {
             key={course.courseID} 
             style={{ padding: '10px', marginBottom: '10px', border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}
           >
-            <strong>{course.courseName}</strong> (Tutor ID: {course.tutor?.tutorID || "N/A"})
+            <strong>{course.courseName}</strong> (Tutor: {course.tutor?.tutorName || "N/A"})
             <div style={{ marginTop: '10px' }}>
               <button 
                 onClick={() => handleEdit(course)} 
@@ -131,7 +131,7 @@ function Course() {
               </button>
               <button 
                 onClick={() => handleDelete(course.courseID)} 
-                style={{ padding: '5px 10px', backgroundColor: 'white', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                style={{ padding: '5px 10px', backgroundColor: 'red', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
               >
                 Delete
               </button>

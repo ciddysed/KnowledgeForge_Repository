@@ -67,22 +67,21 @@ const LoginTutor = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
             className="login-tutor-input"
-            style={{ paddingRight: '40px' }} // Add padding to make space for the icon
+            style={{ paddingRight: '10px' }} // Add padding to make space for the icon
           />
-          <IconButton
+          {/* <IconButton
             onClick={togglePasswordVisibility}
             style={{
               position: 'absolute',
               right: '10px',
               top: '70%',
-              VisibilityOff,
               transform: 'translateY(-50%)',
               padding: 0,
             }}
             aria-label="Toggle password visibility"
           >
             {showPassword ? <VisibilityOff /> : <Visibility />}
-          </IconButton>
+          </IconButton> */}
         </div>
         <button type="submit" className="login-tutor-submit">Login</button>
       </form>

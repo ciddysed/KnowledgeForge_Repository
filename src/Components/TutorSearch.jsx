@@ -2,15 +2,37 @@ import React, { useEffect, useState } from "react";
 
 const TutorSearch = () => {
   const [tutors, setTutors] = useState([]);
+  const [filteredTutors, setFilteredTutors] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedTutor, setSelectedTutor] = useState(null);
 
   useEffect(() => {
     // Fetch tutors from the backend
     fetch("http://localhost:8080/api/tutors")
       .then((response) => response.json())
-      .then((data) => setTutors(data))
+      .then((data) => {
+        setTutors(data);
+        setFilteredTutors(data);
+
+        // Extract unique courses for the dropdown
+        const uniqueCourses = Array.from(new Set(data.map((tutor) => tutor.courseMajor)));
+        setCourses(uniqueCourses);
+      })
       .catch((error) => console.error("Error fetching tutors:", error));
   }, []);
+
+  const handleCourseFilter = (event) => {
+    const selected = event.target.value;
+    setSelectedCourse(selected);
+
+    // Filter tutors by selected course
+    if (selected === "") {
+      setFilteredTutors(tutors); // Show all tutors if no course is selected
+    } else {
+      setFilteredTutors(tutors.filter((tutor) => tutor.courseMajor === selected));
+    }
+  };
 
   const handleChoose = (tutor) => {
     const confirmation = window.confirm(
@@ -26,7 +48,6 @@ const TutorSearch = () => {
     }
   };
 
-  // Inline styles for improved single-column layout and design
   const styles = {
     container: {
       padding: "20px",
@@ -40,6 +61,14 @@ const TutorSearch = () => {
       marginBottom: "25px",
       fontSize: "2rem",
       color: "#3f51b5",
+    },
+    dropdown: {
+      marginBottom: "20px",
+      padding: "10px",
+      fontSize: "1rem",
+      border: "1px solid #ddd",
+      borderRadius: "5px",
+      width: "100%",
     },
     list: {
       display: "flex",
@@ -56,20 +85,6 @@ const TutorSearch = () => {
       transition: "transform 0.3s, box-shadow 0.3s",
       backgroundColor: "#fff",
     },
-    cardHover: {
-      transform: "translateY(-8px)",
-      boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
-    },
-    cardHeading: {
-      fontSize: "1.8rem",
-      marginBottom: "12px",
-      color: "#1e88e5",
-    },
-    cardText: {
-      fontSize: "1rem",
-      color: "#555",
-      marginBottom: "10px",
-    },
     button: {
       padding: "10px 20px",
       border: "none",
@@ -83,64 +98,43 @@ const TutorSearch = () => {
     buttonHover: {
       backgroundColor: "#1565c0",
     },
-    modal: {
-      position: "fixed",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      backgroundColor: "#fff",
-      padding: "30px",
-      borderRadius: "10px",
-      boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-      zIndex: 1000,
-      maxWidth: "500px",
-      width: "90%",
-    },
-    overlay: {
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
-      zIndex: 999,
-    },
-    closeButton: {
-      marginTop: "20px",
-      padding: "8px 16px",
-      border: "none",
-      borderRadius: "5px",
-      backgroundColor: "#e53935",
-      color: "#fff",
-      cursor: "pointer",
-      fontWeight: "bold",
-    },
   };
 
   return (
     <div style={styles.container}>
       <h1 style={styles.heading}>Available Tutors</h1>
+      
+      {/* Dropdown to filter tutors by course */}
+      <select style={styles.dropdown} value={selectedCourse} onChange={handleCourseFilter}>
+        <option value="">Filter by Courses</option>
+        {courses.map((course, index) => (
+          <option key={index} value={course}>
+            {course}
+          </option>
+        ))}
+      </select>
+
       <div style={styles.list}>
-        {tutors.map((tutor) => (
+        {filteredTutors.map((tutor) => (
           <div
             key={tutor.tutorID}
             style={styles.card}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = styles.cardHover.transform;
-              e.currentTarget.style.boxShadow = styles.cardHover.boxShadow;
+              e.currentTarget.style.transform = "translateY(-8px)";
+              e.currentTarget.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.2)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = "translateY(0)";
               e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.1)";
             }}
           >
-            <h2 style={styles.cardHeading}>{tutor.tutorName}</h2>
-            <p style={styles.cardText}><strong>Email:</strong> {tutor.email}</p>
-            <p style={styles.cardText}><strong>Username:</strong> {tutor.username}</p>
-            <p style={styles.cardText}><strong>Course Major:</strong> {tutor.courseMajor}</p>
-            <p style={styles.cardText}><strong>City:</strong> {tutor.city}</p>
-            <p style={styles.cardText}><strong>Age:</strong> {tutor.age}</p>
-            <p style={styles.cardText}><strong>Degrees:</strong> {tutor.degrees}</p>
+            <h2>{tutor.tutorName}</h2>
+            <p><strong>Email:</strong> {tutor.email}</p>
+            <p><strong>Username:</strong> {tutor.username}</p>
+            <p><strong>Course Major:</strong> {tutor.courseMajor}</p>
+            <p><strong>City:</strong> {tutor.city}</p>
+            <p><strong>Age:</strong> {tutor.age}</p>
+            <p><strong>Degrees:</strong> {tutor.degrees}</p>
             <button
               style={styles.button}
               onClick={() => handleChoose(tutor)}
@@ -152,27 +146,6 @@ const TutorSearch = () => {
           </div>
         ))}
       </div>
-
-      {selectedTutor && (
-        <>
-          <div style={styles.overlay}></div>
-          <div style={styles.modal}>
-            <h2 style={styles.cardHeading}>{selectedTutor.tutorName}</h2>
-            <p style={styles.cardText}><strong>Email:</strong> {selectedTutor.email}</p>
-            <p style={styles.cardText}><strong>Username:</strong> {selectedTutor.username}</p>
-            <p style={styles.cardText}><strong>Course Major:</strong> {selectedTutor.courseMajor}</p>
-            <p style={styles.cardText}><strong>City:</strong> {selectedTutor.city}</p>
-            <p style={styles.cardText}><strong>Age:</strong> {selectedTutor.age}</p>
-            <p style={styles.cardText}><strong>Degrees:</strong> {selectedTutor.degrees}</p>
-            <button
-              style={styles.closeButton}
-              onClick={() => setSelectedTutor(null)}
-            >
-              Close
-            </button>
-          </div>
-        </>
-      )}
     </div>
   );
 };
