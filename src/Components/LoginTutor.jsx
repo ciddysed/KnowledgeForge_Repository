@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const LoginTutor = () => {
   const [username, setUsername] = useState('');
@@ -27,15 +24,25 @@ const LoginTutor = () => {
       );
 
       if (response.ok) {
-        const userData = await response.json();
-        localStorage.setItem('loggedInUser', JSON.stringify(userData));
-        navigate('/home2');
+        const data = await response.json();
+
+        // Save JWT token to localStorage
+        const token = data.token;  // assuming the response contains the token in 'token'
+        localStorage.setItem('jwtToken', token);
+
+        // Optionally store user data (if needed)
+        localStorage.setItem('loggedInUser', JSON.stringify(data));
+
+        // Navigate to the tutor home page
+        navigate('/tutorHome');
       } else if (response.status === 401) {
         setError('Invalid username or password.');
       } else {
-        setError('Login failed. Please try again.');
+        const errorData = await response.json();
+        setError(`Login failed: ${errorData.message || 'Please try again.'}`);
       }
     } catch (error) {
+      console.error('Error during login:', error);
       setError('An error occurred. Please try again later.');
     }
   };
@@ -69,19 +76,6 @@ const LoginTutor = () => {
             className="login-tutor-input"
             style={{ paddingRight: '10px' }} // Add padding to make space for the icon
           />
-          {/* <IconButton
-            onClick={togglePasswordVisibility}
-            style={{
-              position: 'absolute',
-              right: '10px',
-              top: '70%',
-              transform: 'translateY(-50%)',
-              padding: 0,
-            }}
-            aria-label="Toggle password visibility"
-          >
-            {showPassword ? <VisibilityOff /> : <Visibility />}
-          </IconButton> */}
         </div>
         <button type="submit" className="login-tutor-submit">Login</button>
       </form>
