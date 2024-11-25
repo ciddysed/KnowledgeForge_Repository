@@ -21,6 +21,8 @@ import TopicManagement from "./Components/TopicManagement";
 import Search from "./Components/TutorSearch";
 import Work from "./Components/Work";
 import TutorProfile from "./Components/TutorProfile";
+import TutorHome from './Components/TutorSpecific/TutorHome';
+import TutorCourse from './Components/TutorSpecific/TutorCourse';
 
 function App() {
   return (
@@ -46,6 +48,9 @@ function App() {
         <Route path="/students" element={<Students />} />
         <Route path="/home2" element={<Home2 />} />
         <Route path="/tutor-profile/:tutorId" element={<TutorProfile />} />
+        <Route path="/tutorHome" element={<TutorHome />} />
+        <Route path="/tutorCourse" element={<TutorCourse />} />
+        
       </Routes>
       <Footer />
     </div>
