@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import About from "./Components/About";
 import Contact from "./Components/Contact";
@@ -21,13 +21,36 @@ import TopicManagement from "./Components/TopicManagement";
 import Search from "./Components/TutorSearch";
 import Work from "./Components/Work";
 import TutorProfile from "./Components/TutorProfile";
-import TutorHome from './Components/TutorSpecific/TutorHome';
-import TutorCourse from './Components/TutorSpecific/TutorCourse';
+import TutorHome from "./Components/TutorSpecific/TutorHome";
+import TutorCourse from "./Components/TutorSpecific/TutorCourse";
+import NavbarStudent from "./Components/NavbarStudent";
+import NavbarTutor from "./Components/NavbarTutor";
 
 function App() {
+  const location = useLocation();
+
+  // Conditional Navbar rendering
+  const getNavbar = () => {
+    if (location.pathname === "/" 
+      || location.pathname === "/LoginPage" 
+      || location.pathname === "/loginStudent"
+      || location.pathname === "/LoginTutor"
+      || location.pathname === "/registerStudent"
+      || location.pathname === "/RegisterTutor") {
+      return <Navbar />; // Navbar only for Home.jsx
+    }
+    if (location.pathname === "/home1" || location.pathname === "/Search") {
+      return <NavbarStudent />; // NavbarStudent for Home1 and Students
+    }
+    if (location.pathname === "/home2") {
+      return <NavbarTutor />; // NavbarTutor for Home2
+    }
+    return null; // No Navbar for other components
+  };
+
   return (
     <div className="App">
-      <Navbar />
+      {getNavbar()}
       <Routes>
         <Route path="/LoginPage" element={<LoginPage />} />
         <Route path="/" element={<Home />} />
@@ -45,12 +68,11 @@ function App() {
         <Route path="/quizManagement" element={<QuizManagement />} />
         <Route path="/moduleManagement" element={<ModuleManagement />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/students" element={<Students />} />
+        <Route path="/students" element={<Students />} /> {/* NavbarStudent applied here */}
         <Route path="/home2" element={<Home2 />} />
         <Route path="/tutor-profile/:tutorId" element={<TutorProfile />} />
         <Route path="/tutorHome" element={<TutorHome />} />
         <Route path="/tutorCourse" element={<TutorCourse />} />
-        
       </Routes>
       <Footer />
     </div>
