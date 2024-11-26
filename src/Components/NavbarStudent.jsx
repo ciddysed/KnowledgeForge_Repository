@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // useNavigate for navigation
 import Logo from "../Assets/logo.png";
-import { HiOutlineBars3 } from "react-icons/hi2";
+import { FaSignOutAlt } from "react-icons/fa";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -18,6 +18,8 @@ import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 
 const NavbarStudent = () => {
   const [openMenu, setOpenMenu] = useState(false);
+  const navigate = useNavigate(); // Hook for navigation
+
   const menuOptions = [
     { text: "Home", icon: <HomeIcon /> },
     { text: "About", icon: <InfoIcon /> },
@@ -25,20 +27,28 @@ const NavbarStudent = () => {
     { text: "Contact", icon: <PhoneRoundedIcon /> },
   ];
 
+  const handleLogout = () => {
+    // Clear user data from localStorage
+    localStorage.removeItem('loggedInUser');
+    // Navigate back to the Home1 page after logout
+    navigate('/loginStudent');
+  };
+
   return (
     <nav>
       <div className="nav-logo-container">
         <Link to="/home1">
-        <img src={Logo} alt="KnowledgeForge Logo" />
+          <img src={Logo} alt="KnowledgeForge Logo" />
         </Link>
       </div>
-      <div className="navbar-links-container">
+      <div className="navbarStudent-links-container">
         <Link to="/home1">Home</Link>
-
+        <Link to="#">Profile</Link>
       </div>
-      <div className="navbar-menu-container">
-        <HiOutlineBars3 onClick={() => setOpenMenu(true)} />
-      </div>
+      <button onClick={handleLogout} className="logout-button creative-btn">
+            <FaSignOutAlt className="logout-icon" /> {/* Logout icon */}
+            Logout
+      </button>
       <Drawer open={openMenu} onClose={() => setOpenMenu(false)} anchor="right">
         <Box
           sx={{ width: 250 }}

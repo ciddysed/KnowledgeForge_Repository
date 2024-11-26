@@ -23,7 +23,7 @@ const Home1 = () => {
         <div className="home-bannerImage-container">
           <img src={BannerBackground} alt="" />
         </div>
-        <div className="home-text-section">
+        <div className="home1-text-section">
           <h1 className="primary-heading">
             {username && <p>Welcome, {username}!</p>}
           </h1>
