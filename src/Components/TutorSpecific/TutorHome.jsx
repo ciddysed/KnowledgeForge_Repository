@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, Link  } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const TutorHome = () => {
   const [username, setUsername] = useState('');
@@ -26,8 +26,11 @@ const TutorHome = () => {
       <h1>Welcome, {username}</h1>
       <button onClick={handleLogout}>Logout</button>
       <div style={{ marginTop: '20px' }}>
-        <Link to="/tutorCourse" style={{ padding: '10px 20px', backgroundColor: '#3498db', color: 'white', textDecoration: 'none', borderRadius: '4px' }}>
+        <Link to="/tutorCourse" style={{ padding: '10px 20px', backgroundColor: '#3498db', color: 'white', textDecoration: 'none', borderRadius: '4px', marginRight: '10px' }}>
           Manage Your Courses
+        </Link>
+        <Link to="/tutorTopic" style={{ padding: '10px 20px', backgroundColor: '#3498db', color: 'white', textDecoration: 'none', borderRadius: '4px' }}>
+          Manage Your Topics
         </Link>
       </div>
     </div>

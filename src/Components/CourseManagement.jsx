@@ -29,7 +29,7 @@ function Course() {
 
   useEffect(() => {
     fetchCourses();
-    fetchTutors();
+    fetchTutors();  
   }, []);
 
   const handleSubmit = async (e) => {

@@ -3,8 +3,9 @@ import "./App.css";
 import About from "./Components/About";
 import Contact from "./Components/Contact";
 import CourseManagement from "./Components/CourseManagement";
-import Footer from "./Components/Footer";
+// import Footer from "./Components/Footer";
 import Home from "./Components/Home";
+import TutorTopic from "./Components/TutorSpecific/TutorTopic";
 import Home1 from "./Components/Home1";
 import Home2 from "./Components/Home2";
 import LoginPage from "./Components/LoginPage";
@@ -50,9 +51,10 @@ function App() {
         <Route path="/tutor-profile/:tutorId" element={<TutorProfile />} />
         <Route path="/tutorHome" element={<TutorHome />} />
         <Route path="/tutorCourse" element={<TutorCourse />} />
+        <Route path="/tutorTopic" element={<TutorTopic />} />
         
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }
