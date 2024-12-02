@@ -1,42 +1,52 @@
-import React, { useState, useEffect } from "react";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { connectWebSocket, sendNotification, subscribeToTutorAcceptance } from './WebSocket';
+
+// Define subscribeToStudentNotifications
+const subscribeToStudentNotifications = (username, callback) => {
+  // Implementation of the function
+};
 
 const TutorSearch = () => {
   const [tutors, setTutors] = useState([]);
-  const [courses, setCourses] = useState({});
+  const [selectedCourse, setSelectedCourse] = useState('All');
   const [filteredTutors, setFilteredTutors] = useState([]);
-  const [selectedTutor, setSelectedTutor] = useState(null);
-  const [selectedCourse, setSelectedCourse] = useState("All");
 
   useEffect(() => {
-    // Fetch tutors from the backend
-    fetch("http://localhost:8080/api/tutors")
-      .then((response) => response.json())
-      .then((data) => {
-        setTutors(data);
-        setFilteredTutors(data); // Initialize filtered list
-        data.forEach((tutor) => fetchCourses(tutor.tutorID)); // Fetch courses for each tutor
-      })
-      .catch((error) => console.error("Error fetching tutors:", error));
-  }, []);
+    const fetchTutors = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/tutors');
+        console.log("Fetched tutors:", response.data);
+        setTutors(response.data);
+        setFilteredTutors(response.data);
+      } catch (error) {
+        console.error("Error fetching tutors:", error);
+      }
+    };
 
-  const fetchCourses = (tutorId) => {
-    fetch(`http://localhost:8080/Course/getCourse?tutorId=${tutorId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        // Map courses to the specific tutorID
-        setCourses((prevCourses) => ({
-          ...prevCourses,
-          [tutorId]: data, // Only store courses for this tutor
-        }));
-      })
-      .catch((error) => console.error("Error fetching courses:", error));
-  };
+    fetchTutors();
+
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+    connectWebSocket(() => {
+      console.log('WebSocket connected, ready to subscribe to notifications');
+      subscribeToStudentNotifications(loggedInUser.username, (message) => {
+        console.log("Notification received for student:", message);
+        alert(`Notification: ${message}`);
+      });
+
+      // Subscribe to notifications when a tutor accepts a student
+      subscribeToTutorAcceptance(loggedInUser.username, (message) => {
+        alert(`Your tutor ${message.tutorName} has accepted you.`);
+      });
+    });
+
+  }, []);
 
   const handleCourseChange = (e) => {
     const selected = e.target.value;
     setSelectedCourse(selected);
 
-    // Filter tutors by selected course
     if (selected === "All") {
       setFilteredTutors(tutors);
     } else {
@@ -48,32 +58,68 @@ const TutorSearch = () => {
   };
 
   const handleChoose = (tutor) => {
-    const confirmation = window.confirm(
-      `Are you sure you want to select ${tutor.tutorName} as your tutor?`
-    );
-    if (confirmation) {
-      setSelectedTutor(tutor);
-      alert(
-        `Wonderful choice! You have successfully chosen ${tutor.tutorName} as your tutor.`
-      );
-    } else {
-      alert("No worries! Feel free to browse more amazing tutors.");
+    console.log("Selected tutor:", tutor);
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+    if (!loggedInUser || !loggedInUser.username) {
+      console.error('No student logged in');
+      alert("Please log in to select a tutor.");
+      return;
     }
+
+    const studentUsername = loggedInUser.username;
+
+    if (!tutor.username) {
+      console.error("No tutor username available for this tutor.");
+      alert("This tutor does not have a valid username.");
+      return;
+    }
+
+    // Prompt for confirmation
+    const confirmSelection = window.confirm(`Are you sure you want to choose ${tutor.tutorName} as your tutor?`);
+    if (!confirmSelection) {
+      return;
+    }
+
+    console.log("tutorUsername:", tutor.username);
+    sendNotification(tutor.username, { studentUsername, tutorId: tutor.tutorID });
+
+    // Save the student-tutor selection in the database
+    axios.post('http://localhost:8080/api/notifications/select', {
+      studentUsername,
+      tutorUsername: tutor.username,
+      tutorId: tutor.tutorID
+    })
+    .then(response => {
+      if (response.status !== 200) {
+        console.error("Failed to save your selection. Status code:", response.status);
+        alert("Failed to save your selection. Please try again.");
+      } else {
+        alert("Your selection has been saved successfully.");
+      }
+    })
+    .catch(error => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error("Error response data:", error.response.data);
+        console.error("Error response status:", error.response.status);
+        console.error("Error response headers:", error.response.headers);
+        alert(`Failed to save your selection. Server responded with status code ${error.response.status}.`);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("Error request data:", error.request);
+        alert("Failed to save your selection. No response received from the server.");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error message:", error.message);
+        alert("An error occurred while saving your selection. Please try again.");
+      }
+      console.error("Error config:", error.config);
+    });
   };
 
-  // const handleCloseModal = () => {
-  //   setSelectedTutor(null);
-  // };
-
-  // Get unique course majors for the dropdown
   const courseMajors = ["All", ...new Set(tutors.map((tutor) => tutor.courseMajor))];
-
-  // Function to generate star ratings based on rating
-  // const renderStars = (rating) => {
-  //   const filledStars = "★".repeat(rating);
-  //   const emptyStars = "☆".repeat(5 - rating);
-  //   return filledStars + emptyStars;
-  // };
 
   const styles = {
     container: {
@@ -182,7 +228,7 @@ const TutorSearch = () => {
             <p style={styles.cardText}><strong>Email:</strong> {tutor.email}</p>
             <p style={styles.cardText}><strong>Course Major:</strong> {tutor.courseMajor}</p>
             <p style={styles.cardText}><strong>Degrees:</strong> {tutor.degrees}</p>
-              <button
+            <button
               style={styles.button}
               onClick={() => handleChoose(tutor)}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = styles.buttonHover.backgroundColor)}

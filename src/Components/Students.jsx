@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa"; // Icons for better visual feedback
+import { subscribeToTutorNotifications } from "./WebSocket"; // Import WebSocket notification function
 
 const Students = () => {
   const [students, setStudents] = useState([]);
@@ -22,6 +23,11 @@ const Students = () => {
     };
 
     fetchStudents();
+
+    // Subscribe to WebSocket notifications for students
+    subscribeToTutorNotifications("studentNotifications", (message) => {
+      alert(`Notification for Student: ${message}`);
+    });
   }, []);
 
   // Handle the Accept button click

@@ -1,7 +1,7 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import IconButton from '@mui/material/IconButton';
-// import Visibility from '@mui/icons-material/Visibility';
-// import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,6 +29,7 @@ const RegisterStudent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Submitting form data:', formData); // Add this line to log form data
 
     try {
       const response = await fetch('http://localhost:8080/api/students/register', {
@@ -90,13 +91,13 @@ const RegisterStudent = () => {
             required
           />
           {/* Password visibility toggle button */}
-          {/* <IconButton
+          <IconButton
             onClick={togglePasswordVisibility}
             style={{ position: 'absolute', right: 0, top: '70%', transform: 'translateY(-50%)' }}
             aria-label="Toggle password visibility"
           >
             {showPassword ? <VisibilityOff /> : <Visibility />}
-          </IconButton> */}
+          </IconButton>
         </div>
         <div className="form-group">
           <label htmlFor="studentName">Student Name:</label>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LoginStudent = () => {
     const [username, setUsername] = useState('');
@@ -10,18 +10,27 @@ const LoginStudent = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
-    
+
         try {
             const response = await fetch(`http://localhost:8080/api/students/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
             });
-    
+
             if (response.ok) {
                 const userData = await response.json();
+
+                // Assuming the response contains the JWT token as 'token'
+                const token = userData.token;
+
+                // Save the JWT token in localStorage
+                localStorage.setItem('jwtToken', token);
+
+                // Optionally save user data as well, if necessary
                 localStorage.setItem('loggedInUser', JSON.stringify(userData));
+
                 console.log('Logged in successfully');
-                navigate('/home1'); // Redirecting to home after login
+                navigate('/studentHome'); // Redirecting to home after login
             } else if (response.status === 401) {
                 setError("Invalid username or password.");
             } else {
@@ -31,7 +40,6 @@ const LoginStudent = () => {
             setError("An error occurred. Please try again later.");
         }
     };
-    
 
     return (
         <div className="login-student-container">

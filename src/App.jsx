@@ -5,7 +5,6 @@ import Contact from "./Components/Contact";
 import CourseManagement from "./Components/CourseManagement";
 // import Footer from "./Components/Footer";
 import Home from "./Components/Home";
-import TutorTopic from "./Components/TutorSpecific/TutorTopic";
 import Home1 from "./Components/Home1";
 import Home2 from "./Components/Home2";
 import LoginPage from "./Components/LoginPage";
@@ -13,17 +12,20 @@ import LoginStudent from "./Components/LoginStudent";
 import LoginTutor from "./Components/LoginTutor";
 import ModuleManagement from "./Components/ModuleManagement";
 import Navbar from "./Components/Navbar";
+import Notifications from './Components/Notifications';
 import QuizManagement from "./Components/QuizManagement";
 import RegisterStudent from "./Components/RegisterStudent";
 import RegisterTutor from "./Components/RegisterTutor";
+import StudentHome from './Components/StudentHome';
 import Students from "./Components/Students";
 import Testimonial from "./Components/Testimonial";
 import TopicManagement from "./Components/TopicManagement";
-import Search from "./Components/TutorSearch";
-import Work from "./Components/Work";
 import TutorProfile from "./Components/TutorProfile";
-import TutorHome from './Components/TutorSpecific/TutorHome';
+import Search from "./Components/TutorSearch";
 import TutorCourse from './Components/TutorSpecific/TutorCourse';
+import TutorHome from './Components/TutorSpecific/TutorHome';
+import TutorTopic from "./Components/TutorSpecific/TutorTopic";
+import Work from "./Components/Work";
 
 function App() {
   return (
@@ -52,6 +54,8 @@ function App() {
         <Route path="/tutorHome" element={<TutorHome />} />
         <Route path="/tutorCourse" element={<TutorCourse />} />
         <Route path="/tutorTopic" element={<TutorTopic />} />
+        <Route path="/notifications" element={<Notifications />} />
+        <Route path="/studentHome" element={<StudentHome />} />
         
       </Routes>
       {/* <Footer /> */}
