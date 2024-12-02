@@ -24,6 +24,7 @@ import Work from "./Components/Work";
 import TutorProfile from "./Components/TutorProfile";
 import TutorHome from './Components/TutorSpecific/TutorHome';
 import TutorCourse from './Components/TutorSpecific/TutorCourse';
+import TutorTopicQuiz from './Components/TutorSpecific/TutorTopicQuiz';
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
         <Route path="/tutorHome" element={<TutorHome />} />
         <Route path="/tutorCourse" element={<TutorCourse />} />
         <Route path="/tutorTopic" element={<TutorTopic />} />
+        <Route path="/tutorTopicQuiz" element={<TutorTopicQuiz />} />
         
       </Routes>
       {/* <Footer /> */}

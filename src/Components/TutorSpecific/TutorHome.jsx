@@ -32,6 +32,9 @@ const TutorHome = () => {
         <Link to="/tutorTopic" style={{ padding: '10px 20px', backgroundColor: '#3498db', color: 'white', textDecoration: 'none', borderRadius: '4px' }}>
           Manage Your Topics
         </Link>
+        <Link to="/tutorTopicQuiz" style={{ padding: '10px 20px', backgroundColor: '#3498db', color: 'white', textDecoration: 'none', borderRadius: '4px' }}>
+          Manage Your Quizzes
+        </Link>
       </div>
     </div>
   );
