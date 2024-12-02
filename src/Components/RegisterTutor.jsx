@@ -1,7 +1,5 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -71,10 +69,6 @@ const RegisterTutor = () => {
       console.error('Registration failed:', error);
       alert("Registration failed: " + error.message);
     }
-  };
-
-  const handleTogglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
   };
 
   const styles = {

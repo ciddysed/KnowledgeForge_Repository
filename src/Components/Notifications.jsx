@@ -1,135 +1,185 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
+import Modal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { connectWebSocket, sendNotification, subscribeToTutorAcceptance, subscribeToTutorNotifications } from './WebSocket';
+import {
+  connectWebSocket,
+  sendNotification,
+  subscribeToTutorAcceptance,
+  subscribeToTutorNotifications,
+} from './WebSocket';
+
+Modal.setAppElement('#root');
 
 const Notifications = () => {
   const [students, setStudents] = useState([]);
   const [tutorUsername, setTutorUsername] = useState('');
   const [error, setError] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [confirmAccept, setConfirmAccept] = useState(null);
   const ws = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loggedInTutor = JSON.parse(localStorage.getItem('loggedInUser'));
-    if (!loggedInTutor || !loggedInTutor.username) {
-      console.error("No logged in user found in localStorage or username is missing");
+    if (!loggedInTutor?.username) {
+      console.error("No logged-in user found in localStorage or username is missing");
       return;
     }
 
-    const tutorUsername = loggedInTutor.username;
-    setTutorUsername(tutorUsername);
-    console.log(`Logged in tutor username: ${tutorUsername}`);
+    const username = loggedInTutor.username;
+    setTutorUsername(username);
 
     const fetchStudents = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/notifications/${tutorUsername}`);
+        const response = await fetch(`http://localhost:8080/api/notifications/${username}`);
         if (response.ok) {
           const data = await response.json();
           setStudents(data);
         } else {
           setError('Failed to fetch students.');
-          console.error('Failed to fetch students:', response.statusText);
         }
-      } catch (error) {
+      } catch (err) {
         setError('Error fetching students. Please try again.');
-        console.error('Error fetching students:', error);
       }
     };
 
     fetchStudents();
 
     ws.current = connectWebSocket(() => {
-      console.log('WebSocket connected, ready to subscribe to notifications');
-      subscribeToTutorNotifications(tutorUsername, (message) => {
-        try {
-          console.log("Received message:", message); // Log incoming messages for debugging
-          const newStudent = message;
-          if (newStudent && newStudent.studentName && newStudent.courseName) {
-            setStudents((prevStudents) => [...prevStudents, newStudent]);
-
-            // Show a toast notification for the new student
-            toast.success(`New student selected you: ${newStudent.studentName}`);
-          }
-        } catch (err) {
-          console.error('Error parsing WebSocket message:', err);
-          toast.error('Error processing the notification.');
+      subscribeToTutorNotifications(username, (message) => {
+        const newStudent = message;
+        if (newStudent?.studentName && newStudent?.courseName) {
+          setStudents((prevStudents) => [...prevStudents, newStudent]);
+          toast.success(`New student selected you: ${newStudent.studentName}`);
         }
       });
 
-      // Subscribe to notifications when a student is accepted by a tutor
-      subscribeToTutorAcceptance(tutorUsername, (message) => {
+      subscribeToTutorAcceptance(username, (message) => {
         toast.success(`You have accepted student ${message.studentName}.`);
       });
     });
 
     return () => {
-      if (ws.current) {
-        ws.current.close();
-      }
+      ws.current?.close();
     };
-  }, [tutorUsername]);
+  }, []);
 
-  const handleAccept = async (student) => {
+  const handleAccept = (student) => setConfirmAccept(student);
+
+  const confirmAcceptStudent = async () => {
+    if (!confirmAccept) return;
+
     try {
-      sendNotification(student.studentUsername, {
+      sendNotification(confirmAccept.studentUsername, {
         tutorUsername,
-        tutorId: student.tutorId,
+        tutorId: confirmAccept.tutorId,
         type: 'ACCEPTED',
-        tutorName: tutorUsername
+        tutorName: tutorUsername,
       });
 
-      // Notify the student in real-time
-      sendNotification(`acceptance/${student.studentUsername}`, {
-        tutorName: tutorUsername
-      });
-
-      toast.success(`Student ${student.studentName} accepted.`);
+      toast.success(`Student ${confirmAccept.studentName} accepted.`);
+      setConfirmAccept(null);
+      navigate(`/chat/${confirmAccept.studentUsername}`);
     } catch (error) {
-      console.error("Error sending acceptance notification:", error);
-      toast.error("Failed to send acceptance notification.");
+      console.error('Error sending acceptance notification:', error);
+      toast.error('Failed to send acceptance notification.');
     }
   };
 
+  const handleViewProfile = (student) => setSelectedStudent(student);
+
+  const closeModal = () => {
+    setSelectedStudent(null);
+    setConfirmAccept(null);
+  };
+
+  const StudentCard = ({ student }) => (
+    <div
+      style={{
+        border: '1px solid #ddd',
+        padding: '10px',
+        marginBottom: '10px',
+        borderRadius: '5px',
+      }}
+    >
+      <p>
+        <strong>Student Name:</strong> {student.studentName}
+      </p>
+      <p>
+        <strong>Course Name:</strong> {student.courseName}
+      </p>
+      <button
+        style={buttonStyle('#007bff', '#0056b3')}
+        onClick={() => handleViewProfile(student)}
+      >
+        View Profile
+      </button>
+      <button
+        style={{ ...buttonStyle('#28a745', '#218838'), marginLeft: '10px' }}
+        onClick={() => handleAccept(student)}
+      >
+        Accept <FaCheckCircle />
+      </button>
+    </div>
+  );
+
+  const buttonStyle = (color, hoverColor) => ({
+    padding: '10px',
+    border: 'none',
+    borderRadius: '5px',
+    backgroundColor: color,
+    color: '#fff',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px',
+    marginBottom: '10px',
+    onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = hoverColor),
+    onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = color),
+  });
+
   return (
-    <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
-      <ToastContainer /> {/* Toast container for displaying notifications */}
+    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+      <ToastContainer />
       <h1>Students Who Chose You as a Tutor</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {students.length === 0 ? (
         <p>No students have selected you yet.</p>
       ) : (
-        <div>
-          {students.map((student) => (
-            <div key={student.id} style={{ border: "1px solid #ddd", padding: "10px", marginBottom: "10px", borderRadius: "5px" }}>
-              <p><strong>Student Name:</strong> {student.studentName}</p>
-              <p><strong>Course Name:</strong> {student.courseName}</p>
-              <button
-                style={{
-                  padding: "10px",
-                  border: "none",
-                  borderRadius: "5px",
-                  backgroundColor: "#28a745",
-                  color: "#fff",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "5px",
-                  transition: "background-color 0.3s",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#218838")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#28a745")
-                }
-                onClick={() => handleAccept(student)}
-              >
-                Accept <FaCheckCircle style={{ fontSize: "16px" }} />
-              </button>
-            </div>
-          ))}
-        </div>
+        students.map((student) => <StudentCard key={student.id} student={student} />)
+      )}
+      {selectedStudent && (
+        <Modal isOpen={!!selectedStudent} onRequestClose={closeModal}>
+          <h2>Student Information</h2>
+          <p>
+            <strong>Student Name:</strong> {selectedStudent.studentName}
+          </p>
+          <p>
+            <strong>Course Name:</strong> {selectedStudent.courseName}
+          </p>
+          <p>
+            <strong>Student Username:</strong> {selectedStudent.studentUsername}
+          </p>
+          <p>
+            <strong>Tutor ID:</strong> {selectedStudent.tutorId}
+          </p>
+          <button onClick={closeModal}>Close</button>
+        </Modal>
+      )}
+      {confirmAccept && (
+        <Modal isOpen={!!confirmAccept} onRequestClose={closeModal}>
+          <h2>Confirm Accept Student</h2>
+          <p>
+            Are you sure you want to accept{' '}
+            <strong>{confirmAccept.studentName}</strong>?
+          </p>
+          <button onClick={confirmAcceptStudent}>Yes</button>
+          <button onClick={closeModal}>No</button>
+        </Modal>
       )}
     </div>
   );

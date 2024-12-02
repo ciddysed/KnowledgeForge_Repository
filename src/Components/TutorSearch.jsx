@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import { connectWebSocket, sendNotification, subscribeToTutorAcceptance } from './WebSocket';
 
 // Define subscribeToStudentNotifications
@@ -11,6 +12,8 @@ const TutorSearch = () => {
   const [tutors, setTutors] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('All');
   const [filteredTutors, setFilteredTutors] = useState([]);
+  const [selectedTutor, setSelectedTutor] = useState(null);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const fetchTutors = async () => {
@@ -96,6 +99,13 @@ const TutorSearch = () => {
         alert("Failed to save your selection. Please try again.");
       } else {
         alert("Your selection has been saved successfully.");
+        // Remove the chosen tutor from the list
+        setTutors(tutors.filter(t => t.tutorID !== tutor.tutorID));
+        setFilteredTutors(filteredTutors.filter(t => t.tutorID !== tutor.tutorID));
+        // Store the selected tutor in local storage
+        localStorage.setItem('bookedTutor', JSON.stringify(tutor));
+        // Navigate to the tutor chat page
+        navigate(`/tutorChat/${studentUsername}`);
       }
     })
     .catch(error => {
@@ -117,6 +127,14 @@ const TutorSearch = () => {
       }
       console.error("Error config:", error.config);
     });
+  };
+
+  const handleViewProfile = (tutor) => {
+    setSelectedTutor(tutor);
+  };
+
+  const closeModal = () => {
+    setSelectedTutor(null);
   };
 
   const courseMajors = ["All", ...new Set(tutors.map((tutor) => tutor.courseMajor))];
@@ -188,6 +206,39 @@ const TutorSearch = () => {
     buttonHover: {
       backgroundColor: "#1565c0",
     },
+    modal: {
+      position: "fixed",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: "#fff",
+      padding: "20px",
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+      zIndex: 1000,
+      borderRadius: "10px",
+      maxWidth: "500px",
+      width: "100%",
+    },
+    overlay: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      zIndex: 999,
+    },
+    closeButton: {
+      backgroundColor: "#f44336",
+      color: "#fff",
+      border: "none",
+      borderRadius: "5px",
+      padding: "10px",
+      cursor: "pointer",
+      fontWeight: "bold",
+      textAlign: "center",
+      marginTop: "10px",
+    },
   };
 
   return (
@@ -236,9 +287,32 @@ const TutorSearch = () => {
             >
               Choose
             </button>
+            <button
+              style={styles.button}
+              onClick={() => handleViewProfile(tutor)}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = styles.buttonHover.backgroundColor)}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#1e88e5")}
+            >
+              View Profile
+            </button>
           </div>
         ))}
       </div>
+
+      {selectedTutor && (
+        <>
+          <div style={styles.overlay} onClick={closeModal}></div>
+          <div style={styles.modal}>
+            <h2>{selectedTutor.tutorName}</h2>
+            <p><strong>Email:</strong> {selectedTutor.email}</p>
+            <p><strong>Course Major:</strong> {selectedTutor.courseMajor}</p>
+            <p><strong>Degrees:</strong> {selectedTutor.degrees}</p>
+            <p><strong>Experience:</strong> {selectedTutor.experience}</p>
+            <p><strong>Bio:</strong> {selectedTutor.bio}</p>
+            <button style={styles.closeButton} onClick={closeModal}>Close</button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

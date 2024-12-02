@@ -21,4 +21,8 @@ public class StudentSelectionService {
     public List<StudentSelection> getStudentsByTutor(String tutorUsername) {
         return studentSelectionRepository.findByTutorUsername(tutorUsername);
     }
+
+    public List<StudentSelection> getTutorsByStudent(String studentUsername) {
+        return studentSelectionRepository.findTutorsByStudentUsername(studentUsername);
+    }
 }

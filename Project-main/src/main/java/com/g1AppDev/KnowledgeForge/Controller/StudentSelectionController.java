@@ -33,6 +33,12 @@ public class StudentSelectionController {
         return studentSelectionService.getStudentsByTutor(tutorUsername);
     }
 
+    // Endpoint to get tutors chosen by a specific student
+    @GetMapping("/student/{studentUsername}")
+    public List<StudentSelection> getTutorsForStudent(@PathVariable String studentUsername) {
+        return studentSelectionService.getTutorsByStudent(studentUsername);
+    }
+
     @PostMapping("/select")
     public ResponseEntity<StudentSelection> selectTutor(@RequestBody StudentSelection studentSelection) {
         logger.info("Received student selection request: {}", studentSelection);

@@ -21,6 +21,14 @@ export const connectWebSocket = (onConnectedCallback) => {
     });
 };
 
+export const disconnectWebSocket = () => {
+    if (stompClient !== null) {
+        stompClient.disconnect(() => {
+            console.log('WebSocket disconnected');
+        });
+    }
+};
+
 // Function to send a message from a specific student to a specific tutor
 export const sendNotification = (tutorUsername, studentMessage) => {
     if (stompClient && stompClient.connected) {
@@ -47,6 +55,10 @@ export const subscribeToTutorNotifications = (tutorUsername, callback) => {
 
 // Function to subscribe to notifications for a specific student
 export const subscribeToStudentNotifications = (studentUsername, callback) => {
+    if (!studentUsername) {
+        console.error("Student username is undefined. Cannot subscribe to notifications.");
+        return;
+    }
     if (stompClient && stompClient.connected) {
         console.log(`Subscribing to notifications for student: ${studentUsername}`);
         const destination = `/topic/notification/student/${studentUsername}`;

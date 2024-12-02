@@ -47,10 +47,6 @@ const LoginTutor = () => {
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
-
   return (
     <div className="login-tutor-container">
       <h1 className="login-tutor-header">Login as Tutor</h1>
