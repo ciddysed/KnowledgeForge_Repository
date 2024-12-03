@@ -25,4 +25,8 @@ public class StudentSelectionService {
     public List<StudentSelection> getTutorsByStudent(String studentUsername) {
         return studentSelectionRepository.findTutorsByStudentUsername(studentUsername);
     }
+
+    public void deleteStudentSelectionByTutorId(Long tutorId) {
+        studentSelectionRepository.deleteByTutorId(tutorId);
+    }
 }

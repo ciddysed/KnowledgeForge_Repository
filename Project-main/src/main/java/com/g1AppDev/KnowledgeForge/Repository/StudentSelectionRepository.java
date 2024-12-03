@@ -16,4 +16,6 @@ public interface StudentSelectionRepository extends JpaRepository<StudentSelecti
 
     List<StudentSelection> findTutorsByStudentUsername(String studentUsername);
 
+    void deleteByTutorId(Long tutorId);
+
 }

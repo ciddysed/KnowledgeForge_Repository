@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,6 +50,17 @@ public class StudentSelectionController {
         } catch (Exception e) {
             logger.error("Error saving student selection", e);
             return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @DeleteMapping("/cancel/{tutorId}")
+    public ResponseEntity<Void> cancelBooking(@PathVariable Long tutorId) {
+        try {
+            studentSelectionService.deleteStudentSelectionByTutorId(tutorId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            logger.error("Error canceling booking", e);
+            return ResponseEntity.status(500).build();
         }
     }
 }

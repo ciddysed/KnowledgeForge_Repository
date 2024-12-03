@@ -9,7 +9,7 @@ import {
   sendNotification,
   subscribeToTutorAcceptance,
   subscribeToTutorNotifications,
-} from './WebSocket';
+} from '../WebSocket';
 
 Modal.setAppElement('#root');
 

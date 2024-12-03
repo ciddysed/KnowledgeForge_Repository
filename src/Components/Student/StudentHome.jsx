@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { FaSearch, FaUserFriends } from "react-icons/fa"; // Add FaUserFriends icon
+import { FaEnvelope, FaSearch, FaUserFriends } from "react-icons/fa"; // Add FaEnvelope icon
 import { Link, useNavigate } from "react-router-dom";
-import BannerBackground from "../Assets/home-banner-background.png";
-import BannerImage from "../Assets/home-banner-image.png";
-import { subscribeToStudentNotifications } from './WebSocket';
+import homeBannerBackground from '../../Assets/home-banner-background.png';
+import homeBannerImage from '../../Assets/home-banner-image.png';
+import { subscribeToStudentNotifications } from '../WebSocket';
 
 const connectWebSocket = (callback) => {
   // WebSocket connection logic here
@@ -47,11 +47,15 @@ const StudentHome = () => {
     navigate('/bookedTutors');
   };
 
+  const handleMessages = () => {
+    navigate('/selectedTutors');
+  };
+
   return (
     <div className="home-container">
       <div className="home-banner-container">
         <div className="home-bannerImage-container">
-          <img src={BannerBackground} alt="" />
+          <img src={homeBannerBackground} alt="" />
         </div>
         <div className="home-text-section">
           <h1 className="primary-heading">
@@ -80,6 +84,23 @@ const StudentHome = () => {
               <FaUserFriends className="link-icon" style={{ marginRight: '8px' }} />
               Booked Tutors
             </button>
+            <button
+              onClick={handleMessages}
+              className="management-link creative-link"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginTop: '10px',
+                padding: '10px 20px',
+                color: '#3498db', // Match the text color with Search Tutors button
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
+              <FaEnvelope className="link-icon" style={{ marginRight: '8px' }} />
+              Messages
+            </button>
           </div>
           <div style={{ marginTop: '20px' }}>
             <button
@@ -98,7 +119,7 @@ const StudentHome = () => {
           </div>
         </div>
         <div className="home-image-section">
-          <img src={BannerImage} alt="" />
+          <img src={homeBannerImage} alt="" />
         </div>
       </div>
     </div>

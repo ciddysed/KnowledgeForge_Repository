@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./BookedTutors.css"; // Import CSS file
 
 const BookedTutors = ({ studentUsername }) => {
   const [bookedTutors, setBookedTutors] = useState([]);
@@ -32,33 +33,45 @@ const BookedTutors = ({ studentUsername }) => {
     navigate("/studentHome");
   };
 
+  const handleConnect = (tutorUsername) => {
+    if (window.confirm("Do you want to connect with this tutor?")) {
+      navigate(`/chat/${tutorUsername}`);
+    }
+  };
+
+  const handleCancelBooking = async (tutorId) => {
+    if (window.confirm("Are you sure you want to cancel this booking?")) {
+      try {
+        await axios.delete(`http://localhost:8080/api/notifications/cancel/${tutorId}`);
+        setBookedTutors(bookedTutors.filter(tutor => tutor.tutorId !== tutorId));
+      } catch (error) {
+        console.error("Error canceling booking:", error);
+      }
+    }
+  };
+
   return (
     <div className="booked-tutors-container">
       <h1>Booked Tutors</h1>
       {bookedTutors.length > 0 ? (
-        <ul>
+        <ul className="tutors-list">
           {bookedTutors.map((tutor, index) => (
-            <li key={index}>
-              <strong>Tutor Name:</strong> {tutor.tutorUsername} <br />
-              <strong>Details:</strong> Tutor ID: {tutor.tutorId}
+            <li key={index} className="tutor-item">
+              <div className="tutor-info">
+                <strong>Tutor Name:</strong> {tutor.tutorUsername} <br />
+                <strong>Details:</strong> Tutor ID: {tutor.tutorId}
+              </div>
+              <div className="tutor-actions">
+                <button className="connect-button" onClick={() => handleConnect(tutor.tutorUsername)}>Connect</button>
+                <button className="cancel-button" onClick={() => handleCancelBooking(tutor.tutorId)}>Cancel Booking</button>
+              </div>
             </li>
           ))}
         </ul>
       ) : (
         <p>No tutors booked yet.</p>
       )}
-      <button
-        onClick={handleBack}
-        style={{
-          padding: "10px 20px",
-          backgroundColor: "#3498db",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-          marginTop: "20px",
-        }}
-      >
+      <button className="back-button" onClick={handleBack}>
         Back to Home
       </button>
     </div>

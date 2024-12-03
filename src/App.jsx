@@ -1,30 +1,30 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import About from "./Components/About";
-import Contact from "./Components/Contact";
 import CourseManagement from "./Components/CourseManagement";
+import About from "./Components/Navigation/About";
+import Contact from "./Components/Navigation/Contact";
 // import Footer from "./Components/Footer";
-import BookedTutors from "./Components/BookedTutors";
-import Chat from "./Components/Chat";
-import Home from "./Components/Home";
+import Chat from "./Components/Chat/Chat";
 import Home1 from "./Components/Home1";
 import Home2 from "./Components/Home2";
 import LoginPage from "./Components/LoginPage";
-import LoginStudent from "./Components/LoginStudent";
-import LoginTutor from "./Components/LoginTutor";
 import ModuleManagement from "./Components/ModuleManagement";
-import Navbar from "./Components/Navbar";
-import Notifications from './Components/Notifications';
+import Home from "./Components/Navigation/Home";
+import Navbar from "./Components/Navigation/Navbar";
+import Testimonial from "./Components/Navigation/Testimonial";
 import QuizManagement from "./Components/QuizManagement";
-import RegisterStudent from "./Components/RegisterStudent";
-import RegisterTutor from "./Components/RegisterTutor";
-import StudentHome from './Components/StudentHome';
-import Students from "./Components/Students";
-import Testimonial from "./Components/Testimonial";
+import BookedTutors from "./Components/Student/BookedTutors";
+import LoginStudent from "./Components/Student/LoginStudent";
+import RegisterStudent from "./Components/Student/RegisterStudent";
+import StudentHome from './Components/Student/StudentHome';
 import TopicManagement from "./Components/TopicManagement";
-import TutorChat from "./Components/TutorChat";
-import TutorProfile from "./Components/TutorProfile";
-import Search from "./Components/TutorSearch";
+import LoginTutor from "./Components/TutorSpecific/LoginTutor";
+import Notifications from './Components/TutorSpecific/Notifications';
+import RegisterTutor from "./Components/TutorSpecific/RegisterTutor";
+import Students from "./Components/TutorSpecific/Students";
+
+import TutorProfile from "./Components/Student/TutorProfile";
+import Search from "./Components/Student/TutorSearch";
 import TutorCourse from './Components/TutorSpecific/TutorCourse';
 import TutorHome from './Components/TutorSpecific/TutorHome';
 import TutorTopic from "./Components/TutorSpecific/TutorTopic";
@@ -62,7 +62,7 @@ function App() {
         <Route path="/studentHome" element={<StudentHome />} />
         <Route path="/bookedTutors" element={<BookedTutors />} />
         <Route path="/chat/:studentUsername" element={<Chat />} />
-        <Route path="/tutorChat/:tutorUsername" element={<TutorChat />} />
+        
 
       </Routes>
       {/* <Footer /> */}

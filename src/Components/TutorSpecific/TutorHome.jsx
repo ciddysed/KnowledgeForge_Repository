@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { FaBell, FaBook, FaClipboardList, FaComments, FaSignOutAlt } from 'react-icons/fa'; // Import icons
 import { Link, useNavigate } from 'react-router-dom';
+import homeBannerBackground from '../../Assets/home-banner-background.png';
+import homeBannerImage from '../../Assets/home-banner-image.png';
 import { subscribeToTutorNotifications } from '../WebSocket'; // Import WebSocket helper
 
 const TutorHome = () => {
@@ -49,51 +52,55 @@ const TutorHome = () => {
   };
 
   return (
-    <div>
-      <h1>Welcome, {username}</h1>
-      <button onClick={handleLogout}>Logout</button>
-      <div style={{ marginTop: '20px' }}>
-        <Link
-          to="/tutorCourse"
-          style={{
-            padding: '10px 20px',
-            backgroundColor: '#3498db',
-            color: 'white',
-            textDecoration: 'none',
-            borderRadius: '4px',
-            marginRight: '10px',
-          }}
-        >
-          Manage Your Courses
-        </Link>
-        <Link
-          to="/tutorTopic"
-          style={{
-            padding: '10px 20px',
-            backgroundColor: '#3498db',
-            color: 'white',
-            textDecoration: 'none',
-            borderRadius: '4px',
-          }}
-        >
-          Manage Your Topics
-        </Link>
-      </div>
+    <div className="home-container">
+      <div className="home-banner-container">
+        <div className="home-bannerImage-container">
+          <img src={homeBannerBackground} alt="" />
+        </div>
+        <div className="home-text-section">
+          <h1 className="primary-heading">
+            {username && <p>Welcome, {username}!</p>}
+          </h1>
 
-      {/* Notification Button */}
-      <div style={{ marginTop: '20px' }}>
-        <Link
-          to="/notifications"
-          style={{
-            padding: '10px 20px',
-            backgroundColor: '#e67e22',
-            color: 'white',
-            textDecoration: 'none',
-            borderRadius: '4px',
-          }}
-        >
-          Notifications ({notifications.length})
-        </Link>
+          <div className="management-links">
+            <h2 className="management-heading">Management Pages</h2>
+            <Link to="/tutorCourse" className="management-link creative-link">
+              <FaBook className="link-icon" />
+              Manage Your Courses
+            </Link>
+            <Link to="/tutorTopic" className="management-link creative-link">
+              <FaClipboardList className="link-icon" />
+              Manage Your Topics
+            </Link>
+            <Link to="/notifications" className="management-link creative-link">
+              <FaBell className="link-icon" />
+              Notifications ({notifications.length})
+            </Link>
+            <Link to="/chat" className="management-link creative-link">
+              <FaComments className="link-icon" />
+              Messages
+            </Link>
+          </div>
+          <div style={{ marginTop: '20px' }}>
+            <button
+              onClick={handleLogout}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#e74c3c',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
+              <FaSignOutAlt style={{ marginRight: '8px' }} />
+              Logout
+            </button>
+          </div>
+        </div>
+        <div className="home-image-section">
+          <img src={homeBannerImage} alt="" />
+        </div>
       </div>
     </div>
   );

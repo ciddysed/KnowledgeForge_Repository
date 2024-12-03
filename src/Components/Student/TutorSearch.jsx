@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import { connectWebSocket, sendNotification, subscribeToTutorAcceptance } from './WebSocket';
+import { connectWebSocket, sendNotification, subscribeToTutorAcceptance } from '../WebSocket';
 
 // Define subscribeToStudentNotifications
 const subscribeToStudentNotifications = (username, callback) => {
@@ -105,7 +105,7 @@ const TutorSearch = () => {
         // Store the selected tutor in local storage
         localStorage.setItem('bookedTutor', JSON.stringify(tutor));
         // Navigate to the tutor chat page
-        navigate(`/tutorChat/${studentUsername}`);
+        navigate(`/chat/${studentUsername}`);
       }
     })
     .catch(error => {

@@ -59,20 +59,24 @@ export const subscribeToStudentNotifications = (studentUsername, callback) => {
         console.error("Student username is undefined. Cannot subscribe to notifications.");
         return;
     }
-    if (stompClient && stompClient.connected) {
-        console.log(`Subscribing to notifications for student: ${studentUsername}`);
-        const destination = `/topic/notification/student/${studentUsername}`;
-        stompClient.subscribe(destination, (message) => {
-            const parsedMessage = JSON.parse(message.body);
-            callback(parsedMessage); // Pass parsed message to callback
-        });
-    } else {
+    if (!stompClient || !stompClient.connected) {
         console.error("WebSocket is not connected. Cannot subscribe to notifications.");
+        return;
     }
+    console.log(`Subscribing to notifications for student: ${studentUsername}`);
+    const destination = `/topic/notification/student/${studentUsername}`;
+    stompClient.subscribe(destination, (message) => {
+        const parsedMessage = JSON.parse(message.body);
+        callback(parsedMessage); // Pass parsed message to callback
+    });
 };
 
 // Function to subscribe to tutor acceptance notifications for a specific student
 export const subscribeToTutorAcceptance = (studentUsername, callback) => {
+  if (!studentUsername) {
+    console.error("Student username is undefined. Cannot subscribe to tutor acceptance notifications.");
+    return;
+  }
   if (stompClient && stompClient.connected) {
     console.log(`Subscribing to tutor acceptance notifications for student: ${studentUsername}`);
     const destination = `/topic/acceptance/${studentUsername}`;
