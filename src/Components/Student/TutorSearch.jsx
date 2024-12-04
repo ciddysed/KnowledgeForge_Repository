@@ -1,8 +1,7 @@
+import { Backdrop, Button, Fade, Modal } from '@mui/material'; // Material-UI components for modal and animations
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { connectWebSocket, subscribeToTutorAcceptance } from '../WebSocket';
-import { Modal, Backdrop, Fade, Button } from '@mui/material'; // Material-UI components for modal and animations
 import './TutorSearch.css'; // External CSS file for custom styling
 
 const TutorSearch = () => {
@@ -11,7 +10,6 @@ const TutorSearch = () => {
   const [filteredTutors, setFilteredTutors] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState(null); // Tutor whose profile is open
   const [confirmationTutor, setConfirmationTutor] = useState(null); // Tutor to confirm selection
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTutors = async () => {
@@ -56,7 +54,7 @@ const TutorSearch = () => {
     }
 
     try {
-      const response = await axios.post(`http://localhost:8080/api/notifications/select`, {
+      await axios.post(`http://localhost:8080/api/notifications/select`, {
         studentUsername: loggedInUser.username,
         tutorUsername: confirmationTutor.username,
         tutorId: confirmationTutor.tutorID,
@@ -67,7 +65,7 @@ const TutorSearch = () => {
       setFilteredTutors(filteredTutors.filter((t) => t.tutorID !== confirmationTutor.tutorID));
       localStorage.setItem('bookedTutor', JSON.stringify(confirmationTutor));
       setConfirmationTutor(null);
-      navigate(`/chat/${loggedInUser.username}`);
+      // Removed redirection to chat
     } catch (error) {
       console.error('Error saving tutor selection:', error);
       alert('Failed to save your selection. Please try again.');

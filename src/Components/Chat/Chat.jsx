@@ -6,24 +6,34 @@ import './Chat.css';
 
 const Chat = () => {
   const { studentUsername } = useParams();
-  const [messages, setMessages] = useState(() => {
-    const savedMessages = localStorage.getItem('chatMessages');
-    return savedMessages ? JSON.parse(savedMessages) : [];
-  });
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [tutorUsername, setTutorUsername] = useState('');
+  const [privateChats, setPrivateChats] = useState(new Map());
+  const [notifications, setNotifications] = useState([]);
   const chatEndRef = useRef(null);
   const stompClientRef = useRef(null);
 
-  // Function to handle successful connection
   const onConnected = useCallback(() => {
     stompClientRef.current.subscribe(
       `/user/${studentUsername}/private`,
       onMessageReceived
     );
+    stompClientRef.current.subscribe(
+      `/user/${tutorUsername}/private`,
+      onMessageReceived
+    );
+    stompClientRef.current.subscribe(
+      `/user/${studentUsername}/notification`,
+      onNotification
+    );
+    stompClientRef.current.subscribe(
+      `/user/${tutorUsername}/notification`,
+      onNotification
+    );
     console.log('WebSocket connected');
-  }, [studentUsername]);
+  }, [studentUsername, tutorUsername]);
 
-  // Function to connect to WebSocket
   const connectWebSocket = useCallback(() => {
     const Sock = new SockJS('http://localhost:8080/ws');
     stompClientRef.current = over(Sock);
@@ -32,35 +42,44 @@ const Chat = () => {
     });
   }, [onConnected]);
 
-  // Function to handle incoming messages
   const onMessageReceived = (payload) => {
     try {
       const payloadData = JSON.parse(payload.body);
-
       const message = {
         sender: payloadData.senderName || 'Unknown',
         content: payloadData.message || '',
         timestamp: payloadData.timestamp || new Date().toISOString(),
         isReply: payloadData.isReply || false,
         isImage: payloadData.isImage || false,
+        isCrossMessage: payloadData.isCrossMessage || false,
       };
 
-      setMessages((prevMessages) => {
-        const updatedMessages = [...prevMessages, message];
-        localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
-        return updatedMessages;
-      });
+      if (payloadData.receiverName === studentUsername) {
+        setPrivateChats((prevChats) => {
+          const updatedChats = new Map(prevChats);
+          const senderMessages = updatedChats.get(payloadData.senderName) || [];
+          senderMessages.push(message);
+          updatedChats.set(payloadData.senderName, senderMessages);
+          return updatedChats;
+        });
+        setNotifications((prev) => [...prev, `New private message from ${payloadData.senderName}`]);
+      } else {
+        setMessages((prevMessages) => [...prevMessages, message]);
+      }
     } catch (error) {
       console.error('Error parsing message payload:', error);
     }
   };
 
-  // Auto-scroll to the latest message
+  const onNotification = (payload) => {
+    const notification = payload.body;
+    setNotifications((prev) => [...prev, notification]);
+  };
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, privateChats]);
 
-  // Initialize WebSocket connection
   useEffect(() => {
     if (!studentUsername) {
       alert('Student username is required!');
@@ -75,14 +94,13 @@ const Chat = () => {
     };
   }, [connectWebSocket, studentUsername]);
 
-  // Handle sending a message
   const handleSendMessage = () => {
     const trimmedMessage = newMessage.trim();
     if (!trimmedMessage) return;
 
     const message = {
-      senderName: 'tutor',
-      receiverName: studentUsername,
+      senderName: studentUsername,
+      receiverName: tutorUsername,
       message: trimmedMessage,
       status: 'MESSAGE',
       isReply: false,
@@ -91,18 +109,23 @@ const Chat = () => {
     };
 
     stompClientRef.current.send(
-      '/app/private-message',
+      `/app/private-message`,
       {},
       JSON.stringify(message)
     );
 
-    setMessages((prevMessages) => {
-      const updatedMessages = [...prevMessages, message];
-      localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
-      return updatedMessages;
+    setPrivateChats((prevChats) => {
+      const updatedChats = new Map(prevChats);
+      const tutorMessages = updatedChats.get(tutorUsername) || [];
+      tutorMessages.push(message);
+      updatedChats.set(tutorUsername, tutorMessages);
+      return updatedChats;
     });
 
     setNewMessage('');
+    setTimeout(() => {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   const formatTimestamp = (timestamp) => {
@@ -119,7 +142,7 @@ const Chat = () => {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`chat-message ${msg.sender === 'tutor' ? 'tutor-message' : 'student-message'} ${msg.isReply ? 'reply-message' : ''}`}
+            className={`chat-message ${msg.isCrossMessage ? 'cross-message' : msg.sender === tutorUsername ? 'tutor-message' : 'student-message'} ${msg.isReply ? 'reply-message' : ''}`}
           >
             <div className="message-details">
               <span className="message-sender">{msg.sender}</span>

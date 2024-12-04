@@ -54,6 +54,12 @@ const BookedTutors = () => {
     }
   };
 
+  const isSentMessage = (message) => {
+    // Assuming 'message' has a property 'sentBy' to determine if it's sent or received
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    return message.sentBy === loggedInUser.username;
+  };
+
   return (
     <div className="booked-tutors-container">
       <h1>Booked Tutors</h1>
@@ -61,7 +67,7 @@ const BookedTutors = () => {
         <ul className="tutors-list">
           {bookedTutors.map((tutor, index) => (
             <li key={index} className="tutor-item">
-              <div className="tutor-info">
+              <div className={`tutor-info ${isSentMessage(tutor) ? 'sent-message' : 'received-message'}`}>
                 <strong>Tutor Name:</strong> {tutor.tutorUsername} <br />
                 <strong>Details:</strong> Tutor ID: {tutor.tutorId}
               </div>
