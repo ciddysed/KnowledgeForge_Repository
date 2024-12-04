@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -19,6 +19,7 @@ const Notifications = () => {
   const [error, setError] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [confirmAccept, setConfirmAccept] = useState(null);
+  const [confirmDecline, setConfirmDecline] = useState(null);
   const ws = useRef(null);
   const navigate = useNavigate();
 
@@ -82,10 +83,26 @@ const Notifications = () => {
 
       toast.success(`Student ${confirmAccept.studentName} accepted.`);
       setConfirmAccept(null);
+      setStudents((prev) => prev.filter((s) => s.id !== confirmAccept.id));
       navigate(`/chat/${confirmAccept.studentUsername}`);
     } catch (error) {
       console.error('Error sending acceptance notification:', error);
       toast.error('Failed to send acceptance notification.');
+    }
+  };
+
+  const handleDecline = (student) => setConfirmDecline(student);
+
+  const confirmDeclineStudent = async () => {
+    if (!confirmDecline) return;
+
+    try {
+      toast.info(`Student ${confirmDecline.studentName} declined.`);
+      setConfirmDecline(null);
+      setStudents((prev) => prev.filter((s) => s.id !== confirmDecline.id));
+    } catch (error) {
+      console.error('Error declining student:', error);
+      toast.error('Failed to decline student.');
     }
   };
 
@@ -94,40 +111,51 @@ const Notifications = () => {
   const closeModal = () => {
     setSelectedStudent(null);
     setConfirmAccept(null);
+    setConfirmDecline(null);
   };
 
   const StudentCard = ({ student }) => (
-    <div
-      style={{
-        border: '1px solid #ddd',
-        padding: '10px',
-        marginBottom: '10px',
-        borderRadius: '5px',
-      }}
-    >
+    <div style={cardStyle}>
       <p>
         <strong>Student Name:</strong> {student.studentName}
       </p>
       <p>
-        <strong>Course Name:</strong> {student.courseName}
+        <strong>Course-Year:</strong> {student.courseYear}
       </p>
-      <button
-        style={buttonStyle('#007bff', '#0056b3')}
-        onClick={() => handleViewProfile(student)}
-      >
-        View Profile
-      </button>
-      <button
-        style={{ ...buttonStyle('#28a745', '#218838'), marginLeft: '10px' }}
-        onClick={() => handleAccept(student)}
-      >
-        Accept <FaCheckCircle />
-      </button>
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <button
+          style={buttonStyle('#007bff', '#0056b3')}
+          onClick={() => handleViewProfile(student)}
+        >
+          View Profile
+        </button>
+        <button
+          style={buttonStyle('#28a745', '#218838')}
+          onClick={() => handleAccept(student)}
+        >
+          Accept <FaCheckCircle />
+        </button>
+        <button
+          style={buttonStyle('#dc3545', '#c82333')}
+          onClick={() => handleDecline(student)}
+        >
+          Decline <FaTimesCircle />
+        </button>
+      </div>
     </div>
   );
 
+  const cardStyle = {
+    border: '1px solid #ddd',
+    padding: '20px',
+    marginBottom: '10px',
+    borderRadius: '10px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#fff',
+  };
+
   const buttonStyle = (color, hoverColor) => ({
-    padding: '10px',
+    padding: '10px 15px',
     border: 'none',
     borderRadius: '5px',
     backgroundColor: color,
@@ -138,14 +166,14 @@ const Notifications = () => {
     alignItems: 'center',
     gap: '5px',
     marginBottom: '10px',
-    onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = hoverColor),
-    onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = color),
   });
 
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
       <ToastContainer />
-      <h1>Students Who Chose You as a Tutor</h1>
+      <h1 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>
+        Students Who Chose You as a Tutor
+      </h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {students.length === 0 ? (
         <p>No students have selected you yet.</p>
@@ -159,15 +187,14 @@ const Notifications = () => {
             <strong>Student Name:</strong> {selectedStudent.studentName}
           </p>
           <p>
-            <strong>Course Name:</strong> {selectedStudent.courseName}
+            <strong>Course Year:</strong> {selectedStudent.courseYear}
           </p>
           <p>
             <strong>Student Username:</strong> {selectedStudent.studentUsername}
           </p>
-          <p>
-            <strong>Tutor ID:</strong> {selectedStudent.tutorId}
-          </p>
-          <button onClick={closeModal}>Close</button>
+          <button style={buttonStyle('#007bff', '#0056b3')} onClick={closeModal}>
+            Close
+          </button>
         </Modal>
       )}
       {confirmAccept && (
@@ -177,8 +204,27 @@ const Notifications = () => {
             Are you sure you want to accept{' '}
             <strong>{confirmAccept.studentName}</strong>?
           </p>
-          <button onClick={confirmAcceptStudent}>Yes</button>
-          <button onClick={closeModal}>No</button>
+          <button style={buttonStyle('#28a745', '#218838')} onClick={confirmAcceptStudent}>
+            Yes
+          </button>
+          <button style={buttonStyle('#dc3545', '#c82333')} onClick={closeModal}>
+            No
+          </button>
+        </Modal>
+      )}
+      {confirmDecline && (
+        <Modal isOpen={!!confirmDecline} onRequestClose={closeModal}>
+          <h2>Confirm Decline Student</h2>
+          <p>
+            Are you sure you want to decline{' '}
+            <strong>{confirmDecline.studentName}</strong>?
+          </p>
+          <button style={buttonStyle('#dc3545', '#c82333')} onClick={confirmDeclineStudent}>
+            Yes
+          </button>
+          <button style={buttonStyle('#28a745', '#218838')} onClick={closeModal}>
+            No
+          </button>
         </Modal>
       )}
     </div>
