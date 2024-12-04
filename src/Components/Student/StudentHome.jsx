@@ -102,21 +102,6 @@ const StudentHome = () => {
               Messages
             </button>
           </div>
-          <div style={{ marginTop: '20px' }}>
-            <button
-              onClick={handleLogout}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#e74c3c',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              Logout
-            </button>
-          </div>
         </div>
         <div className="home-image-section">
           <img src={homeBannerImage} alt="" />

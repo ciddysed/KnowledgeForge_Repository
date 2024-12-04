@@ -29,6 +29,26 @@ nav {
   justify-content: space-between;
   min-height: 90px;
 }
+.navbarStudent-links-container {
+  display: flex; /* Ensures it behaves like navbar-links-container */
+  justify-content: center; /* Center the links horizontally */
+  align-items: center; /* Vertically align items */
+  margin-left: 1350px;
+  text-decoration: none;
+  color: black;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.navbarStudent-links-container a {
+  margin-right: 75px; /* Same spacing as navbar links */
+  text-decoration: none;
+  color: black;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.navbarStudent-links-container a:hover {
+  color: #00008b; /* Optionally add hover effect */
+}
 .navbar-menu-container {
   display: none;
 }

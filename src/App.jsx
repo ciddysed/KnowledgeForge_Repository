@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import CourseManagement from "./Components/CourseManagement";
 import About from "./Components/Navigation/About";
@@ -11,6 +11,8 @@ import LoginPage from "./Components/LoginPage";
 import ModuleManagement from "./Components/ModuleManagement";
 import Home from "./Components/Navigation/Home";
 import Navbar from "./Components/Navigation/Navbar";
+import NavbarStudent from "./Components/NavbarStudent";
+import NavbarTutor from "./Components/NavbarTutor";
 import Testimonial from "./Components/Navigation/Testimonial";
 import QuizManagement from "./Components/QuizManagement";
 import BookedTutors from "./Components/Student/BookedTutors";
@@ -32,9 +34,37 @@ import Work from "./Components/Work";
 
 
 function App() {
+  const location = useLocation();
+
+  // Conditional Navbar rendering
+  const getNavbar = () => {
+    if (location.pathname === "/" 
+      || location.pathname === "/LoginPage" 
+      || location.pathname === "/loginStudent"
+      || location.pathname === "/loginTutor"
+      || location.pathname === "/registerStudent"
+      || location.pathname === "/RegisterTutor"
+      || location.pathname === "/about"
+      || location.pathname === "/work"
+      || location.pathname === "/testimonial"
+      || location.pathname === "/contact") {
+      return <Navbar />; // Navbar only for Home.jsx
+    }
+    if (location.pathname === "/studentHome" 
+      || location.pathname === "/Search") {
+      return <NavbarStudent />; // NavbarStudent for Home1 and Students
+    }
+    if (location.pathname === "/tutorHome"
+      || location.pathname === "/tutorCourse"
+      || location.pathname === "/tutorTopic") {
+      return <NavbarTutor />; // NavbarTutor for Home2
+    }
+    return null; // No Navbar for other components
+  };
+
   return (
     <div className="App">
-      <Navbar />
+      {getNavbar()}
       <Routes>
         <Route path="/LoginPage" element={<LoginPage />} />
         <Route path="/" element={<Home />} />

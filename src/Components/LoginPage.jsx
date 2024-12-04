@@ -8,7 +8,7 @@ const LoginPage = () => {
         <div className="login-page">
             <h2>Are you a Student or Tutor?</h2>
             <button onClick={() => navigate('/loginStudent')} className="login-button">Login as Student</button>
-            <button onClick={() => navigate('/LoginTutor')} className="login-button">Login as Tutor</button>
+            <button onClick={() => navigate('/loginTutor')} className="login-button">Login as Tutor</button>
         </div>
     );
 };
