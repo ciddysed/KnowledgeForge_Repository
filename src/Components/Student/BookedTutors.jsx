@@ -3,11 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./BookedTutors.css"; // Import CSS file
 
-const BookedTutors = ({ studentUsername }) => {
+const BookedTutors = () => {
   const [bookedTutors, setBookedTutors] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Retrieve the logged-in student's username from localStorage
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    const studentUsername = loggedInUser?.username;
+
     // Fetch booked tutors data for the specific student
     const fetchBookedTutors = async () => {
       try {
@@ -22,12 +26,12 @@ const BookedTutors = ({ studentUsername }) => {
       fetchBookedTutors();
     }
 
-    // Retrieve the selected tutor from local storage
+    // Retrieve the selected tutor from localStorage
     const bookedTutor = JSON.parse(localStorage.getItem('bookedTutor'));
     if (bookedTutor) {
       setBookedTutors([bookedTutor]);
     }
-  }, [studentUsername]);
+  }, []);
 
   const handleBack = () => {
     navigate("/studentHome");

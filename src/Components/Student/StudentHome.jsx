@@ -48,7 +48,7 @@ const StudentHome = () => {
   };
 
   const handleMessages = () => {
-    navigate('/selectedTutors');
+    navigate('/bookedTutors');
   };
 
   return (
