@@ -143,6 +143,7 @@ const Chat = () => {
           <div
             key={index}
             className={`chat-message ${msg.isCrossMessage ? 'cross-message' : msg.sender === tutorUsername ? 'tutor-message' : 'student-message'} ${msg.isReply ? 'reply-message' : ''}`}
+            style={{ alignSelf: msg.sender === studentUsername ? 'flex-end' : 'flex-start' }}
           >
             <div className="message-details">
               <span className="message-sender">{msg.sender}</span>
