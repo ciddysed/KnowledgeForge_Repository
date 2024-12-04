@@ -113,3 +113,13 @@
     font-size: 0.8em;
     color: #888;
   }
+
+  .cross-message {
+    background-color: #ffeb3b;
+    color: #333;
+    align-self: center;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 10px 0;
+    font-style: italic;
+  }
