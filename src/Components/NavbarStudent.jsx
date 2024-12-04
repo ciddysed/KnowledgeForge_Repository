@@ -37,7 +37,7 @@ const NavbarStudent = () => {
   return (
     <nav>
       <div className="nav-logo-container">
-        <Link to="/home1">
+        <Link to="/studentHome">
           <img src={Logo} alt="KnowledgeForge Logo" />
         </Link>
       </div>

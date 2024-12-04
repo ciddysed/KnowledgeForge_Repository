@@ -56,7 +56,8 @@ function App() {
     }
     if (location.pathname === "/tutorHome"
       || location.pathname === "/tutorCourse"
-      || location.pathname === "/tutorTopic") {
+      || location.pathname === "/tutorTopic"
+      || location.pathname === "/notifications") {
       return <NavbarTutor />; // NavbarTutor for Home2
     }
     return null; // No Navbar for other components
