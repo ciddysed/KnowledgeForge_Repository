@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.g1AppDev.KnowledgeForge.Entity.Student;
 import com.g1AppDev.KnowledgeForge.Entity.StudentSelection;
 import com.g1AppDev.KnowledgeForge.Service.StudentSelectionService;
+import com.g1AppDev.KnowledgeForge.Service.StudentService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -24,6 +26,8 @@ import com.g1AppDev.KnowledgeForge.Service.StudentSelectionService;
 public class StudentSelectionController {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentSelectionController.class);
+    @Autowired
+    private StudentService studentService;
 
     @Autowired
     private StudentSelectionService studentSelectionService;
@@ -31,7 +35,22 @@ public class StudentSelectionController {
     // Endpoint to get students who selected a particular tutor
     @GetMapping("/{tutorUsername}")
     public List<StudentSelection> getStudentsForTutor(@PathVariable String tutorUsername) {
-        return studentSelectionService.getStudentsByTutor(tutorUsername);
+        List<StudentSelection> selections = studentSelectionService.getStudentsByTutor(tutorUsername);
+
+    // Assuming you have a method to populate student details
+    selections.forEach(selection -> {
+        Student student = null;
+        try {
+            student = studentService.getStudentByUsername(selection.getStudentUsername());
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        selection.setStudentName(student.getStudentName());
+        selection.setCourseYear(student.getCourseYear());
+    });
+
+    return selections;
     }
 
     // Endpoint to get tutors chosen by a specific student

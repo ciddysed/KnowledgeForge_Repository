@@ -12,8 +12,18 @@ public class StudentSelection {
     private Long id;
 
     private String studentUsername;
+    private String studentName;
     private String tutorUsername;
     private Long tutorId;
+    private String courseYear;
+
+    public String getCourseYear() {
+        return courseYear;
+    }
+
+    public void setCourseYear(String courseYear) {
+        this.courseYear = courseYear;
+    }
 
     // Getters and setters
     public Long getId() {
@@ -30,6 +40,14 @@ public class StudentSelection {
 
     public void setStudentUsername(String studentUsername) {
         this.studentUsername = studentUsername;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
     public String getTutorUsername() {

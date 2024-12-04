@@ -61,4 +61,15 @@ public class StudentService {
         }
         return false;
     }
+    public Student getStudentByUsername(String username) throws Exception {
+
+        Optional<Student> studentOptional = studentRepository.findByUsername(username);
+        if (studentOptional.isPresent()) {
+            return studentOptional.get();
+        } else {
+            // Handle the case where the student is not found
+            throw new Exception("Student with username " + username + " not found");
+        }
+
+    }
 }

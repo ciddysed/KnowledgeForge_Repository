@@ -109,7 +109,7 @@ const Notifications = () => {
         <strong>Student Name:</strong> {student.studentName}
       </p>
       <p>
-        <strong>Course Name:</strong> {student.courseName}
+        <strong>Course-Year:</strong> {student.courseYear}
       </p>
       <button
         style={buttonStyle('#007bff', '#0056b3')}
@@ -159,14 +159,12 @@ const Notifications = () => {
             <strong>Student Name:</strong> {selectedStudent.studentName}
           </p>
           <p>
-            <strong>Course Name:</strong> {selectedStudent.courseName}
+            <strong>Course Year:</strong> {selectedStudent.courseYear}
           </p>
           <p>
             <strong>Student Username:</strong> {selectedStudent.studentUsername}
           </p>
-          <p>
-            <strong>Tutor ID:</strong> {selectedStudent.tutorId}
-          </p>
+         
           <button onClick={closeModal}>Close</button>
         </Modal>
       )}

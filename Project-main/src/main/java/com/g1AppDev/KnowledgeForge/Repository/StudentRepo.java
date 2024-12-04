@@ -15,4 +15,6 @@ public interface StudentRepo extends JpaRepository<Student, Integer> {
 
     // Method to find a student by username and password
     Optional<Student> findByUsernameAndPassword(String username, String password);
+
+    Optional<Student> findByUsername(String username);
 }
