@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaBell, FaBook, FaClipboardList, FaComments, FaSignOutAlt } from 'react-icons/fa'; // Import icons
+import { FaBell, FaBook, FaClipboardList, FaComments } from 'react-icons/fa'; // Import icons
 import { Link, useNavigate } from 'react-router-dom';
 import homeBannerBackground from '../../Assets/home-banner-background.png';
 import homeBannerImage from '../../Assets/home-banner-image.png';
@@ -45,12 +45,6 @@ const TutorHome = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('loggedInUser');
-    localStorage.removeItem('jwtToken');
-    navigate('/loginTutor');
-  };
-
   return (
     <div className="home-container">
       <div className="home-banner-container">
@@ -82,20 +76,6 @@ const TutorHome = () => {
             </Link>
           </div>
           <div style={{ marginTop: '20px' }}>
-            <button
-              onClick={handleLogout}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#e74c3c',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              <FaSignOutAlt style={{ marginRight: '8px' }} />
-              Logout
-            </button>
           </div>
         </div>
         <div className="home-image-section">

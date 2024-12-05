@@ -1,25 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { FaEnvelope, FaSearch, FaUserFriends } from "react-icons/fa"; // Add FaEnvelope icon
+import { FaEnvelope, FaSearch, FaUserFriends } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import homeBannerBackground from '../../Assets/home-banner-background.png';
-import homeBannerImage from '../../Assets/home-banner-image.png';
-import { subscribeToStudentNotifications } from '../WebSocket';
+import homeBannerBackground from "../../Assets/home-banner-background.png";
+import homeBannerImage from "../../Assets/home-banner-image.png";
+import { subscribeToStudentNotifications } from "../WebSocket";
 
 const connectWebSocket = (callback) => {
-  // WebSocket connection logic here
   callback();
 };
 
 const StudentHome = () => {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get JWT token from localStorage
-    const storedToken = localStorage.getItem('jwtToken');
-    const storedUsername = localStorage.getItem('loggedInUser');
+    const storedToken = localStorage.getItem("jwtToken");
+    const storedUsername = localStorage.getItem("loggedInUser");
 
-    // Check if token and user data are available
     if (storedToken && storedUsername) {
       const userData = JSON.parse(storedUsername);
       setUsername(userData.username);
@@ -31,24 +28,16 @@ const StudentHome = () => {
         });
       });
     } else {
-      // If no token or user data, redirect to login page
-      navigate('/loginStudent');
+      navigate("/loginStudent");
     }
   }, [navigate]);
 
-  // Logout function to remove the token and user data
-  const handleLogout = () => {
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem('loggedInUser');
-    navigate('/loginStudent');
-  };
-
   const handleBookedTutors = () => {
-    navigate('/bookedTutors');
+    navigate("/bookedTutors");
   };
 
   const handleMessages = () => {
-    navigate('/bookedTutors');
+    navigate("/bookedTutors");
   };
 
   return (
@@ -59,69 +48,113 @@ const StudentHome = () => {
         </div>
         <div className="home-text-section">
           <h1 className="primary-heading">
-            {username && <p>Welcome, {username}!</p>}
+            {username && (
+              <p>
+                Welcome, <span className="highlight">{username}</span>!
+              </p>
+            )}
           </h1>
-
           <div className="management-links">
-            <h2 className="management-heading">Management Pages</h2>
-            <Link to="/Search" className="management-link creative-link">
-              <FaSearch className="link-icon" />
-              Search Tutors </Link>
-            <button
-              onClick={handleBookedTutors}
-              className="management-link creative-link"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginTop: '10px',
-                padding: '10px 20px',
-                color: '#3498db', // Match the text color with Search Tutors button
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              <FaUserFriends className="link-icon" style={{ marginRight: '8px' }} />
-              Booked Tutors
-            </button>
-            <button
-              onClick={handleMessages}
-              className="management-link creative-link"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginTop: '10px',
-                padding: '10px 20px',
-                color: '#3498db', // Match the text color with Search Tutors button
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              <FaEnvelope className="link-icon" style={{ marginRight: '8px' }} />
-              Messages
-            </button>
-          </div>
-          <div style={{ marginTop: '20px' }}>
-            <button
-              onClick={handleLogout}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#e74c3c',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              Logout
-            </button>
+            <div className="management-tile">
+              <Link to="/Search" className="tile-link">
+                <FaSearch className="tile-icon" />
+                <p>Search Tutors</p>
+              </Link>
+            </div>
+            <div className="management-tile">
+              <button onClick={handleBookedTutors} className="tile-link">
+                <FaUserFriends className="tile-icon" />
+                <p>Booked Tutors</p>
+              </button>
+            </div>
+            <div className="management-tile">
+              <button onClick={handleMessages} className="tile-link">
+                <FaEnvelope className="tile-icon" />
+                <p>Messages</p>
+              </button>
+            </div>
           </div>
         </div>
         <div className="home-image-section">
           <img src={homeBannerImage} alt="" />
         </div>
       </div>
+      <style>
+  {`
+    .home-text-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 50vh;
+    }
+
+    .management-links {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 30px;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .management-tile {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 25px;
+      width: 320px;
+      height: 220px;
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      position: relative;
+    }
+
+    .management-tile:hover {
+      background-color: #3498db;
+      color: #fff;
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+    }
+
+    .tile-link {
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
+      border: none; /* Remove border color */
+    }
+
+    .tile-icon {
+      font-size: 3rem;
+      color: #3498db;
+      margin-bottom: 10px;
+      align-self: flex-start;
+    }
+
+    .tile-link:hover .tile-icon {
+      color: #fff;
+    }
+
+    .highlight {
+      color: #3498db;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin: 0;
+    }
+  `}
+</style>
+
     </div>
   );
 };

@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 const LoginTutor = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -24,25 +23,18 @@ const LoginTutor = () => {
       );
 
       if (response.ok) {
-        const data = await response.json();
-
-        // Save JWT token to localStorage
-        const token = data.token;  // assuming the response contains the token in 'token'
+        const userData = await response.json();
+        const token = userData.token;
         localStorage.setItem('jwtToken', token);
-
-        // Optionally store user data (if needed)
-        localStorage.setItem('loggedInUser', JSON.stringify(data));
-
-        // Navigate to the tutor home page
+        localStorage.setItem('loggedInUser', JSON.stringify(userData));
+        console.log('Logged in successfully');
         navigate('/tutorHome');
       } else if (response.status === 401) {
         setError('Invalid username or password.');
       } else {
-        const errorData = await response.json();
-        setError(`Login failed: ${errorData.message || 'Please try again.'}`);
+        setError('Login failed. Please try again.');
       }
     } catch (error) {
-      console.error('Error during login:', error);
       setError('An error occurred. Please try again later.');
     }
   };
@@ -62,15 +54,14 @@ const LoginTutor = () => {
             className="login-tutor-input"
           />
         </div>
-        <div className="login-tutor-form-group" style={{ position: 'relative' }}>
+        <div className="login-tutor-form-group">
           <label className="login-tutor-label">Password:</label>
           <input
-            type={showPassword ? 'text' : 'password'}
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             className="login-tutor-input"
-            style={{ paddingRight: '10px' }} // Add padding to make space for the icon
           />
         </div>
         <button type="submit" className="login-tutor-submit">Login</button>
@@ -78,6 +69,109 @@ const LoginTutor = () => {
       <p className="login-tutor-register-link">
         Don't have an account? <Link to="/RegisterTutor">Register here.</Link>
       </p>
+      <style>{`
+        .login-tutor-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 40vh;
+          width: 25%;
+          padding: 20px;
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+          border-radius: 50px;
+
+          position: absolute;
+          top: 40%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          animation: fadeBlur 2s ease-in-out;
+          filter: blur(0px);
+        }
+
+        .login-tutor-header {
+          font-size: 2rem;
+          color: black;
+          margin-bottom: 20px;
+          text-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-tutor-error {
+          color: #ff4d4d;
+          margin-bottom: 10px;
+          font-size: 1rem;
+        }
+
+        .login-tutor-form {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .login-tutor-form-group {
+          margin-bottom: 15px;
+          width: 100%;
+          text-align: left;
+        }
+
+        .login-tutor-label {
+          font-size: 1rem;
+          color: black;
+          margin-bottom: 5px;
+          display: block;
+        }
+
+        .login-tutor-input {
+          width: 100%;
+          max-width: 300px;
+          padding: 10px;
+          font-size: 1rem;
+          border: 2px solid #ddd;
+          border-radius: 5px;
+          outline: none;
+          box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-tutor-input:focus {
+          border-color: #66a6ff;
+          box-shadow: 0 0 6px rgba(102, 166, 255, 0.5);
+        }
+
+        .login-tutor-submit {
+          width: 100%;
+          max-width: 300px;
+          padding: 10px;
+          font-size: 1rem;
+          background-color: blue;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: all 0.3s ease-in-out;
+          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-tutor-submit:hover {
+          background-color: #45a049;
+          transform: scale(1.05);
+        }
+
+        .login-tutor-register-link {
+          margin-top: 15px;
+          font-size: 1rem;
+          color: black;
+          text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-tutor-register-link a {
+          color: blue;
+          text-decoration: none;
+        }
+
+        .login-tutor-register-link a:hover {
+          text-decoration: underline;
+        }
+      `}</style>
     </div>
   );
 };

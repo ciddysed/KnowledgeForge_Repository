@@ -35,9 +35,9 @@ const NavbarStudent = () => {
 
   return (
     <nav>
-      <div className="nav-logo-container">
+      <div className="nav-logo-container fancy-logo">
         <Link to="/tutorHome">
-          <img src={Logo} alt="KnowledgeForge Logo" />
+          <img src={Logo} alt="KnowledgeForge Logo" className="nav-logo" />
         </Link>
       </div>
       <div className="navbarStudent-links-container">
@@ -68,6 +68,63 @@ const NavbarStudent = () => {
           <Divider />
         </Box>
       </Drawer>
+      <style>{`
+      .nav-logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+      }
+
+      .fancy-logo {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .fancy-logo:hover {
+        transform: scale(1.5);
+      }
+
+      .nav-logo {
+        width: 150px;
+        height: auto;
+        padding: 5px;
+      }
+
+        .nav-logo-container {
+          max-width: 140px;
+          margin-left: 20px; /* Add slight margin for spacing from the left */
+          display: inline-block; /* Align it with navbar links */
+        }
+
+        .navbarStudent-links-container {
+          display: flex;
+          justify-content: center; /* Align links to the right */
+          align-items: center;
+          margin-left: auto; /* Automatically push links to the right */
+          text-decoration: none;
+          color: black;
+          font-size: 1.1rem;
+          font-weight: 600;
+        }
+
+        .navbarStudent-links-container a {
+          margin-right: 60px; /* Standard spacing between links */
+          text-decoration: none;
+          color: black;
+          font-size: 1.1rem;
+          font-weight: 600;
+        }
+
+        .navbarStudent-links-container a:hover {
+          color: #00008b; /* Add hover effect */
+        }
+
+        .logout-button {
+          margin-left: 40px; /* Ensure spacing from links */
+        }
+      `}
+
+      </style>
     </nav>
   );
 };
