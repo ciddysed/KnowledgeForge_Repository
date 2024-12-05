@@ -61,4 +61,17 @@ public class StudentService {
         }
         return false;
     }
+
+    public Student getStudentByUsername(String username) {
+
+        // Implement the logic to retrieve a student by username
+
+        // For example, you can use a repository to fetch the student from the database
+
+        Optional<Student> studentOptional = studentRepository.findByUsername(username);
+        return studentOptional.orElse(null);
+
+    }
+
+    
 }

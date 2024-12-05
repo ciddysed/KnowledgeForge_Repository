@@ -35,6 +35,7 @@ public class TutorController {
         return ResponseEntity.ok("Notification sent to tutor!");
     }    
 
+
     @Autowired
     private final TutorService tutorService;
 
@@ -65,6 +66,14 @@ public class TutorController {
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+    // Get Tutor by Username
+    @GetMapping("/username/{username}")
+    public ResponseEntity<Tutor> getTutorByUsername(@PathVariable String username) {
+        Optional<Tutor> tutor = tutorService.findTutorByUsername(username);
+        return tutor.map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
     // Get All Tutors
     @GetMapping
     public ResponseEntity<List<Tutor>> getAllTutors() {
@@ -90,4 +99,14 @@ public class TutorController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @GetMapping("/{tutorName}")
+    public ResponseEntity<List<Tutor>> getTutorByName(@PathVariable String tutorName) {
+        List<Tutor> tutors = tutorService.getTutorByName(tutorName);
+        if (!tutors.isEmpty()) {
+            return ResponseEntity.ok(tutors);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
 }

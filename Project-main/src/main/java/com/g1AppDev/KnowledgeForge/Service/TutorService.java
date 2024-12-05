@@ -35,6 +35,11 @@ public class TutorService {
         return tutorRepository.findById(id);
     }
 
+    // Find Tutor by Username
+    public Optional<Tutor> findTutorByUsername(String username) {
+        return tutorRepository.findByUsername(username);
+    }
+
     // Find All Tutors
     public List<Tutor> findAllTutors() {
         return tutorRepository.findAll();
@@ -65,5 +70,18 @@ public class TutorService {
             return true;
         }
         return false;
+    }
+    public List<Tutor> getTutorByName(String tutorName) {
+
+        // Implement the logic to find the tutor by name
+
+        return tutorRepository.findByTutorName(tutorName);
+
+    }
+
+    public Optional<Tutor> getTutorById(int id) {
+
+        return tutorRepository.findById(id);
+
     }
 }

@@ -5,6 +5,7 @@ import About from "./Components/Navigation/About";
 import Contact from "./Components/Navigation/Contact";
 // import Footer from "./Components/Footer";
 import Chat from "./Components/Chat/Chat";
+import Messenger from "./Components/Chat/Messenger";
 import Home1 from "./Components/Home1";
 import Home2 from "./Components/Home2";
 import LoginPage from "./Components/LoginPage";
@@ -31,6 +32,8 @@ import TutorCourse from './Components/TutorSpecific/TutorCourse';
 import TutorHome from './Components/TutorSpecific/TutorHome';
 import TutorTopic from "./Components/TutorSpecific/TutorTopic";
 import Work from "./Components/Work";
+import AdminLogin from "./Components/AdminLogin";
+import HostClass from "./Components/TutorSpecific/HostClass";
 
 
 function App() {
@@ -57,7 +60,8 @@ function App() {
     if (location.pathname === "/tutorHome"
       || location.pathname === "/tutorCourse"
       || location.pathname === "/tutorTopic"
-      || location.pathname === "/notifications") {
+      || location.pathname === "/notifications"
+      || location.pathname === "/hostClass") {
       return <NavbarTutor />; // NavbarTutor for Home2
     }
     return null; // No Navbar for other components
@@ -84,7 +88,7 @@ function App() {
         <Route path="/moduleManagement" element={<ModuleManagement />} />
         <Route path="/search" element={<Search />} />
         <Route path="/students" element={<Students />} />
-        <Route path="/home2" element={<Home2 />} />
+        <Route path="/adminDashboard" element={<Home2 />} />
         <Route path="/tutor-profile/:tutorId" element={<TutorProfile />} />
         <Route path="/tutorHome" element={<TutorHome />} />
         <Route path="/tutorCourse" element={<TutorCourse />} />
@@ -93,6 +97,9 @@ function App() {
         <Route path="/studentHome" element={<StudentHome />} />
         <Route path="/bookedTutors" element={<BookedTutors />} />
         <Route path="/chat/:studentUsername" element={<Chat />} />
+        <Route path="/messenger" element={<Messenger />} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/hostClass" element={<HostClass />} />
        
         
 

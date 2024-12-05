@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { FaBell, FaBook, FaClipboardList, FaComments, FaSignOutAlt } from 'react-icons/fa'; // Import icons
+import {
+  FaBell,
+  FaBook,
+  FaClipboardList,
+  FaComments,
+  FaSignOutAlt,
+  FaChalkboardTeacher, // Import icon for "Host a Class"
+} from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import homeBannerBackground from '../../Assets/home-banner-background.png';
 import homeBannerImage from '../../Assets/home-banner-image.png';
@@ -79,6 +86,10 @@ const TutorHome = () => {
             <Link to="/chat" className="management-link creative-link">
               <FaComments className="link-icon" />
               Messages
+            </Link>
+            <Link to="/hostClass" className="management-link creative-link">
+              <FaChalkboardTeacher className="link-icon" />
+              Host a Class
             </Link>
           </div>
           <div style={{ marginTop: '20px' }}>
