@@ -34,6 +34,9 @@ import TutorTopic from "./Components/TutorSpecific/TutorTopic";
 import Work from "./Components/Work";
 import AdminLogin from "./Components/AdminLogin";
 import HostClass from "./Components/TutorSpecific/HostClass";
+import TutorClasses from "./Components/TutorSpecific/TutorClasses";
+import ClassView from "./Components/TutorSpecific/ClassView";
+// import StudentClassView from './Components/Student/StudentClassView';
 
 
 function App() {
@@ -61,7 +64,8 @@ function App() {
       || location.pathname === "/tutorCourse"
       || location.pathname === "/tutorTopic"
       || location.pathname === "/notifications"
-      || location.pathname === "/hostClass") {
+      || location.pathname === "/hostClass"
+      || location.pathname === "/TutorClasses") {
       return <NavbarTutor />; // NavbarTutor for Home2
     }
     return null; // No Navbar for other components
@@ -83,7 +87,7 @@ function App() {
         <Route path="/registerTutor" element={<RegisterTutor />} />
         <Route path="/home1" element={<Home1 />} />
         <Route path="/courseManagement" element={<CourseManagement />} />
-        <Route path="/topicManagement" element={<TopicManagement />} />
+        <Route path="/topicManagement" element={<TopicManagement />} />\
         <Route path="/quizManagement" element={<QuizManagement />} />
         <Route path="/moduleManagement" element={<ModuleManagement />} />
         <Route path="/search" element={<Search />} />
@@ -100,9 +104,9 @@ function App() {
         <Route path="/messenger" element={<Messenger />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/hostClass" element={<HostClass />} />
-       
-        
-
+        <Route path="/TutorClasses" element={<TutorClasses />} />
+        <Route path="/classView" element={<ClassView />} />
+        {/* <Route path="/studentClassView/:tutorId" element={<StudentClassView />} /> */}
       </Routes>
       {/* <Footer /> */}
     </div>

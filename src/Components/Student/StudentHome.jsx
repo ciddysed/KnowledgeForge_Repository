@@ -51,6 +51,52 @@ const StudentHome = () => {
     navigate('/bookedTutors');
   };
 
+  // const handleViewClass = async (classId) => {
+  //   try {
+  //     const response = await fetch(`http://localhost:8080/api/notifications/checkAccess`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ studentUsername: username, classId }),
+  //     });
+
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       if (data.accessGranted) {
+  //         navigate(`/classView/${classId}`, { state: { hostClass: data.hostClass } });
+  //       } else {
+  //         alert('Access denied. You are not accepted for this class.');
+  //       }
+  //     } else {
+  //       alert('Failed to check access.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error checking access:', error);
+  //     alert('An error occurred. Please try again later.');
+  //   }
+  // };
+
+  const handleViewClasses = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/notifications/student/${username}`);
+      if (response.ok) {
+        const classes = await response.json();
+        const acceptedClasses = classes.filter(c => c.accepted);
+        if (acceptedClasses.length > 0) {
+          navigate(`/studentClassView/${acceptedClasses[0].tutorId}`, { state: { hostClass: acceptedClasses[0] } });
+        } else {
+          alert('No accepted classes found.');
+        }
+      } else {
+        alert('Failed to fetch classes.');
+      }
+    } catch (error) {
+      console.error('Error fetching classes:', error);
+      alert('An error occurred. Please try again later.');
+    }
+  };
+
   return (
     <div className="home-container">
       <div className="home-banner-container">
@@ -100,6 +146,23 @@ const StudentHome = () => {
             >
               <FaEnvelope className="link-icon" style={{ marginRight: '8px' }} />
               Messages
+            </button>
+            <button
+              onClick={handleViewClasses}
+              className="management-link creative-link"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginTop: '10px',
+                padding: '10px 20px',
+                color: '#3498db',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
+              <FaUserFriends className="link-icon" style={{ marginRight: '8px' }} />
+              View Classes
             </button>
           </div>
           <div style={{ marginTop: '20px' }}>

@@ -18,6 +18,8 @@ public class StudentSelection {
     private String studentName;
     private String courseYear;
 
+    private boolean accepted;
+
     public String getCourseYear() {
         return courseYear;
     }
@@ -65,5 +67,13 @@ public class StudentSelection {
 
     public void setStudentName(String studentName) {
         this.studentName = studentName;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 }

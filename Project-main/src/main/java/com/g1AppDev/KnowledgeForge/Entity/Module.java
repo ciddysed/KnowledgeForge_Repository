@@ -20,6 +20,9 @@ public class Module {
     @Column(name = "module_name", nullable = false)  // Non-nullable column
     private String moduleName;
 
+    @Column(name = "uploaded_file_name")
+    private String uploadedFileName;
+
     // Many modules belong to one topic
     @ManyToOne
     @JoinColumn(name = "topic_id", nullable = false)  // Foreign key column
@@ -57,5 +60,13 @@ public class Module {
 
     public void setTopic(Topic topic) {
         this.topic = topic;
+    }
+
+    public String getUploadedFileName() {
+        return uploadedFileName;
+    }
+
+    public void setUploadedFileName(String uploadedFileName) {
+        this.uploadedFileName = uploadedFileName;
     }
 }

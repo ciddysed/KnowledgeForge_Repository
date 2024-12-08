@@ -1,6 +1,8 @@
 package com.g1AppDev.KnowledgeForge.Controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +50,14 @@ public class StudentSelectionController {
         return selections;
     }
 
+    // Assuming you have a method to get the class details
+    private Map<String, Object> getClassDetails(Long classId) {
+        // Implement the logic to get class details based on classId
+        Map<String, Object> classDetails = new HashMap<>();
+        // Populate classDetails map with relevant data
+        return classDetails;
+    }
+
     // Endpoint to get tutors chosen by a specific student
     @GetMapping("/student/{studentUsername}")
     public List<StudentSelection> getTutorsForStudent(@PathVariable String studentUsername) {
@@ -67,6 +77,32 @@ public class StudentSelectionController {
         }
     }
 
+    @PostMapping("/accept")
+    public ResponseEntity<Void> acceptStudent(@RequestBody Map<String, Object> payload) {
+        Long studentId = Long.valueOf(payload.get("studentId").toString());
+        String tutorUsername = payload.get("tutorUsername").toString();
+        try {
+            studentSelectionService.acceptStudent(studentId, tutorUsername);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            logger.error("Error accepting student", e);
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @PostMapping("/decline")
+    public ResponseEntity<Void> declineStudent(@RequestBody Map<String, Object> payload) {
+        Long studentId = Long.valueOf(payload.get("studentId").toString());
+        String tutorUsername = payload.get("tutorUsername").toString();
+        try {
+            studentSelectionService.declineStudent(studentId, tutorUsername);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            logger.error("Error declining student", e);
+            return ResponseEntity.status(500).build();
+        }
+    }
+
     @DeleteMapping("/cancel/{tutorId}")
     public ResponseEntity<Void> cancelBooking(@PathVariable Long tutorId) {
         try {
@@ -76,5 +112,19 @@ public class StudentSelectionController {
             logger.error("Error canceling booking", e);
             return ResponseEntity.status(500).build();
         }
+    }
+
+    @PostMapping("/checkAccess")
+    public ResponseEntity<Map<String, Object>> checkStudentAccess(@RequestBody Map<String, Object> payload) {
+        String studentUsername = payload.get("studentUsername").toString();
+        Long classId = Long.valueOf(payload.get("classId").toString());
+        boolean accessGranted = studentSelectionService.checkStudentAccess(studentUsername, classId);
+        Map<String, Object> response = new HashMap<>();
+        response.put("accessGranted", accessGranted);
+        if (accessGranted) {
+            // Assuming you have a method to get the class details
+            response.put("hostClass", getClassDetails(classId));
+        }
+        return ResponseEntity.ok(response);
     }
 }

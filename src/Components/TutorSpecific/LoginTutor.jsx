@@ -70,8 +70,23 @@ const LoginTutor = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
             className="login-tutor-input"
-            style={{ paddingRight: '10px' }} // Add padding to make space for the icon
+            style={{ paddingRight: '30px' }} // Adjust padding for the toggle button
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            style={{
+              position: 'absolute',
+              right: '10px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            {showPassword ? 'Hide' : 'Show'}
+          </button>
         </div>
         <button type="submit" className="login-tutor-submit">Login</button>
       </form>
