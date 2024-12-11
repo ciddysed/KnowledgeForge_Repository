@@ -99,8 +99,6 @@ function App() {
         <Route path="/chat/:studentUsername" element={<Chat />} />
         <Route path="/studentProfile" element={<Profile />} />
        
-        
-
       </Routes>
       {/* <Footer /> */}
     </div>

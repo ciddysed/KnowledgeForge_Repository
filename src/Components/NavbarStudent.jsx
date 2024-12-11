@@ -1,57 +1,74 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom'; // useNavigate for navigation
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Logo from "../Assets/logo.png";
 import { FaSignOutAlt, FaUser, FaHome } from "react-icons/fa";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import HomeIcon from "@mui/icons-material/Home";
-import InfoIcon from "@mui/icons-material/Info";
-import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
-import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
+import Swal from 'sweetalert2';
 
 const NavbarStudent = () => {
-  const [openMenu, setOpenMenu] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch the logged-in user's profile image from the backend
-    const fetchProfileImage = async () => {
-      try {
-        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-        if (loggedInUser && loggedInUser.username) {
-          const response = await axios.get(`http://localhost:8080/api/students/profile?username=${loggedInUser.username}`);
-          if (response.data && response.data.profileImage) {
-            setProfileImage(`http://localhost:8080/${response.data.profileImage}`);
+    // Fetch the logged-in user's profile image from localStorage
+    const storedProfileImage = localStorage.getItem('profileImage');
+    if (storedProfileImage) {
+      setProfileImage(storedProfileImage);
+    } else {
+      // Fetch the logged-in user's profile image from the backend
+      const fetchProfileImage = async () => {
+        try {
+          const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+          if (loggedInUser && loggedInUser.username) {
+            const response = await axios.get(`http://localhost:8080/api/students/profile?username=${loggedInUser.username}`);
+            if (response.data && response.data.profileImage) {
+              const profileImageUrl = `http://localhost:8080/${response.data.profileImage}`;
+              setProfileImage(profileImageUrl);
+              localStorage.setItem('profileImage', profileImageUrl); // Store in localStorage
+            }
           }
+        } catch (error) {
+          console.error("Error fetching profile image:", error);
         }
-      } catch (error) {
-        console.error("Error fetching profile image:", error);
-      }
-    };
+      };
 
-    fetchProfileImage();
+      fetchProfileImage();
+    }
   }, []);
 
-  const menuOptions = [
-    { text: "Home", icon: <HomeIcon /> },
-    { text: "About", icon: <InfoIcon /> },
-    { text: "Testimonials", icon: <CommentRoundedIcon /> },
-    { text: "Contact", icon: <PhoneRoundedIcon /> },
-  ];
+  useEffect(() => {
+    const handleProfileUpdate = (event) => {
+      const updatedProfileImage = event.detail.profileImage;
+      setProfileImage(updatedProfileImage);
+      localStorage.setItem('profileImage', updatedProfileImage);
+    };
+
+    window.addEventListener('profileUpdate', handleProfileUpdate);
+
+    return () => {
+      window.removeEventListener('profileUpdate', handleProfileUpdate);
+    };
+  }, []);
 
   const handleLogout = () => {
-    // Clear user data from localStorage
-    localStorage.removeItem('loggedInUser');
-    // Navigate back to the Home1 page after logout
-    navigate('/loginStudent');
+    Swal.fire({
+      title: 'You sure you want to log-out?',
+      text: "You'll need to log-in again to access your account.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, mo log-out nako!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Clear user data from localStorage
+        localStorage.removeItem('loggedInUser');
+        localStorage.removeItem('profileImage');
+        // Navigate back to the login page
+        navigate('/loginStudent');
+      }
+    });
   };
 
   return (
@@ -77,26 +94,6 @@ const NavbarStudent = () => {
         <FaSignOutAlt className="logout-icon" /> {/* Logout icon */}
         Logout
       </button>
-      <Drawer open={openMenu} onClose={() => setOpenMenu(false)} anchor="right">
-        <Box
-          sx={{ width: 250 }}
-          role="presentation"
-          onClick={() => setOpenMenu(false)}
-          onKeyDown={() => setOpenMenu(false)}
-        >
-          <List>
-            {menuOptions.map((item) => (
-              <ListItem key={item.text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-        </Box>
-      </Drawer>
       <style>{`
         nav {
           border-radius: 0 0 10px 10px;
@@ -194,6 +191,32 @@ const NavbarStudent = () => {
 
         .logout-button {
           margin-left: 40px; /* Ensure spacing from links */
+        }
+
+        .modal-box {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 300px;
+          background-color: white;
+          padding: 20px;
+          box-shadow: 24px;
+          border-radius: 10px;
+          text-align: center;
+        }
+
+        .modal-box h2 {
+          margin-bottom: 20px;
+        }
+
+        .modal-box button {
+          margin: 0 10px;
+        }
+        
+        .cancel-button {
+          background-color: #ff0000;
+          color: white;
         }
       `} </style>
     </nav>

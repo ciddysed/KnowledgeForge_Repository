@@ -40,17 +40,21 @@ const RegisterStudent = () => {
     console.log('Submitting form data:', formData);
   
     try {
-      const payload = {
-        ...formData,
-        profilePicture: selectedFile ? await selectedFile.text() : null, // Convert file to base64 if needed
-      };
+      const formDataToSend = new FormData();
+      formDataToSend.append('username', formData.username);
+      formDataToSend.append('password', formData.password);
+      formDataToSend.append('studentName', formData.studentName);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('courseYear', formData.courseYear);
+      formDataToSend.append('city', formData.city);
+      formDataToSend.append('age', formData.age);
+      if (selectedFile) {
+        formDataToSend.append('profilePicture', selectedFile);
+      }
   
       const response = await fetch('http://localhost:8080/api/students/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
+        body: formDataToSend,
       });
   
       if (!response.ok) {
@@ -60,6 +64,19 @@ const RegisterStudent = () => {
       const data = await response.json();
       console.log('Registered successfully:', data);
       alert('Registration successful!');
+      
+      // Store profile image URL in localStorage
+      if (data.profileImage) {
+        const profileImageUrl = `http://localhost:8080/${data.profileImage}`;
+        localStorage.setItem('profileImage', profileImageUrl);
+
+        // Dispatch custom event to update profile image in NavbarStudent
+        const profileUpdateEvent = new CustomEvent('profileUpdate', {
+          detail: { profileImage: profileImageUrl },
+        });
+        window.dispatchEvent(profileUpdateEvent);
+      }
+  
       navigate('/loginStudent');
     } catch (error) {
       console.error('Registration failed:', error);

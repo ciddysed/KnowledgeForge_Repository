@@ -40,8 +40,33 @@ public class StudentController {
 
     // Register (Create) Student
     @PostMapping("/register")
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        logger.info("Received registration request: {}", student);
+    public ResponseEntity<Student> createStudent(@RequestParam("username") String username,
+                                                 @RequestParam("password") String password,
+                                                 @RequestParam("studentName") String studentName,
+                                                 @RequestParam("email") String email,
+                                                 @RequestParam("courseYear") String courseYear,
+                                                 @RequestParam("city") String city,
+                                                 @RequestParam("age") int age,
+                                                 @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture) {
+        logger.info("Received registration request: {}", username);
+        Student student = new Student();
+        student.setUsername(username);
+        student.setPassword(password);
+        student.setStudentName(studentName);
+        student.setEmail(email);
+        student.setCourseYear(courseYear);
+        student.setCity(city);
+        student.setAge(age);
+
+        if (profilePicture != null && !profilePicture.isEmpty()) {
+            try {
+                String imagePath = saveProfileImage(profilePicture, student.getStudentID());
+                student.setProfileImage(imagePath);
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
+        }
+
         Student createdStudent = studentService.registerStudent(student);
         return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
     }
@@ -134,7 +159,8 @@ public class StudentController {
             // Save the updated student
             studentService.saveUser(student);  // Assuming saveUser persists the updated student
 
-            return ResponseEntity.ok(student); // Return the updated student object
+            // Return the updated student object with profile image URL
+            return ResponseEntity.ok(student); 
         } catch (IOException ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating profile: " + ex.getMessage());
         }

@@ -22,7 +22,6 @@ public class StudentService {
 
     // Register (Create Student)
     public Student registerStudent(Student student) {
-        // Optional: You could add logic here to check if the username or email already exists
         return studentRepository.save(student);
     }
 

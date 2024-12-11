@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 import axios from 'axios';
 
 const StudentProfile = () => {
@@ -50,9 +51,13 @@ const StudentProfile = () => {
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
-    setPreview(URL.createObjectURL(file));
+    const file = e.target.files && e.target.files[0]; // Safely access the file
+    if (file) {
+      setSelectedFile(file);
+      setPreview(URL.createObjectURL(file)); // Generate a preview only if the file is valid
+    } else {
+      console.error("No file selected or file input is invalid.");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -69,25 +74,43 @@ const StudentProfile = () => {
       if (selectedFile) {
         formData.append('profileImage', selectedFile);
       }
-
+  
       const response = await axios.put('http://localhost:8080/api/students/update-profile', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-
+  
       if (response.status === 200) {
-        alert('Profile updated successfully!');
+        Swal.fire({
+          title: 'Success!',
+          text: 'Your profile has been updated successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'swal2-popup-custom',
+          },
+        });
         setStudent(response.data);
         if (response.data.profileImage) {
           setPreview(`http://localhost:8080/${response.data.profileImage}`);
         }
+  
+        const profileUpdateEvent = new CustomEvent('profileUpdate', {
+          detail: { profileImage: `http://localhost:8080/${response.data.profileImage}` },
+        });
+        window.dispatchEvent(profileUpdateEvent);
       } else {
         throw new Error('Error updating profile');
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('Error updating profile: ' + error.message);
+      Swal.fire({
+        title: 'Oops!',
+        text: `An error occurred while updating your profile: ${error.message}`,
+        icon: 'error',
+        confirmButtonText: 'Try Again',
+      });
     }
   };
 
@@ -289,6 +312,13 @@ const StudentProfile = () => {
         .primary-button:hover {
             background-color: #45a049;
             transform: scale(1.05);
+        }
+
+        .swal2-popup-custom {
+          font-family: 'Arial', sans-serif;
+          border-radius: 15px;
+          background: linear-gradient(135deg, #f0f0f0, #e8e8e8);
+          box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
       `}</style>
     </div>

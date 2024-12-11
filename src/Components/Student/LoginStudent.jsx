@@ -22,6 +22,19 @@ const LoginStudent = () => {
                 const token = userData.token;
                 localStorage.setItem('jwtToken', token);
                 localStorage.setItem('loggedInUser', JSON.stringify(userData));
+                
+                // Store profile image URL in localStorage
+                if (userData.profileImage) {
+                    const profileImageUrl = `http://localhost:8080/${userData.profileImage}`;
+                    localStorage.setItem('profileImage', profileImageUrl);
+
+                    // Dispatch custom event to update profile image in NavbarStudent
+                    const profileUpdateEvent = new CustomEvent('profileUpdate', {
+                        detail: { profileImage: profileImageUrl },
+                    });
+                    window.dispatchEvent(profileUpdateEvent);
+                }
+
                 console.log('Logged in successfully');
                 navigate('/studentHome');
             } else if (response.status === 401) {
