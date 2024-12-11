@@ -89,6 +89,12 @@ public class ModuleController {
     public ResponseEntity<Void> deleteModule(@PathVariable int id) {
         boolean isDeleted = moduleService.deleteModule(id);
         if (isDeleted) {
+            try {
+                Path filePath = Paths.get("uploads").toAbsolutePath().normalize().resolve(id + ".pdf").normalize();
+                Files.deleteIfExists(filePath);
+            } catch (Exception e) {
+                logger.error("Error deleting file for module: " + id, e);
+            }
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

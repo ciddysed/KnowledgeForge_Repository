@@ -7,7 +7,6 @@ const HostClass = () => {
   const [topics, setTopics] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedTopic, setSelectedTopic] = useState('');
-  const [hostClassID, setHostClassID] = useState('');
   const [classDate, setClassDate] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
@@ -54,7 +53,7 @@ const HostClass = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ hostClassID, tutorId, courseId: selectedCourse, topicId: selectedTopic, classDate, description }) // Include classDate and description in the request body
+        body: JSON.stringify({ tutorId, courseId: selectedCourse, topicId: selectedTopic, classDate, description }) // Include classDate and description in the request body
       });
 
       if (response.ok) {
@@ -74,16 +73,6 @@ const HostClass = () => {
       <h1 className="host-class-header">Host a Class</h1>
       {error && <p className="host-class-error">{error}</p>}
       <form onSubmit={handleHostClass} className="host-class-form">
-        <div className="host-class-form-group">
-          <label className="host-class-label">Host Class ID:</label>
-          <input
-            type="text"
-            value={hostClassID}
-            onChange={(e) => setHostClassID(e.target.value)}
-            required
-            className="host-class-input"
-          />
-        </div>
         <div className="host-class-form-group">
           <label className="host-class-label">Course:</label>
           <select value={selectedCourse} onChange={handleCourseChange} required className="host-class-select">

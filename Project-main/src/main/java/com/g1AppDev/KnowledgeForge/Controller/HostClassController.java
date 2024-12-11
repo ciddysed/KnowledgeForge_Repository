@@ -62,7 +62,7 @@ public class HostClassController {
 
     @PostMapping("/tutor/{tutorId}/course/{courseId}/topic/{topicId}")
     public ResponseEntity<HostClass> createHostClassForTutor(@PathVariable int tutorId, @PathVariable int courseId, @PathVariable int topicId, @RequestBody HostClass hostClass) {
-        HostClass newHostClass = hostClassService.createHostClassForTutor(hostClass.getHostClassID(), tutorId, courseId, topicId, hostClass.getClassDate(), hostClass.getDescription());
+        HostClass newHostClass = hostClassService.createHostClassForTutor(tutorId, courseId, topicId, hostClass.getClassDate(), hostClass.getDescription());
         return ResponseEntity.ok(newHostClass);
     }
 }

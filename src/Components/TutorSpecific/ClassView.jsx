@@ -113,6 +113,28 @@ const ClassView = () => {
     }
   };
 
+  const handleDeleteModule = async (moduleID) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/modules/${moduleID}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setModules(modules.filter((module) => module.moduleID !== moduleID));
+        setUploadedFiles((prev) => {
+          const updatedFiles = { ...prev };
+          delete updatedFiles[moduleID];
+          return updatedFiles;
+        });
+        alert('Module deleted successfully');
+      } else {
+        setError('Failed to delete module.');
+      }
+    } catch (error) {
+      console.error('Error deleting module:', error);
+      setError('An error occurred. Please try again later.');
+    }
+  };
+
   const handleAcceptStudent = async (student) => {
     try {
       const response = await fetch(`http://localhost:8080/api/notifications/accept`, {
@@ -175,6 +197,7 @@ const ClassView = () => {
             )}
             <input type="file" onChange={handleFileChange} />
             <button onClick={() => handleUploadFile(module.moduleID)}>Upload File</button>
+            <button onClick={() => handleDeleteModule(module.moduleID)}>Delete Module</button>
           </div>
         ))}
         <input

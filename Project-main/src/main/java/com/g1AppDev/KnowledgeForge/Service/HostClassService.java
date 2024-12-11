@@ -56,9 +56,8 @@ public class HostClassService {
     //     return hostClassRepository.save(hostClass);
     // }
 
-    public HostClass createHostClassForTutor(int hostClassID, int tutorId, int courseId, int topicId, String classDate, String description) {
+    public HostClass createHostClassForTutor(int tutorId, int courseId, int topicId, String classDate, String description) {
         HostClass hostClass = new HostClass();
-        hostClass.setHostClassID(hostClassID); 
         hostClass.setTutor(new Tutor(tutorId));
         hostClass.setCourse(new Course(courseId));
         hostClass.setTopic(new Topic(topicId));
