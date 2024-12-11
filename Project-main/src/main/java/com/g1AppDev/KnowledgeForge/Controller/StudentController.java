@@ -1,5 +1,7 @@
 package com.g1AppDev.KnowledgeForge.Controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.g1AppDev.KnowledgeForge.Entity.Student;
 import com.g1AppDev.KnowledgeForge.Service.StudentService;
@@ -66,6 +69,21 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
+    // Get Student Profile
+    @GetMapping("/profile")
+    public ResponseEntity<?> getStudentProfile(@RequestParam String username) {
+    try {
+        Student student = studentService.getStudentByUsername(username);
+        if (student == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
+        }
+        return ResponseEntity.ok(student);
+    } catch (Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching student profile: " + ex.getMessage());
+    }
+    }
+
+
     // Update Student
     @PutMapping("/update/{id}")
     public ResponseEntity<Student> updateStudent(@PathVariable int id, @RequestBody Student updatedStudent) {
@@ -76,6 +94,80 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    // Update Student Profile
+    @PutMapping("/update-profile")
+    public ResponseEntity<?> updateProfile(@RequestParam int userId, 
+                                           @RequestParam(required = false) MultipartFile profileImage,
+                                           @RequestParam String name,
+                                           @RequestParam String email,
+                                           @RequestParam String password,
+                                           @RequestParam String courseYear,
+                                           @RequestParam String city,
+                                           @RequestParam int age) {
+        try {
+            // Handle profile image upload if exists
+            String imagePath = null;
+            if (profileImage != null && !profileImage.isEmpty()) {
+                imagePath = saveProfileImage(profileImage, userId); // Save the image to disk
+            }
+            
+            // Retrieve the student to update
+            Optional<Student> studentOptional = studentService.findStudentById(userId);
+            if (!studentOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
+            }
+            
+            Student student = studentOptional.get();
+            // Update fields
+            student.setStudentName(name);
+            student.setEmail(email);
+            student.setPassword(password);
+            student.setCourseYear(courseYear);
+            student.setCity(city);
+            student.setAge(age);
+            
+            // If an image was uploaded, update the profile image path
+            if (imagePath != null) {
+                student.setProfileImage(imagePath); // Save the profile image path
+            }
+            
+            // Save the updated student
+            studentService.saveUser(student);  // Assuming saveUser persists the updated student
+
+            return ResponseEntity.ok(student); // Return the updated student object
+        } catch (IOException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating profile: " + ex.getMessage());
+        }
+    }
+
+    // Method to save the uploaded image to the server
+    private String saveProfileImage(MultipartFile profileImage, int userId) throws IOException {
+        // Define the absolute path to the uploads directory
+        String uploadDir = "C:/Users/James Wolfe/Downloads/uploads/profile_images/";
+
+        // Create the directory if it doesn't exist
+        File directory = new File(uploadDir);
+        if (!directory.exists()) {
+            boolean dirCreated = directory.mkdirs();  // Creates the folder if it doesn't exist
+            if (!dirCreated) {
+                throw new IOException("Failed to create directory for profile images.");
+            }
+        }
+
+        // Generate a unique filename (use userId to ensure uniqueness)
+        String imageFileName = userId + "_" + profileImage.getOriginalFilename();
+        File imageFile = new File(uploadDir + imageFileName);
+
+        // Log for debugging
+        System.out.println("Saving profile image to: " + imageFile.getAbsolutePath());
+
+        // Save the image to the directory
+        profileImage.transferTo(imageFile);
+
+        // Return the relative path of the uploaded image
+        return "uploads/profile_images/" + imageFileName;
+    }
+
     // Delete Student
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable int id) {
@@ -84,4 +176,5 @@ public class StudentController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
 }

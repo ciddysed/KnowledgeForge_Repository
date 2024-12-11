@@ -82,7 +82,7 @@ const BookedTutors = () => {
         <p>No tutors booked yet.</p>
       )}
       <button className="back-button" onClick={handleBack}>
-        Back to Home
+        Back
       </button>
     </div>
   );

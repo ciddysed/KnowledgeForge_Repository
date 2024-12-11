@@ -32,6 +32,8 @@ import TutorHome from './Components/TutorSpecific/TutorHome';
 import TutorTopic from "./Components/TutorSpecific/TutorTopic";
 import Work from "./Components/Work";
 
+import Profile from "./Components/Student/studentProfile";
+
 
 function App() {
   const location = useLocation();
@@ -51,14 +53,16 @@ function App() {
       return <Navbar />; // Navbar only for Home.jsx
     }
     if (location.pathname === "/studentHome" 
-      || location.pathname === "/Search") {
-      return <NavbarStudent />; // NavbarStudent for Home1 and Students
+      || location.pathname === "/Search"
+      || location.pathname === "/bookedTutors"
+      || location.pathname === "/studentProfile") {
+      return <NavbarStudent />; // NavbarStudent
     }
     if (location.pathname === "/tutorHome"
       || location.pathname === "/tutorCourse"
       || location.pathname === "/tutorTopic"
       || location.pathname === "/notifications") {
-      return <NavbarTutor />; // NavbarTutor for Home2
+      return <NavbarTutor />; // NavbarTutor
     }
     return null; // No Navbar for other components
   };
@@ -93,6 +97,7 @@ function App() {
         <Route path="/studentHome" element={<StudentHome />} />
         <Route path="/bookedTutors" element={<BookedTutors />} />
         <Route path="/chat/:studentUsername" element={<Chat />} />
+        <Route path="/studentProfile" element={<Profile />} />
        
         
 

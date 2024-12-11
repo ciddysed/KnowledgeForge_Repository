@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom'; // useNavigate for navigation
+import axios from 'axios';
 import Logo from "../Assets/logo.png";
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaSignOutAlt, FaUser, FaHome } from "react-icons/fa";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -17,7 +18,27 @@ import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 
 const NavbarStudent = () => {
   const [openMenu, setOpenMenu] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
   const navigate = useNavigate(); // Hook for navigation
+
+  useEffect(() => {
+    // Fetch the logged-in user's profile image from the backend
+    const fetchProfileImage = async () => {
+      try {
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        if (loggedInUser && loggedInUser.username) {
+          const response = await axios.get(`http://localhost:8080/api/students/profile?username=${loggedInUser.username}`);
+          if (response.data && response.data.profileImage) {
+            setProfileImage(`http://localhost:8080/${response.data.profileImage}`);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching profile image:", error);
+      }
+    };
+
+    fetchProfileImage();
+  }, []);
 
   const menuOptions = [
     { text: "Home", icon: <HomeIcon /> },
@@ -36,17 +57,25 @@ const NavbarStudent = () => {
   return (
     <nav>
       <div className="nav-logo-container fancy-logo">
-        <Link to="/">
+        <Link to="/studentHome">
           <img src={Logo} alt="KnowledgeForge Logo" className="nav-logo" />
         </Link>
       </div>
       <div className="navbarStudent-links-container">
-        <Link to="/studentHome">Home</Link>
-        <Link to="#">Profile</Link>
+        <Link to="/studentHome">
+          <FaHome className="home-icon" /> {/* Home icon */}
+        </Link>
+        <Link to="/studentProfile">
+          {profileImage ? (
+            <img src={profileImage} alt="Profile" className="navbar-profile-image" />
+          ) : (
+            <FaUser className="profile-icon" /> // Fallback to icon if no image
+          )}
+        </Link>
       </div>
       <button onClick={handleLogout} className="logout-button creative-btn">
-            <FaSignOutAlt className="logout-icon" /> {/* Logout icon */}
-            Logout
+        <FaSignOutAlt className="logout-icon" /> {/* Logout icon */}
+        Logout
       </button>
       <Drawer open={openMenu} onClose={() => setOpenMenu(false)} anchor="right">
         <Box
@@ -69,29 +98,73 @@ const NavbarStudent = () => {
         </Box>
       </Drawer>
       <style>{`
-      .nav-logo-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-      }
+        nav {
+          border-radius: 0 0 10px 10px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          min-height: 75px;
+          min-width: 100%;
+        }
 
-      .fancy-logo {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
+        .home-icon {
+          font-size: 1.8rem;
+          color: black;
+          margin-top: 4px;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-      .fancy-logo:hover {
-        transform: scale(1.5);
-      }
+        .home-icon:hover {
+          transform: scale(1.2);
+          color: #ffffff;
+        }
+        
+        .profile-icon {
+          font-size: 1.5rem;
+          color: black;
+          margin-top: 4px;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-      .nav-logo {
-        width: 150px;
-        height: auto;
-        padding: 5px;
-      }
-      
+        .profile-icon:hover {
+          transform: scale(1.2);
+          color: #ffffff;
+        }
+        
+        .navbar-profile-image {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin-top: 4px;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .navbar-profile-image:hover {
+          transform: scale(1.2);
+        }
+        
         .nav-logo-container {
-          max-width: 140px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .fancy-logo {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .fancy-logo:hover {
+          transform: scale(1.2);
+        }
+
+        .nav-logo {
+          width: 200px;
+          height: auto;
+          padding: 5px;
+        }
+        
+        .nav-logo-container {
           margin-left: 20px; /* Add slight margin for spacing from the left */
           display: inline-block; /* Align it with navbar links */
         }
@@ -122,9 +195,7 @@ const NavbarStudent = () => {
         .logout-button {
           margin-left: 40px; /* Ensure spacing from links */
         }
-      `}
-
-      </style>
+      `} </style>
     </nav>
   );
 };

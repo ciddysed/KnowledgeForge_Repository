@@ -1,30 +1,50 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import IconButton from '@mui/material/IconButton';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { IconButton } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import axios from 'axios';
 
-const RegisterStudent = () => {
-  const [formData, setFormData] = useState({
+const StudentProfile = () => {
+  const [student, setStudent] = useState({
     username: '',
-    password: '',
-    studentName: '',
     email: '',
+    studentName: '',
     courseYear: '',
     city: '',
     age: '',
+    profileImage: '',
   });
-
-  const [showPassword, setShowPassword] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Fetch student profile data
+    const fetchProfile = async () => {
+      try {
+        const storedUsername = localStorage.getItem("loggedInUser");
+        if (storedUsername) {
+          const userData = JSON.parse(storedUsername);
+          const response = await axios.get('http://localhost:8080/api/students/profile', {
+            params: { username: userData.username }
+          });
+          setStudent(response.data);
+          if (response.data.profileImage) {
+            setPreview(`http://localhost:8080/${response.data.profileImage}`);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setStudent({
+      ...student,
       [name]: value,
     });
   };
@@ -37,33 +57,37 @@ const RegisterStudent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitting form data:', formData);
-  
     try {
-      const payload = {
-        ...formData,
-        profilePicture: selectedFile ? await selectedFile.text() : null, // Convert file to base64 if needed
-      };
-  
-      const response = await fetch('http://localhost:8080/api/students/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Error in registration');
+      const formData = new FormData();
+      formData.append('userId', student.studentID);
+      formData.append('name', student.studentName);
+      formData.append('email', student.email);
+      formData.append('password', student.password);
+      formData.append('courseYear', student.courseYear);
+      formData.append('city', student.city);
+      formData.append('age', student.age);
+      if (selectedFile) {
+        formData.append('profileImage', selectedFile);
       }
-  
-      const data = await response.json();
-      console.log('Registered successfully:', data);
-      alert('Registration successful!');
-      navigate('/loginStudent');
+
+      const response = await axios.put('http://localhost:8080/api/students/update-profile', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 200) {
+        alert('Profile updated successfully!');
+        setStudent(response.data);
+        if (response.data.profileImage) {
+          setPreview(`http://localhost:8080/${response.data.profileImage}`);
+        }
+      } else {
+        throw new Error('Error updating profile');
+      }
     } catch (error) {
-      console.error('Registration failed:', error);
-      alert('Registration failed: ' + error.message);
+      console.error('Error updating profile:', error);
+      alert('Error updating profile: ' + error.message);
     }
   };
 
@@ -71,18 +95,18 @@ const RegisterStudent = () => {
     navigate(-1);
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
-
   return (
-    <div className={`student-register-container ${preview ? 'with-preview' : ''}`}>
-      {/* Back Button */}
-      <IconButton onClick={handleBack} aria-label="Go back" style={{ position: 'absolute', top: 20, left: 20, color: '#ffffff' }}>
+    <div className="student-profile-container">
+      <IconButton onClick={handleBack} aria-label="Go back" style={{ position: 'absolute', top: 22, left: 25, color: '#ffffff' }}>
         <ArrowBackIcon />
       </IconButton>
 
-      <h2>Student Registration</h2>
+      <h2>Your Profile</h2>
+      {preview && (
+        <div className="profile-image-container">
+          <img src={preview} alt="Profile" className="profile-image" />
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="username">Username:</label>
@@ -90,39 +114,9 @@ const RegisterStudent = () => {
             type="text"
             id="username"
             name="username"
-            value={formData.username}
+            value={student.username}
             onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group" style={{ position: 'relative' }}>
-          <label htmlFor="password">Password:</label>
-          <input
-            type={showPassword ? 'text' : 'password'}
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          {/* Password visibility toggle button */}
-          <IconButton
-            onClick={togglePasswordVisibility}
-            style={{ position: 'absolute', right: 0, top: '70%', transform: 'translateY(-50%)' }}
-            aria-label="Toggle password visibility"
-          >
-            {showPassword ? <VisibilityOff /> : <Visibility />}
-          </IconButton>
-        </div>
-        <div className="form-group">
-          <label htmlFor="studentName">Student Name:</label>
-          <input
-            type="text"
-            id="studentName"
-            name="studentName"
-            value={formData.studentName}
-            onChange={handleChange}
-            required
+            disabled
           />
         </div>
         <div className="form-group">
@@ -131,7 +125,18 @@ const RegisterStudent = () => {
             type="email"
             id="email"
             name="email"
-            value={formData.email}
+            value={student.email}
+            onChange={handleChange}
+            disabled
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="studentName">Student Name:</label>
+          <input
+            type="text"
+            id="studentName"
+            name="studentName"
+            value={student.studentName}
             onChange={handleChange}
             required
           />
@@ -142,7 +147,7 @@ const RegisterStudent = () => {
             type="text"
             id="courseYear"
             name="courseYear"
-            value={formData.courseYear}
+            value={student.courseYear}
             onChange={handleChange}
             required
           />
@@ -153,7 +158,7 @@ const RegisterStudent = () => {
             type="text"
             id="city"
             name="city"
-            value={formData.city}
+            value={student.city}
             onChange={handleChange}
             required
           />
@@ -164,64 +169,70 @@ const RegisterStudent = () => {
             type="number"
             id="age"
             name="age"
-            value={formData.age}
+            value={student.age}
             onChange={handleChange}
             required
             min="1"
           />
         </div>
         <div className="form-group">
-          <label htmlFor="profilePicture">Profile Picture:</label>
+          <label htmlFor="profileImage">Profile Picture:</label>
           <input
             type="file"
-            id="profilePicture"
-            name="profilePicture"
+            id="profileImage"
+            name="profileImage"
             onChange={handleFileChange}
           />
-          {preview && (
-            <div className="profile-image-container">
-              <img src={preview} alt="Profile Preview" className="profile-image" />
-            </div>
-          )}
         </div>
-        <button type="submit" className="primary-button">Register</button>
+        <button type="submit" className="primary-button">Update Profile</button>
       </form>
       <style>{`
-        .student-register-container {
+        .student-profile-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: auto;
-            width: 25%; /* Adjusted for a more balanced layout */
-            max-width: 800px; /* Ensures it doesnt stretch too wide on larger screens */
-            min-width: 300px; /* Ensures it stays readable on smaller screens */
+            height: auto; /* Adjust height to auto */
+            width: 25%;
+            max-width: 800px;
+            min-width: 300px;
             padding: 20px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             border-radius: 50px;
             position: absolute;
-            top: 57%;
+            top: 53%;
             left: 50%;
             transform: translate(-50%, -50%);
             animation: fadeBlur 2s ease-in-out;
             filter: blur(0px);
-            transition: padding-bottom 0.3s ease-in-out;
         }
 
-        .student-register-container.with-preview {
+        .student-profile-container.with-preview {
             padding-bottom: 40px; /* Increase padding-bottom when preview is displayed */
         }
 
-        .student-register-container h2 {
+        .student-profile-container h2 {
             font-size: 2rem;
             color: black;
             margin-bottom: 20px;
             text-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
         }
 
+        .profile-display {
+          margin-bottom: 20px;
+          text-align: left;
+          width: 100%;
+          max-width: 300px;
+        }
+
+        .profile-display p {
+          font-size: 1rem;
+          color: black;
+          margin: 5px 0;
+        }
+
         .profile-image-container {
-            margin-top: 10px;
-            text-align: center;
+            margin-bottom: 20px;
         }
 
         .profile-image {
@@ -279,11 +290,9 @@ const RegisterStudent = () => {
             background-color: #45a049;
             transform: scale(1.05);
         }
-  `}
-</style>
-
+      `}</style>
     </div>
   );
 };
 
-export default RegisterStudent;
+export default StudentProfile;

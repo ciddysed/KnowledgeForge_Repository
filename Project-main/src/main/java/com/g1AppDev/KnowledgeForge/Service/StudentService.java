@@ -1,6 +1,7 @@
 package com.g1AppDev.KnowledgeForge.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,33 @@ public class StudentService {
 
         Optional<Student> studentOptional = studentRepository.findByUsername(username);
         return studentOptional.orElse(null);
-
     }
+
+    public void saveUser(Student student) {
+        studentRepository.save(student);
+    }
+
+    public Student updateUser(int userId, Student newUserDetails) {
+        Student user = new Student();
+        try {
+            user = studentRepository.findById(userId).get();  // Find user by ID
+
+            // Update the user details
+            user.setUsername(newUserDetails.getUsername());
+            user.setEmail(newUserDetails.getEmail());
+            user.setPassword(newUserDetails.getPassword());
+
+            // Update the profile image if it's not null
+            if (newUserDetails.getProfileImage() != null) {
+                // Set the new profile image path
+                user.setProfileImage(newUserDetails.getProfileImage());
+            }
+
+        } catch (NoSuchElementException ex) {
+            throw new NoSuchElementException("User with ID " + userId + " does not exist!");
+        }
+        // Save the updated user to the database
+        return studentRepository.save(user);
+    }
+
 }

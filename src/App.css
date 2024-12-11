@@ -20,25 +20,16 @@ body {
 }
 
 body {
-  background-color: #f6f6f6;
+    background-image: url('Assets/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 90px;
-}
 .navbar-menu-container {
   display: none;
 }
-.navbar-links-container a {
-  margin-right: 6rem;
-  text-decoration: none;
-  color: black;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
+
 .primary-button {
   padding: 0.9rem 1.75rem;
   background-color: white;
@@ -50,9 +41,7 @@ nav {
   font-weight: 600;
   transition: 0.2s;
 }
-.navbar-cart-icon {
-  font-size: 1.15rem;
-}
+
 .primary-button:hover {
   background-color: rgb(234, 234, 234);
 }
@@ -73,26 +62,14 @@ nav {
   max-width: 700px;
 }
 .home-image-section {
-  max-width: 600px;
+  max-width: 750px;
   flex: 1;
 }
-.home-text-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-}
-.primary-heading {
-  font-size: clamp(2rem, 5vw, 4rem);
-  color: #4c4c4c;
-  line-height: 5rem;
-  max-width: 600px;
-}
+
 .primary-text {
   font-size: clamp(1rem, 3vw, 1.5rem);
   max-width: 500px;
-  color: #6a6a6a;
+  color: #000000;
   margin: 1.5rem 0rem;
 }
 .secondary-button {
@@ -109,11 +86,6 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none; /* Remove underline */
-}
-
-/* Remove underline specifically for Link components */
-.link-no-underline {
   text-decoration: none; /* Remove underline */
 }
 
@@ -266,13 +238,6 @@ nav {
   color: #1877F2;
 }
 .testimonial-section-bottom h2 {
-  margin-top: 1.5rem;
-}
-.work-section-wrapper {
-  margin-top: 2rem;
-}
-.work-section-top p {
-  text-align: center;
   max-width: 600px !important;
 }
 .work-section-top h1 {
@@ -434,89 +399,6 @@ nav {
   .about-background-image-container {
     display: none;
   }
-}
-
-/* LoginTutor */
-.login-tutor-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start; /* Center vertically */
-  height: 100vh; /* Full viewport height */
-  background-color: rgba(0, 0, 0, 0); /* Optional: add a background for better visibility */
-  padding: 20px;
-  border-radius: 10px; /* Rounded corners */
-}
-
-.login-tutor-header {
-  color: #000000;
-  margin-bottom: 20px;
-}
-
-.login-tutor-error {
-  color: red; /* Error message color */
-  margin-bottom: 10px;
-}
-
-.login-tutor-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.login-tutor-form-group {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.login-tutor-label {
-  color: #000000; /* Change label text color to white */
-  margin-bottom: 5px; /* Add some space below the label */
-}
-
-.login-tutor-input {
-  padding: 10px;
-  font-size: 16px;
-  width: 250px; /* Adjust width as needed */
-  border: 1px solid #ccc; /* Light border */
-  border-radius: 5px; /* Rounded corners */
-}
-
-.login-tutor-submit {
-  width: 250px;
-  padding: 10px;
-  margin: 10px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.login-tutor-submit:hover {
-  background-color: #0056b3;
-}
-
-.login-tutor-register-link {
-  margin-top: 10px;
-  color: #000000; /* Link color */
-}
-
-/* RegisterTutor */
-.tutor-register-container {
-  max-width: 400px; /* Adjust max-width for responsiveness */
-  margin: auto; /* Centering the form */
-  padding: 20px;
-  border: 1px solid #ccc; /* Light border for form */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
-
-.tutor-register-container h2 {
-  text-align: center; /* Center title */
-  margin-bottom: 20px; /* Spacing below title */
 }
 
 .form-group {

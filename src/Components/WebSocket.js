@@ -1,5 +1,7 @@
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import { useEffect } from 'react';
+import { over } from 'stompjs';
 
 let stompClient = null;
 
@@ -88,3 +90,23 @@ export const subscribeToTutorAcceptance = (studentUsername, callback) => {
     console.error("WebSocket is not connected. Cannot subscribe to tutor acceptance notifications.");
   }
 };
+
+const useWebSocket = () => {
+    useEffect(() => {
+      const socket = new SockJS('http://localhost:8080/ws');
+      const stompClient = over(socket);
+  
+      stompClient.connect({}, () => {
+        console.log('WebSocket connected');
+        stompClient.subscribe('/topic/messages', (message) => {
+          console.log('Received:', message.body);
+        });
+      });
+  
+      return () => {
+        stompClient.disconnect();
+      };
+    }, []);
+  };
+  
+  export default useWebSocket;

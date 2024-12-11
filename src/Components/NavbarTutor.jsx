@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom'; // useNavigate for navigation
 import Logo from "../Assets/logo.png";
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaSignOutAlt, FaUser } from "react-icons/fa";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -42,7 +42,9 @@ const NavbarStudent = () => {
       </div>
       <div className="navbarStudent-links-container">
         <Link to="/tutorHome">Home</Link>
-        <Link to="#">Profile</Link>
+        <Link to="/profile">
+          <FaUser className="profile-icon" /> {/* Profile icon */}
+        </Link>
       </div>
       <button onClick={handleLogout} className="logout-button creative-btn">
             <FaSignOutAlt className="logout-icon" /> {/* Logout icon */}
@@ -69,11 +71,26 @@ const NavbarStudent = () => {
         </Box>
       </Drawer>
       <style>{`
+      nav {
+        border-radius: 0 0 10px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 75px;
+        min-width: 100%;
+      }
+
+      .profile-icon {
+        font-size: 1.5rem;
+        color: black;
+        margin-top: 4px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      
       .nav-logo-container {
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 10px;
       }
 
       .fancy-logo {
@@ -85,7 +102,7 @@ const NavbarStudent = () => {
       }
 
       .nav-logo {
-        width: 150px;
+        width: 200px;
         height: auto;
         padding: 5px;
       }
@@ -93,7 +110,6 @@ const NavbarStudent = () => {
         .nav-logo-container {
           max-width: 140px;
           margin-left: 20px; /* Add slight margin for spacing from the left */
-          display: inline-block; /* Align it with navbar links */
         }
 
         .navbarStudent-links-container {

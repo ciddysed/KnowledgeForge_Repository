@@ -35,6 +35,9 @@ public class Student {
     @Column(name = "age", nullable = false)
     private int age;
 
+    @Column(name = "profile_image")
+    private String profileImage;
+
     // Additional attributes can be added if needed
     // Example:
     // @Column(name = "full_name", nullable = false)
@@ -105,4 +108,13 @@ public class Student {
     public void setAge(int age) {
         this.age = age;
     }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
 }

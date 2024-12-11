@@ -69,13 +69,26 @@ const LoginTutor = () => {
       <p className="login-tutor-register-link">
         Don't have an account? <Link to="/RegisterTutor">Register here.</Link>
       </p>
-      <style>{`
+      <style> {`
+        :root {
+          --primary-color: #66a6ff;
+          --secondary-color: #45a049;
+          --error-color: #ff4d4d;
+          --background-color: rgba(220, 220, 220, 0.1);
+          --text-color: black;
+          --input-border-color: #ddd;
+          --input-focus-border-color: var(--primary-color);
+          --button-background-color: blue;
+          --button-hover-background-color: var(--secondary-color);
+        }
+
         .login-tutor-container {
+          background-color: var(--background-color);
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          height: 40vh;
+          height: 45vh;
           width: 25%;
           padding: 20px;
           box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -138,6 +151,7 @@ const LoginTutor = () => {
         }
 
         .login-tutor-submit {
+          margin-top: 15px;
           width: 100%;
           max-width: 300px;
           padding: 10px;
@@ -157,19 +171,31 @@ const LoginTutor = () => {
         }
 
         .login-tutor-register-link {
-          margin-top: 15px;
+          margin-top: 40px;
           font-size: 1rem;
           color: black;
           text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         .login-tutor-register-link a {
-          color: blue;
+          color: var(--primary-color);
           text-decoration: none;
         }
 
         .login-tutor-register-link a:hover {
           text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+          .login-student-container {
+            width: 80%;
+            height: auto;
+            padding: 20px;
+          }
+
+          .login-student-input,
+          .login-student-submit {
+            max-width: 100%;
+          }
         }
       `}</style>
     </div>

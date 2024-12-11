@@ -28,7 +28,7 @@ const LoginPage = () => {
                 .login-page h2 {
                     margin-bottom: 20px;
                     font-size: 2rem;
-                    animation: fadeIn 2s ease-in-out;
+                    animation: fadeIn 1s ease-in-out;
                 }
 
                 .login-button {
@@ -41,9 +41,9 @@ const LoginPage = () => {
                     border: 2px solid blue;
                     border-radius: 30px;
                     cursor: pointer;
-                    transition: all 0.3s ease-in-out;
-                    animation: fadeIn 2s ease-in-out;
-                    animation-delay: 0.1s; /* Staggered fade for buttons */
+                    transition: all 0.2s ease-in-out;
+                    animation: fadeIn 1s ease-in-out;
+                    animation-delay: 0.1s;
                 }
 
                 .login-button:hover {
