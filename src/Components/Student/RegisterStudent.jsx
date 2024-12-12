@@ -4,7 +4,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import IconButton from '@mui/material/IconButton';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
- 
+
 const RegisterStudent = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -15,12 +15,10 @@ const RegisterStudent = () => {
     city: '',
     age: '',
   });
- 
+
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
- 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -28,77 +26,50 @@ const RegisterStudent = () => {
       [name]: value,
     });
   };
- 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
-    setPreview(URL.createObjectURL(file));
-  };
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Submitting form data:', formData);
- 
+
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('username', formData.username);
-      formDataToSend.append('password', formData.password);
-      formDataToSend.append('studentName', formData.studentName);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('courseYear', formData.courseYear);
-      formDataToSend.append('city', formData.city);
-      formDataToSend.append('age', formData.age);
-      if (selectedFile) {
-        formDataToSend.append('profilePicture', selectedFile);
-      }
- 
       const response = await fetch('http://localhost:8080/api/students/register', {
         method: 'POST',
-        body: formDataToSend,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
- 
+
       if (!response.ok) {
         throw new Error('Error in registration');
       }
- 
+
       const data = await response.json();
       console.log('Registered successfully:', data);
       alert('Registration successful!');
-     
-      // Store profile image URL in localStorage
-      if (data.profileImage) {
-        const profileImageUrl = `http://localhost:8080/${data.profileImage}`;
-        localStorage.setItem('profileImage', profileImageUrl);
- 
-        // Dispatch custom event to update profile image in NavbarStudent
-        const profileUpdateEvent = new CustomEvent('profileUpdate', {
-          detail: { profileImage: profileImageUrl },
-        });
-        window.dispatchEvent(profileUpdateEvent);
-      }
- 
+
       navigate('/loginStudent');
     } catch (error) {
       console.error('Registration failed:', error);
       alert('Registration failed: ' + error.message);
     }
   };
- 
+
   const handleBack = () => {
     navigate(-1);
   };
- 
+
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
- 
+
   return (
-    <div className={`student-register-container ${preview ? 'with-preview' : ''}`}>
+    <div className="student-register-container">
       {/* Back Button */}
       <IconButton onClick={handleBack} aria-label="Go back" style={{ position: 'absolute', top: 20, left: 20, color: '#ffffff' }}>
         <ArrowBackIcon />
       </IconButton>
- 
+
       <h2>Student Registration</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -187,20 +158,6 @@ const RegisterStudent = () => {
             min="1"
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="profilePicture">Profile Picture:</label>
-          <input
-            type="file"
-            id="profilePicture"
-            name="profilePicture"
-            onChange={handleFileChange}
-          />
-          {preview && (
-            <div className="profile-image-container">
-              <img src={preview} alt="Profile Preview" className="profile-image" />
-            </div>
-          )}
-        </div>
         <button type="submit" className="primary-button">Register</button>
       </form>
       <style>{`
@@ -224,44 +181,27 @@ const RegisterStudent = () => {
             filter: blur(0px);
             transition: padding-bottom 0.3s ease-in-out;
         }
- 
-        .student-register-container.with-preview {
-            padding-bottom: 40px; /* Increase padding-bottom when preview is displayed */
-        }
- 
+
         .student-register-container h2 {
             font-size: 2rem;
             color: black;
             margin-bottom: 20px;
             text-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
         }
- 
-        .profile-image-container {
-            margin-top: 10px;
-            text-align: center;
-        }
- 
-        .profile-image {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
- 
+
         .form-group {
             margin-bottom: 15px;
             width: 100%;
             text-align: left;
         }
- 
+
         .form-group label {
             font-size: 1rem;
             color: black;
             margin-bottom: 5px;
             display: block;
         }
- 
+
         .form-group input {
             width: 100%;
             max-width: 300px;
@@ -272,12 +212,12 @@ const RegisterStudent = () => {
             outline: none;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
         }
- 
+
         .form-group input:focus {
             border-color: #66a6ff;
             box-shadow: 0 0 6px rgba(102, 166, 255, 0.5);
         }
- 
+
         .primary-button {
             width: 100%;
             max-width: 300px;
@@ -291,16 +231,16 @@ const RegisterStudent = () => {
             transition: all 0.3s ease-in-out;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         }
- 
+
         .primary-button:hover {
             background-color: #45a049;
             transform: scale(1.05);
         }
   `}
 </style>
- 
+
     </div>
   );
 };
- 
+
 export default RegisterStudent;
