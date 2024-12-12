@@ -31,18 +31,22 @@ public class HostClassService {
         return hostClassRepository.findAll();
     }
 
-    public Optional<HostClass> getHostClassById(int id) {
+    public Optional<HostClass> getHostClassById(Long id) {
         logger.info("Fetching HostClass by ID: {}", id);
         return hostClassRepository.findById(id);
     }
 
-    public void deleteHostClass(int id) {
+    public void deleteHostClass(Long id) {
         logger.info("Deleting HostClass by ID: {}", id);
         hostClassRepository.deleteById(id);
     }
 
     public List<HostClass> getHostClassesByTutorId(int tutorId) {
         logger.info("Fetching HostClasses by Tutor ID: {}", tutorId);
+        return hostClassRepository.findByTutor_TutorID(tutorId);
+    }
+
+    public List<HostClass> getClassesByTutorId(int tutorId) {
         return hostClassRepository.findByTutor_TutorID(tutorId);
     }
 

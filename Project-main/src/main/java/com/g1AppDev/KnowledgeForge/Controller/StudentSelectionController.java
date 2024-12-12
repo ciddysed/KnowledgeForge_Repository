@@ -3,6 +3,7 @@ package com.g1AppDev.KnowledgeForge.Controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,8 @@ import com.g1AppDev.KnowledgeForge.Entity.Student;
 import com.g1AppDev.KnowledgeForge.Entity.StudentSelection;
 import com.g1AppDev.KnowledgeForge.Service.StudentSelectionService;
 import com.g1AppDev.KnowledgeForge.Service.StudentService;
+import com.g1AppDev.KnowledgeForge.Service.HostClassService;
+import com.g1AppDev.KnowledgeForge.Entity.HostClass;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -34,6 +37,9 @@ public class StudentSelectionController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private HostClassService hostClassService;
 
     // Endpoint to get students who selected a particular tutor
     @GetMapping("/{tutorUsername}")
@@ -60,8 +66,14 @@ public class StudentSelectionController {
 
     // Endpoint to get tutors chosen by a specific student
     @GetMapping("/student/{studentUsername}")
-    public List<StudentSelection> getTutorsForStudent(@PathVariable String studentUsername) {
-        return studentSelectionService.getTutorsByStudent(studentUsername);
+    public List<HostClass> getTutorsForStudent(@PathVariable String studentUsername) {
+        List<StudentSelection> selections = studentSelectionService.getTutorsByStudent(studentUsername).stream()
+            .filter(StudentSelection::isAccepted) // Ensure only accepted selections are returned
+            .collect(Collectors.toList());
+
+        return selections.stream()
+            .flatMap((StudentSelection selection) -> hostClassService.getClassesByTutorId(selection.getTutorId().intValue()).stream())
+            .collect(Collectors.toList());
     }
 
     @PostMapping("/select")

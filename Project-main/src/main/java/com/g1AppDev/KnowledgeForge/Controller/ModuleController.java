@@ -3,7 +3,6 @@ package com.g1AppDev.KnowledgeForge.Controller;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,6 +109,16 @@ public class ModuleController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostMapping("/{moduleId}/trackAccess")
+    public ResponseEntity<Void> trackModuleAccess(@PathVariable int moduleId, @RequestParam String studentUsername) {
+        try {
+            moduleService.trackModuleAccess(moduleId, studentUsername);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

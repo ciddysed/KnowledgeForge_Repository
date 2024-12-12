@@ -11,7 +11,7 @@ const connectWebSocket = (callback) => {
 };
 
 const StudentHome = () => {
-  const [username, setUsername] = useState('');
+  const [studentName, setStudentName] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const StudentHome = () => {
     // Check if token and user data are available
     if (storedToken && storedUsername) {
       const userData = JSON.parse(storedUsername);
-      setUsername(userData.username);
+      setStudentName(userData.studentName);
 
       connectWebSocket(() => {
         subscribeToStudentNotifications(userData.username, (message) => {
@@ -51,50 +51,8 @@ const StudentHome = () => {
     navigate('/bookedTutors');
   };
 
-  // const handleViewClass = async (classId) => {
-  //   try {
-  //     const response = await fetch(`http://localhost:8080/api/notifications/checkAccess`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ studentUsername: username, classId }),
-  //     });
-
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       if (data.accessGranted) {
-  //         navigate(`/classView/${classId}`, { state: { hostClass: data.hostClass } });
-  //       } else {
-  //         alert('Access denied. You are not accepted for this class.');
-  //       }
-  //     } else {
-  //       alert('Failed to check access.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error checking access:', error);
-  //     alert('An error occurred. Please try again later.');
-  //   }
-  // };
-
-  const handleViewClasses = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/notifications/student/${username}`);
-      if (response.ok) {
-        const classes = await response.json();
-        const acceptedClasses = classes.filter(c => c.accepted);
-        if (acceptedClasses.length > 0) {
-          navigate(`/studentClassView/${acceptedClasses[0].tutorId}`, { state: { hostClass: acceptedClasses[0] } });
-        } else {
-          alert('No accepted classes found.');
-        }
-      } else {
-        alert('Failed to fetch classes.');
-      }
-    } catch (error) {
-      console.error('Error fetching classes:', error);
-      alert('An error occurred. Please try again later.');
-    }
+  const handleViewClasses = () => {
+    navigate(`/studentClassList`);
   };
 
   return (
@@ -105,7 +63,7 @@ const StudentHome = () => {
         </div>
         <div className="home-text-section">
           <h1 className="primary-heading">
-            {username && <p>Welcome, {username}!</p>}
+            {studentName && <p>Welcome, {studentName}!</p>}
           </h1>
 
           <div className="management-links">

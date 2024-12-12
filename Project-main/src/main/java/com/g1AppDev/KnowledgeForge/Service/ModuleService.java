@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.g1AppDev.KnowledgeForge.Entity.Module;
-import com.g1AppDev.KnowledgeForge.Repository.ModuleRepo;
+import com.g1AppDev.KnowledgeForge.Repository.ModuleRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +23,11 @@ public class ModuleService {
 
     
     @Autowired
-    private final ModuleRepo moduleRepository;
+    private final ModuleRepository moduleRepository;
     private final Path fileStorageLocation = Paths.get("uploads").toAbsolutePath().normalize();
     private static final Logger logger = LoggerFactory.getLogger(ModuleService.class);
 
-    public ModuleService(ModuleRepo moduleRepository) {
+    public ModuleService(ModuleRepository moduleRepository) {
         this.moduleRepository = moduleRepository;
         try {
             Files.createDirectories(this.fileStorageLocation);
@@ -121,5 +121,10 @@ public class ModuleService {
         } else {
             logger.error("Module not found with ID: " + moduleId);
         }
+    }
+
+    public void trackModuleAccess(int moduleId, String studentUsername) {
+        // Logic to track module access by student
+        // This could involve updating a database table that tracks student progress
     }
 }

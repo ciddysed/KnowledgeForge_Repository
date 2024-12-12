@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
 import CourseManagement from "./Components/CourseManagement";
 import About from "./Components/Navigation/About";
@@ -36,7 +36,10 @@ import AdminLogin from "./Components/AdminLogin";
 import HostClass from "./Components/TutorSpecific/HostClass";
 import TutorClasses from "./Components/TutorSpecific/TutorClasses";
 import ClassView from "./Components/TutorSpecific/ClassView";
+import StudentClassList from './Components/Student/StudentClassList';
 // import StudentClassView from './Components/Student/StudentClassView';
+import ModuleList from './Components/Student/ModuleList'; // Ensure this import is correct
+
 
 
 function App() {
@@ -57,7 +60,8 @@ function App() {
       return <Navbar />; // Navbar only for Home.jsx
     }
     if (location.pathname === "/studentHome" 
-      || location.pathname === "/Search") {
+      || location.pathname === "/Search"
+      || location.pathname === "/studentClassList") {
       return <NavbarStudent />; // NavbarStudent for Home1 and Students
     }
     if (location.pathname === "/tutorHome"
@@ -65,7 +69,8 @@ function App() {
       || location.pathname === "/tutorTopic"
       || location.pathname === "/notifications"
       || location.pathname === "/hostClass"
-      || location.pathname === "/TutorClasses") {
+      || location.pathname === "/TutorClasses"
+      || location.pathname === "/classView") {
       return <NavbarTutor />; // NavbarTutor for Home2
     }
     return null; // No Navbar for other components
@@ -106,6 +111,8 @@ function App() {
         <Route path="/hostClass" element={<HostClass />} />
         <Route path="/TutorClasses" element={<TutorClasses />} />
         <Route path="/classView" element={<ClassView />} />
+        <Route path="/studentClassList" element={<StudentClassList />} />
+        <Route path="/modules/:topicId" element={<ModuleList />} /> {/* Ensure this route is correct */}
         {/* <Route path="/studentClassView/:tutorId" element={<StudentClassView />} /> */}
       </Routes>
       {/* <Footer /> */}

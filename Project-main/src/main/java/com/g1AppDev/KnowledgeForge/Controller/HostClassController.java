@@ -29,13 +29,13 @@ public class HostClassController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HostClass> getHostClassById(@PathVariable int id) {
+    public ResponseEntity<HostClass> getHostClassById(@PathVariable Long id) {
         Optional<HostClass> hostClass = hostClassService.getHostClassById(id);
         return hostClass.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteHostClass(@PathVariable int id) {
+    public ResponseEntity<Void> deleteHostClass(@PathVariable Long id) {
         hostClassService.deleteHostClass(id);
         return ResponseEntity.noContent().build();
     }
@@ -47,7 +47,7 @@ public class HostClassController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HostClass> updateHostClass(@PathVariable int id, @RequestBody HostClass updatedHostClass) {
+    public ResponseEntity<HostClass> updateHostClass(@PathVariable Long id, @RequestBody HostClass updatedHostClass) {
         Optional<HostClass> existingHostClass = hostClassService.getHostClassById(id);
         if (existingHostClass.isPresent()) {
             HostClass hostClass = existingHostClass.get();
