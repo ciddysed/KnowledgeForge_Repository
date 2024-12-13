@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation, BrowserRouter as Router } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import CourseManagement from "./Components/CourseManagement";
 import About from "./Components/Navigation/About";
@@ -10,10 +10,10 @@ import Home1 from "./Components/Home1";
 import Home2 from "./Components/Home2";
 import LoginPage from "./Components/LoginPage";
 import ModuleManagement from "./Components/ModuleManagement";
-import Home from "./Components/Navigation/Home";
-import Navbar from "./Components/Navigation/Navbar";
 import NavbarStudent from "./Components/NavbarStudent";
 import NavbarTutor from "./Components/NavbarTutor";
+import Home from "./Components/Navigation/Home";
+import Navbar from "./Components/Navigation/Navbar";
 import Testimonial from "./Components/Navigation/Testimonial";
 import QuizManagement from "./Components/QuizManagement";
 import BookedTutors from "./Components/Student/BookedTutors";
@@ -26,17 +26,17 @@ import Notifications from './Components/TutorSpecific/Notifications';
 import RegisterTutor from "./Components/TutorSpecific/RegisterTutor";
 import Students from "./Components/TutorSpecific/Students";
 
+import AdminLogin from "./Components/AdminLogin";
+import StudentClassList from './Components/Student/StudentClassList';
 import TutorProfile from "./Components/Student/TutorProfile";
 import Search from "./Components/Student/TutorSearch";
+import ClassView from "./Components/TutorSpecific/ClassView";
+import HostClass from "./Components/TutorSpecific/HostClass";
+import TutorClasses from "./Components/TutorSpecific/TutorClasses";
 import TutorCourse from './Components/TutorSpecific/TutorCourse';
 import TutorHome from './Components/TutorSpecific/TutorHome';
 import TutorTopic from "./Components/TutorSpecific/TutorTopic";
 import Work from "./Components/Work";
-import AdminLogin from "./Components/AdminLogin";
-import HostClass from "./Components/TutorSpecific/HostClass";
-import TutorClasses from "./Components/TutorSpecific/TutorClasses";
-import ClassView from "./Components/TutorSpecific/ClassView";
-import StudentClassList from './Components/Student/StudentClassList';
 // import StudentClassView from './Components/Student/StudentClassView';
 import ModuleList from './Components/Student/ModuleList'; // Ensure this import is correct
 

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const LoginTutor = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -65,7 +64,7 @@ const LoginTutor = () => {
         <div className="login-tutor-form-group" style={{ position: 'relative' }}>
           <label className="login-tutor-label">Password:</label>
           <input
-            type={showPassword ? 'text' : 'password'}
+            type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

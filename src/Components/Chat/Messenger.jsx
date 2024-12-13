@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
 
 const Messenger = ({ tutorId }) => {
   const [conversations, setConversations] = useState([]);
@@ -9,7 +9,7 @@ const Messenger = ({ tutorId }) => {
   useEffect(() => {
     // Fetch conversations when the component mounts
     fetchConversations();
-  }, []);
+  }, [fetchConversations]);
 
   const fetchConversations = async () => {
     try {

@@ -1,3 +1,4 @@
+
 package com.g1AppDev.KnowledgeForge.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,4 @@ public class ChatController {
         System.out.println("Message sent: " + chat.toString());
     }
 }       
-
 

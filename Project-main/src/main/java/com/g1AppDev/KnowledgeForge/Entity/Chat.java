@@ -48,3 +48,4 @@ public class Chat {
         this.status = status;
     }
 }
+

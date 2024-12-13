@@ -1,73 +1,177 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { connectWebSocket, sendNotification, subscribeToStudentNotifications } from '../WebSocket';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import SockJS from 'sockjs-client';
+import { over } from 'stompjs';
+import './Chat.css';
 
 const Chat = () => {
-  const { studentUsername } = useParams();
+  const { studentUsername, tutorUsername } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const ws = useRef(null);
+  const [privateChats, setPrivateChats] = useState(new Map());
+  const [notifications, setNotifications] = useState([]);
+  const chatEndRef = useRef(null);
+  const stompClientRef = useRef(null);
+
+  const onConnected = useCallback(() => {
+    stompClientRef.current.subscribe(
+      `/user/${studentUsername}/private`,
+      onMessageReceived
+    );
+    stompClientRef.current.subscribe(
+      `/user/${tutorUsername}/private`,
+      onMessageReceived
+    );
+    stompClientRef.current.subscribe(
+      `/user/${studentUsername}/notification`,
+      onNotification
+    );
+    stompClientRef.current.subscribe(
+      `/user/${tutorUsername}/notification`,
+      onNotification
+    );
+    console.log('WebSocket connected');
+  }, [studentUsername, tutorUsername]);
+
+  const connectWebSocket = useCallback(() => {
+    const Sock = new SockJS('http://localhost:8080/ws');
+    stompClientRef.current = over(Sock);
+    stompClientRef.current.connect({}, onConnected, (err) => {
+      console.error('WebSocket connection error:', err);
+    });
+  }, [onConnected]);
+
+  const onMessageReceived = (payload) => {
+    try {
+      const payloadData = JSON.parse(payload.body);
+      const message = {
+        sender: payloadData.senderName || 'Unknown',
+        content: payloadData.message || '',
+        timestamp: payloadData.timestamp || new Date().toISOString(),
+        isReply: payloadData.isReply || false,
+        isImage: payloadData.isImage || false,
+        isCrossMessage: payloadData.isCrossMessage || false,
+      };
+
+      if (payloadData.receiverName === studentUsername) {
+        setPrivateChats((prevChats) => {
+          const updatedChats = new Map(prevChats);
+          const senderMessages = updatedChats.get(payloadData.senderName) || [];
+          senderMessages.push(message);
+          updatedChats.set(payloadData.senderName, senderMessages);
+          return updatedChats;
+        });
+        setNotifications((prev) => [...prev, `New private message from ${payloadData.senderName}`]);
+      } else {
+        setMessages((prevMessages) => [...prevMessages, message]);
+      }
+    } catch (error) {
+      console.error('Error parsing message payload:', error);
+    }
+  };
+
+  const onNotification = (payload) => {
+    const notification = payload.body;
+    setNotifications((prev) => [...prev, notification]);
+  };
 
   useEffect(() => {
-    ws.current = connectWebSocket(() => {
-      subscribeToStudentNotifications(studentUsername, (message) => {
-        setMessages((prevMessages) => [...prevMessages, message]);
-      });
-    });
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, privateChats]);
 
+  useEffect(() => {
+    if (!studentUsername || !tutorUsername) {
+      return;
+    }
+    connectWebSocket();
     return () => {
-      ws.current?.close();
+      if (stompClientRef.current) {
+        stompClientRef.current.disconnect();
+        console.log('Disconnected');
+      }
     };
-  }, [studentUsername]);
+  }, [connectWebSocket, studentUsername, tutorUsername]);
 
   const handleSendMessage = () => {
-    if (newMessage.trim() === '') return;
+    const trimmedMessage = newMessage.trim();
+    if (!trimmedMessage || !stompClientRef.current) return;
 
-    sendNotification(studentUsername, newMessage);
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { sender: 'tutor', content: newMessage },
-    ]);
+    const message = {
+      senderName: studentUsername,
+      receiverName: tutorUsername,
+      message: trimmedMessage,
+      status: 'MESSAGE',
+      isReply: false,
+      isImage: false,
+      timestamp: new Date().toISOString(),
+    };
+
+    stompClientRef.current.send(
+      `/app/private-message`,
+      {},
+      JSON.stringify(message)
+    );
+
+    setPrivateChats((prevChats) => {
+      const updatedChats = new Map(prevChats);
+      const tutorMessages = updatedChats.get(tutorUsername) || [];
+      tutorMessages.push(message);
+      updatedChats.set(tutorUsername, tutorMessages);
+      return updatedChats;
+    });
+
     setNewMessage('');
+    setTimeout(() => {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <ToastContainer />
-      <h1 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>
-        Chat with {studentUsername}
-      </h1>
-      <div style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '10px', backgroundColor: '#fff' }}>
+    <div className="chat-container">
+      <div className="chat-header">
+        <h2>Chat with {tutorUsername ? tutorUsername : studentUsername}</h2>
+      </div>
+      <div className="chat-messages">
         {messages.map((msg, index) => (
-          <div key={index} style={{ marginBottom: '10px' }}>
-            <strong>{msg.sender}:</strong> {msg.content}
+          <div
+            key={index}
+            className={`chat-message ${msg.isCrossMessage ? 'cross-message' : msg.sender === tutorUsername ? 'tutor-message' : 'student-message'} ${msg.isReply ? 'reply-message' : ''}`}
+            style={{ alignSelf: msg.sender === studentUsername ? 'flex-end' : 'flex-start' }}
+          >
+            <div className="message-details">
+              <span className="message-sender">{msg.sender}</span>
+              <span className="message-timestamp">
+                {formatTimestamp(msg.timestamp)}
+              </span>
+            </div>
+            {msg.isImage ? (
+              <img src={msg.content} alt="Received" style={{ maxWidth: '100%', borderRadius: '10px' }} />
+            ) : (
+              <div className="message-content">{msg.content}</div>
+            )}
           </div>
         ))}
+        <div ref={chatEndRef} />
       </div>
-      <div style={{ display: 'flex', marginTop: '20px' }}>
+      <div className="chat-input">
         <input
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          style={{ flex: 1, padding: '10px', borderRadius: '5px', border: '1px solid #ddd' }}
+          placeholder="Type a message..."
+          className="input"
         />
         <button
           onClick={handleSendMessage}
-          style={{
-            padding: '10px 15px',
-            border: 'none',
-            borderRadius: '5px',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            cursor: 'pointer',
-            marginLeft: '10px',
-          }}
-        >Send
+          className="button"
+        >
+          Send
         </button>
-         
-        
       </div>
     </div>
   );

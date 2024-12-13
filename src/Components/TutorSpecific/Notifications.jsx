@@ -13,7 +13,6 @@ Modal.setAppElement('#root');
 
 const Notifications = () => {
   const [students, setStudents] = useState([]);
-  const [tutorUsername, setTutorUsername] = useState('');
   const [error, setError] = useState(null);
   const ws = useRef(null);
   const navigate = useNavigate();
@@ -26,7 +25,6 @@ const Notifications = () => {
     }
 
     const username = loggedInTutor.username;
-    setTutorUsername(username);
 
     const fetchStudents = async () => {
       try {

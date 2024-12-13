@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
-  FaBell,
   FaBook,
+  FaChalkboardTeacher,
   FaClipboardList,
   FaComments,
-  FaSignOutAlt,
-  FaChalkboardTeacher, // Import icon for "Host a Class"
 } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { subscribeToTutorNotifications } from '../WebSocket'; // Import WebSocket helper
 
 const TutorHome = () => {
-  const [username, setUsername] = useState('');
   const [tutorName, setTutorName] = useState(''); // Add state for tutorName
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
@@ -21,7 +18,6 @@ const TutorHome = () => {
     const storedUser = localStorage.getItem('loggedInUser');
     if (storedUser) {
       const userData = JSON.parse(storedUser);
-      setUsername(userData.username);
 
       // Fetch tutorName by username
       fetchTutorName(userData.username);
