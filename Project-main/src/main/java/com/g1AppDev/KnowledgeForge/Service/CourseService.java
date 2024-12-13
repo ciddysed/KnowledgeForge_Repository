@@ -57,8 +57,9 @@ public class CourseService {
     }
 
     public Course addCourseForTutor(String username, Course course) {
-        Tutor tutor = tutorRepository.findByUsername(username);
-        if (tutor != null) {
+        Optional<Tutor> tutorOptional = tutorRepository.findByUsername(username);
+        if (tutorOptional.isPresent()) {
+            Tutor tutor = tutorOptional.get();
             course.setTutor(tutor);
             return courseRepository.save(course);
         } else {

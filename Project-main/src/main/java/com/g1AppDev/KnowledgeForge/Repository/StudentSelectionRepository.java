@@ -18,4 +18,6 @@ public interface StudentSelectionRepository extends JpaRepository<StudentSelecti
 
     void deleteByTutorId(Long tutorId);
 
+    boolean existsByStudentUsernameAndTutorIdAndAccepted(String studentUsername, Long tutorId, boolean accepted);
+
 }

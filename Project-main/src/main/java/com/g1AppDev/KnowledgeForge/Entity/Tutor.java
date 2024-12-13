@@ -38,6 +38,13 @@ public class Tutor {
     @Column(name = "degrees")
     private String degrees;
 
+    // Constructor
+    public Tutor() {}
+
+    public Tutor(int tutorID) {
+        this.tutorID = tutorID;
+    }
+
     // Getters and Setters
 
     public int getTutorID() {

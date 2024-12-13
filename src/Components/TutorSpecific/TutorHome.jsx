@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { FaBell, FaBook, FaClipboardList, FaComments, FaSignOutAlt } from 'react-icons/fa'; // Import icons
+import {
+  FaBell,
+  FaBook,
+  FaClipboardList,
+  FaComments,
+  FaSignOutAlt,
+  FaChalkboardTeacher, // Import icon for "Host a Class"
+} from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import homeBannerBackground from '../../Assets/home-banner-background.png';
 import homeBannerImage from '../../Assets/home-banner-image.png';
@@ -7,6 +14,7 @@ import { subscribeToTutorNotifications } from '../WebSocket'; // Import WebSocke
 
 const TutorHome = () => {
   const [username, setUsername] = useState('');
+  const [tutorName, setTutorName] = useState(''); // Add state for tutorName
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
 
@@ -16,6 +24,9 @@ const TutorHome = () => {
     if (storedUser) {
       const userData = JSON.parse(storedUser);
       setUsername(userData.username);
+
+      // Fetch tutorName by username
+      fetchTutorName(userData.username);
 
       // Fetch notifications related to the tutor
       fetchNotifications(userData.username);
@@ -30,6 +41,20 @@ const TutorHome = () => {
       navigate('/loginTutor');
     }
   }, [navigate]);
+
+  const fetchTutorName = async (username) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/tutors/username/${username}`);
+      if (response.ok) {
+        const data = await response.json();
+        setTutorName(data.tutorName); // Set tutorName from response
+      } else {
+        console.error('Failed to fetch tutor name');
+      }
+    } catch (error) {
+      console.error('Error fetching tutor name:', error);
+    }
+  };
 
   const fetchNotifications = async (tutorUsername) => {
     try {
@@ -59,7 +84,7 @@ const TutorHome = () => {
         </div>
         <div className="home-text-section">
           <h1 className="primary-heading">
-            {username && <p>Welcome, {username}!</p>}
+            {tutorName && <p>Welcome, {tutorName}!</p>} {/* Use tutorName instead of username */}
           </h1>
 
           <div className="management-links">
@@ -73,12 +98,16 @@ const TutorHome = () => {
               Manage Your Topics
             </Link>
             <Link to="/notifications" className="management-link creative-link">
-              <FaBell className="link-icon" />
-              Notifications ({notifications.length})
+              <FaComments className="link-icon" />
+              Chat ({notifications.length})
             </Link>
-            <Link to="/chat" className="management-link creative-link">
+            {/* <Link to="/chat" className="management-link creative-link">
               <FaComments className="link-icon" />
               Messages
+            </Link> */}
+            <Link to="/hostClass" className="management-link creative-link">
+              <FaChalkboardTeacher className="link-icon" />
+              Host a Class
             </Link>
           </div>
           <div style={{ marginTop: '20px' }}>

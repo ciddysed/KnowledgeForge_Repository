@@ -27,8 +27,11 @@ public class Topic {
     @JoinColumn(name = "course_id", nullable = false)  // Foreign key column
     private Course course;
 
-    // Constructors
-    public Topic() {
+    // Constructor
+    public Topic() {}
+
+    public Topic(int topicID) {
+        this.topicID = topicID;
     }
 
     public Topic(String topicName, String description, Course course) {

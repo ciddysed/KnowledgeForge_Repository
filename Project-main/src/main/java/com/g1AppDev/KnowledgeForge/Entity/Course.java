@@ -26,7 +26,10 @@ public class Course {
     private Tutor tutor;
 
     // Constructors
-    public Course() {
+    public Course() {}
+
+    public Course(int courseID) {
+        this.courseID = courseID;
     }
 
     public Course(String courseName, Tutor tutor) {

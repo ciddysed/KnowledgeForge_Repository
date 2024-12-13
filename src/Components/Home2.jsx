@@ -18,7 +18,7 @@ const Home2 = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('loggedInUser');
-    navigate('/');
+    navigate('/admin');
   };
 
   return (
@@ -29,7 +29,7 @@ const Home2 = () => {
         </div>
         <div className="home-text-section">
           <h1 className="primary-heading">
-            {username && <p>Welcome, {username}!</p>}
+            {username && <p>Hello, admin!</p>}
           </h1>
 
           <button onClick={handleLogout} className="logout-button creative-btn">

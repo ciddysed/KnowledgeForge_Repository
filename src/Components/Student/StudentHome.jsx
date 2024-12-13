@@ -11,7 +11,7 @@ const connectWebSocket = (callback) => {
 };
 
 const StudentHome = () => {
-  const [username, setUsername] = useState('');
+  const [studentName, setStudentName] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const StudentHome = () => {
     // Check if token and user data are available
     if (storedToken && storedUsername) {
       const userData = JSON.parse(storedUsername);
-      setUsername(userData.username);
+      setStudentName(userData.studentName);
 
       connectWebSocket(() => {
         subscribeToStudentNotifications(userData.username, (message) => {
@@ -51,6 +51,10 @@ const StudentHome = () => {
     navigate('/bookedTutors');
   };
 
+  const handleViewClasses = () => {
+    navigate(`/studentClassList`);
+  };
+
   return (
     <div className="home-container">
       <div className="home-banner-container">
@@ -59,7 +63,7 @@ const StudentHome = () => {
         </div>
         <div className="home-text-section">
           <h1 className="primary-heading">
-            {username && <p>Welcome, {username}!</p>}
+            {studentName && <p>Welcome, {studentName}!</p>}
           </h1>
 
           <div className="management-links">
@@ -100,6 +104,23 @@ const StudentHome = () => {
             >
               <FaEnvelope className="link-icon" style={{ marginRight: '8px' }} />
               Messages
+            </button>
+            <button
+              onClick={handleViewClasses}
+              className="management-link creative-link"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginTop: '10px',
+                padding: '10px 20px',
+                color: '#3498db',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
+              <FaUserFriends className="link-icon" style={{ marginRight: '8px' }} />
+              View Classes
             </button>
           </div>
           <div style={{ marginTop: '20px' }}>

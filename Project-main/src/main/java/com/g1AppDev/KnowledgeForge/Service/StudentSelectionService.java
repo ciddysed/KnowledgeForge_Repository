@@ -29,4 +29,18 @@ public class StudentSelectionService {
     public void deleteStudentSelectionByTutorId(Long tutorId) {
         studentSelectionRepository.deleteByTutorId(tutorId);
     }
+
+    public void acceptStudent(Long studentId, String tutorUsername) {
+        StudentSelection selection = studentSelectionRepository.findById(studentId).orElseThrow();
+        selection.setAccepted(true);
+        studentSelectionRepository.save(selection);
+    }
+
+    public void declineStudent(Long studentId, String tutorUsername) {
+        studentSelectionRepository.deleteById(studentId);
+    }
+
+    public boolean checkStudentAccess(String studentUsername, Long tutorId) {
+        return studentSelectionRepository.existsByStudentUsernameAndTutorIdAndAccepted(studentUsername, tutorId, true);
+    }
 }

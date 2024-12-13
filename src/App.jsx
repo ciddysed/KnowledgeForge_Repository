@@ -1,16 +1,19 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation, BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
 import CourseManagement from "./Components/CourseManagement";
 import About from "./Components/Navigation/About";
 import Contact from "./Components/Navigation/Contact";
 // import Footer from "./Components/Footer";
 import Chat from "./Components/Chat/Chat";
+import Messenger from "./Components/Chat/Messenger";
 import Home1 from "./Components/Home1";
 import Home2 from "./Components/Home2";
 import LoginPage from "./Components/LoginPage";
 import ModuleManagement from "./Components/ModuleManagement";
 import Home from "./Components/Navigation/Home";
 import Navbar from "./Components/Navigation/Navbar";
+import NavbarStudent from "./Components/NavbarStudent";
+import NavbarTutor from "./Components/NavbarTutor";
 import Testimonial from "./Components/Navigation/Testimonial";
 import QuizManagement from "./Components/QuizManagement";
 import BookedTutors from "./Components/Student/BookedTutors";
@@ -29,12 +32,53 @@ import TutorCourse from './Components/TutorSpecific/TutorCourse';
 import TutorHome from './Components/TutorSpecific/TutorHome';
 import TutorTopic from "./Components/TutorSpecific/TutorTopic";
 import Work from "./Components/Work";
+import AdminLogin from "./Components/AdminLogin";
+import HostClass from "./Components/TutorSpecific/HostClass";
+import TutorClasses from "./Components/TutorSpecific/TutorClasses";
+import ClassView from "./Components/TutorSpecific/ClassView";
+import StudentClassList from './Components/Student/StudentClassList';
+// import StudentClassView from './Components/Student/StudentClassView';
+import ModuleList from './Components/Student/ModuleList'; // Ensure this import is correct
+
 
 
 function App() {
+  const location = useLocation();
+
+  // Conditional Navbar rendering
+  const getNavbar = () => {
+    if (location.pathname === "/" 
+      || location.pathname === "/LoginPage" 
+      || location.pathname === "/loginStudent"
+      || location.pathname === "/loginTutor"
+      || location.pathname === "/registerStudent"
+      || location.pathname === "/RegisterTutor"
+      || location.pathname === "/about"
+      || location.pathname === "/work"
+      || location.pathname === "/testimonial"
+      || location.pathname === "/contact") {
+      return <Navbar />; // Navbar only for Home.jsx
+    }
+    if (location.pathname === "/studentHome" 
+      || location.pathname === "/Search"
+      || location.pathname === "/studentClassList") {
+      return <NavbarStudent />; // NavbarStudent for Home1 and Students
+    }
+    if (location.pathname === "/tutorHome"
+      || location.pathname === "/tutorCourse"
+      || location.pathname === "/tutorTopic"
+      || location.pathname === "/notifications"
+      || location.pathname === "/hostClass"
+      || location.pathname === "/TutorClasses"
+      || location.pathname === "/classView") {
+      return <NavbarTutor />; // NavbarTutor for Home2
+    }
+    return null; // No Navbar for other components
+  };
+
   return (
     <div className="App">
-      <Navbar />
+      {getNavbar()}
       <Routes>
         <Route path="/LoginPage" element={<LoginPage />} />
         <Route path="/" element={<Home />} />
@@ -48,12 +92,12 @@ function App() {
         <Route path="/registerTutor" element={<RegisterTutor />} />
         <Route path="/home1" element={<Home1 />} />
         <Route path="/courseManagement" element={<CourseManagement />} />
-        <Route path="/topicManagement" element={<TopicManagement />} />
+        <Route path="/topicManagement" element={<TopicManagement />} />\
         <Route path="/quizManagement" element={<QuizManagement />} />
         <Route path="/moduleManagement" element={<ModuleManagement />} />
         <Route path="/search" element={<Search />} />
         <Route path="/students" element={<Students />} />
-        <Route path="/home2" element={<Home2 />} />
+        <Route path="/adminDashboard" element={<Home2 />} />
         <Route path="/tutor-profile/:tutorId" element={<TutorProfile />} />
         <Route path="/tutorHome" element={<TutorHome />} />
         <Route path="/tutorCourse" element={<TutorCourse />} />
@@ -62,8 +106,14 @@ function App() {
         <Route path="/studentHome" element={<StudentHome />} />
         <Route path="/bookedTutors" element={<BookedTutors />} />
         <Route path="/chat/:studentUsername" element={<Chat />} />
-        
-
+        <Route path="/messenger" element={<Messenger />} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/hostClass" element={<HostClass />} />
+        <Route path="/TutorClasses" element={<TutorClasses />} />
+        <Route path="/classView" element={<ClassView />} />
+        <Route path="/studentClassList" element={<StudentClassList />} />
+        <Route path="/modules/:topicId" element={<ModuleList />} /> {/* Ensure this route is correct */}
+        {/* <Route path="/studentClassView/:tutorId" element={<StudentClassView />} /> */}
       </Routes>
       {/* <Footer /> */}
     </div>
