@@ -62,7 +62,8 @@ function App() {
     if (location.pathname === "/studentHome" 
       || location.pathname === "/Search"
       || location.pathname === "/studentClassList"
-      || location.pathname === "/bookedTutors") {
+      || location.pathname === "/bookedTutors"
+      || location.pathname === "/chat/:tutorUsername") {
       return <NavbarStudent />; // NavbarStudent
     }
     if (location.pathname === "/tutorHome"
@@ -71,7 +72,8 @@ function App() {
       || location.pathname === "/notifications"
       || location.pathname === "/hostClass"
       || location.pathname === "/TutorClasses"
-      || location.pathname === "/classView") {
+      || location.pathname === "/classView"
+      || location.pathname === "/chat/:studentUsername") {
       return <NavbarTutor />; // NavbarTutor
     }
     return null; // No Navbar for other components
@@ -107,6 +109,7 @@ function App() {
         <Route path="/studentHome" element={<StudentHome />} />
         <Route path="/bookedTutors" element={<BookedTutors />} />
         <Route path="/chat/:studentUsername" element={<Chat />} />
+        <Route path="/chat/:tutorUsername" element={<Chat />} />
         <Route path="/messenger" element={<Messenger />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/hostClass" element={<HostClass />} />

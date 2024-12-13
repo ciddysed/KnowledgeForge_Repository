@@ -38,24 +38,12 @@ const RegisterTutor = () => {
     console.log('Submitting form data:', formData);
 
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('username', formData.username);
-      formDataToSend.append('password', formData.password);
-      formDataToSend.append('tutorName', formData.tutorName);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('courseMajor', formData.courseMajor);
-      formDataToSend.append('city', formData.city);
-      formDataToSend.append('age', formData.age);
-      formDataToSend.append('degrees', formData.degrees);
-
-      // Log form data for debugging
-      for (let [key, value] of formDataToSend.entries()) {
-        console.log(`${key}: ${value}`);
-      }
-
       const response = await fetch('http://localhost:8080/api/tutors/register', {
         method: 'POST',
-        body: formDataToSend,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) {

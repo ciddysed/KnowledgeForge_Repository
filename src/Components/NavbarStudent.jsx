@@ -82,7 +82,7 @@ const NavbarStudent = () => {
         <Link to="/studentHome">
           <FaHome className="home-icon" /> {/* Home icon */}
         </Link>
-        <Link to="/studentProfile">
+        <Link to="#">
           {profileImage ? (
             <img src={profileImage} alt="Profile" className="navbar-profile-image" />
           ) : (

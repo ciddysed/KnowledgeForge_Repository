@@ -63,7 +63,7 @@ const StudentHome = () => {
               </Link>
             </div>
             <div className="management-tile">
-              <Link to="/Messages" className="tile-link">
+              <Link to="/chat/:tutorUsername" className="tile-link">
                 <FaEnvelope className="tile-icon" />
                 <p>Messages</p>
               </Link>
