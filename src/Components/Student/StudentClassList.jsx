@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './StudentClassList.css'; // Import the CSS file
 
 const StudentClassList = () => {
   const [acceptedClasses, setAcceptedClasses] = useState([]);
@@ -43,10 +42,81 @@ const StudentClassList = () => {
   );
 
   return (
-    <div className="class-list-container" style={{ padding: '20px', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9' }}>
-      <h1 style={{ textAlign: 'center', color: '#333', marginBottom: '20px' }}>Active Classes</h1>
-      <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-        <select className="tutor-filter" value={tutorFilter} onChange={handleTutorFilterChange} style={{ padding: '10px', marginBottom: '20px', width: '100%', borderRadius: '4px', border: '1px solid #ccc' }}>
+    <>
+      <style>
+        {`
+          .class-list-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: rgba(51, 54, 207, 0);
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            margin-top: 50px;
+          }
+          h1 {
+            text-align: center;
+            color: #222;
+            font-size: 2em;
+            margin-bottom: 30px;
+          }
+          .tutor-filter {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 25px;
+            border: 1px solid #bbb;
+            border-radius: 6px;
+            font-size: 1em;
+          }
+          .error-message {
+            color: #e74c3c;
+            text-align: center;
+            font-weight: bold;
+          }
+          .class-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+          }
+          .class-item {
+            padding: 20px;
+            margin-bottom: 15px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: transform 0.3s, box-shadow 0.3s;
+          }
+          .class-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+          }
+          .class-item p {
+            margin: 0;
+            color: #444;
+            font-size: 1em;
+          }
+          .view-modules-button {
+            align-self: flex-start;
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+          }
+          .view-modules-button:hover {
+            background-color: #2980b9;
+          }
+        `}
+      </style>
+      <div className="class-list-container">
+        <h1>Active Classes</h1>
+        <select className="tutor-filter" value={tutorFilter} onChange={handleTutorFilterChange}>
           <option value="">All Tutors</option>
           {uniqueTutors.map((tutorName) => (
             <option key={tutorName} value={tutorName}>
@@ -54,15 +124,17 @@ const StudentClassList = () => {
             </option>
           ))}
         </select>
-        {error && <p className="error-message" style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="error-message">{error}</p>}
         {filteredClasses.length > 0 ? (
-          <ul className="class-list" style={{ listStyleType: 'none', padding: '0' }}>
+          <ul className="class-list">
             {filteredClasses.map((hostClass) => (
-              <li key={hostClass.hostClassID} className="class-item" style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', marginBottom: '15px', backgroundColor: '#fff', boxShadow: '0 0 10px rgba(0, 0, 0, 0.05)' }}>
-                <p style={{ marginBottom: '10px', color: '#555' }}>Course: {hostClass.course?.courseName || 'N/A'}</p>
-                <p style={{ marginBottom: '10px', color: '#555' }}>Topic: {hostClass.topic?.topicName || 'N/A'}</p>
-                <p style={{ marginBottom: '10px', color: '#555' }}>Tutor: {hostClass.tutor?.tutorName || 'N/A'}</p>
-                <button className="view-modules-button" onClick={() => handleViewModules(hostClass.topic.topicID)} style={{ padding: '10px 20px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Modules</button>
+              <li key={hostClass.hostClassID} className="class-item">
+                <p>Course: {hostClass.course?.courseName || 'N/A'}</p>
+                <p>Topic: {hostClass.topic?.topicName || 'N/A'}</p>
+                <p>Tutor: {hostClass.tutor?.tutorName || 'N/A'}</p>
+                <button className="view-modules-button" onClick={() => handleViewModules(hostClass.topic.topicID)}>
+                  Modules
+                </button>
               </li>
             ))}
           </ul>
@@ -70,7 +142,7 @@ const StudentClassList = () => {
           <p style={{ color: '#777' }}>No accepted classes found.</p>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

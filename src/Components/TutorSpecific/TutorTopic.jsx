@@ -1,27 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-const styles = {
-  container: { maxWidth: '800px', margin: '0 auto', padding: '20px', fontFamily: 'Arial, sans-serif' },
-  header: { textAlign: 'center', color: '#2c3e50' },
-  courseList: { listStyleType: 'none', paddingLeft: '0' },
-  courseItem: { padding: '10px', marginBottom: '10px', border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  courseName: { fontWeight: 'bold' },
-  buttonContainer: { display: 'flex', gap: '10px' },
-  button: { padding: '10px 20px', backgroundColor: '#3498db', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', transition: 'background-color 0.3s' },
-  buttonHover: { backgroundColor: '#2980b9' },
-  modal: { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: '#ffffff', padding: '30px', borderRadius: '10px', boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)', zIndex: 1000, width: '80%', maxWidth: '500px', transition: 'transform 0.3s ease-in-out' },
-  overlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, 0.6)', zIndex: 999 },
-  modalHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
-  modalTitle: { fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' },
-  closeButton: { background: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#7f8c8d' },
-  modalBody: { marginBottom: '20px', fontSize: '16px', color: '#34495e' },
-  modalFooter: { display: 'flex', justifyContent: 'flex-end', gap: '10px' },
-  actionButton: { padding: '10px 20px', backgroundColor: '#3498db', color: '#ffffff', border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold', transition: 'background-color 0.3s' },
-  input: { padding: '10px', marginBottom: '10px', borderRadius: '4px', border: '1px solid #ddd', width: '100%' },
-  topicContainer: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', borderBottom: '1px solid #ddd', paddingBottom: '5px' },
-  topicButtons: { display: 'flex', gap: '10px' },
-};
-
 const TutorTopic = () => {
   const [courses, setCourses] = useState([]);
   const [topics, setTopics] = useState([]);
@@ -120,16 +98,163 @@ const TutorTopic = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.header}>Manage Your Topics</h1>
-      <h3 style={styles.header}>Your Courses</h3>
-      <ul style={styles.courseList}>
+    <div className="container">
+      <style>
+        {`
+          .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background color: rgba(0, 0, 0, 0.1);
+            border-radius: 25px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.6);
+          }
+          .header {
+            text-align: center;
+            color: #000000;
+            margin-bottom: 20px;
+            font-size: 24px;
+          }
+          .courseList {
+            list-style-type: none;
+            padding-left: 0;
+          }
+          .courseItem {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s;
+          }
+          .courseItem:hover {
+            transform: scale(1.02);
+          }
+          .courseName {
+            font-weight: bold;
+          }
+          .buttonContainer {
+            display: flex;
+            gap: 10px;
+          }
+          .button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+          }
+          .button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+          }
+          .deleteButton {
+            background-color: #e74c3c;
+          }
+          .deleteButton:hover {
+            background-color: #c0392b;
+          }
+          .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            width: 80%;
+            max-width: 500px;
+            transition: transform 0.3s ease-in-out;
+          }
+          .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+          }
+          .modalHeader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+          }
+          .modalTitle {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+          }
+          .closeButton {
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #7f8c8d;
+          }
+          .modalBody {
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #34495e;
+          }
+          .modalFooter {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+          }
+          .actionButton {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+          }
+          .actionButton:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+          }
+          .input {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            width: 100%;
+          }
+          .topicContainer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+          }
+          .topicButtons {
+            display: flex;
+            gap: 10px;
+          }
+        `}
+      </style>
+      <h1 className="header">Manage Your Topics</h1>
+      <h3 className="header">Your Courses</h3>
+      <ul className="courseList">
         {courses.map((course) => (
-          <li key={course.courseID} style={styles.courseItem}>
-            <span style={styles.courseName}>{course.courseName}</span>
-            <div style={styles.buttonContainer}>
-              <button style={styles.button} onClick={() => fetchTopics(course.courseID)}>View Topics</button>
-              <button style={styles.button} onClick={() => { setSelectedCourse(course.courseID); setIsAddModalOpen(true); }}>Add Topic</button>
+          <li key={course.courseID} className="courseItem">
+            <span className="courseName">{course.courseName}</span>
+            <div className="buttonContainer">
+              <button className="button" onClick={() => fetchTopics(course.courseID)}>View Topics</button>
+              <button className="button" onClick={() => { setSelectedCourse(course.courseID); setIsAddModalOpen(true); }}>Add Topic</button>
             </div>
           </li>
         ))}
@@ -137,22 +262,22 @@ const TutorTopic = () => {
 
       {isTopicModalOpen && (
         <>
-          <div style={styles.overlay} onClick={() => setIsTopicModalOpen(false)} />
-          <div style={styles.modal}>
-            <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>Topics</h2>
-              <button style={styles.closeButton} onClick={() => setIsTopicModalOpen(false)}>✖</button>
+          <div className="overlay" onClick={() => setIsTopicModalOpen(false)} />
+          <div className="modal">
+            <div className="modalHeader">
+              <h2 className="modalTitle">Topics</h2>
+              <button className="closeButton" onClick={() => setIsTopicModalOpen(false)}>✖</button>
             </div>
-            <div style={styles.modalBody}>
+            <div className="modalBody">
               {topics.length > 0 ? (
                 topics.map((topic) => (
-                  <div key={topic.topicID} style={styles.topicContainer}>
+                  <div key={topic.topicID} className="topicContainer">
                     <span>
                       <strong>{topic.topicName}</strong>: {topic.description}
                     </span>
-                    <div style={styles.topicButtons}>
-                      <button style={styles.button} onClick={() => { setSelectedTopic(topic); setTopicName(topic.topicName); setTopicDescription(topic.description); setIsEditModalOpen(true); }}>Edit</button>
-                      <button style={{ ...styles.button, backgroundColor: '#e74c3c' }} onClick={() => handleDeleteTopic(topic.topicID)}>Delete</button>
+                    <div className="topicButtons">
+                      <button className="button" onClick={() => { setSelectedTopic(topic); setTopicName(topic.topicName); setTopicDescription(topic.description); setIsEditModalOpen(true); }}>Edit</button>
+                      <button className="button deleteButton" onClick={() => handleDeleteTopic(topic.topicID)}>Delete</button>
                     </div>
                   </div>
                 ))
@@ -166,18 +291,18 @@ const TutorTopic = () => {
 
       {isAddModalOpen && (
         <>
-          <div style={styles.overlay} onClick={() => setIsAddModalOpen(false)} />
-          <div style={styles.modal}>
-            <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>Add Topic</h2>
-              <button style={styles.closeButton} onClick={() => setIsAddModalOpen(false)}>✖</button>
+          <div className="overlay" onClick={() => setIsAddModalOpen(false)} />
+          <div className="modal">
+            <div className="modalHeader">
+              <h2 className="modalTitle">Add Topic</h2>
+              <button className="closeButton" onClick={() => setIsAddModalOpen(false)}>✖</button>
             </div>
-            <div style={styles.modalBody}>
-              <input style={styles.input} value={topicName} onChange={(e) => setTopicName(e.target.value)} placeholder="Topic Name" />
-              <textarea style={styles.input} value={topicDescription} onChange={(e) => setTopicDescription(e.target.value)} placeholder="Topic Description" />
+            <div className="modalBody">
+              <input className="input" value={topicName} onChange={(e) => setTopicName(e.target.value)} placeholder="Topic Name" />
+              <textarea className="input" value={topicDescription} onChange={(e) => setTopicDescription(e.target.value)} placeholder="Topic Description" />
             </div>
-            <div style={styles.modalFooter}>
-              <button style={styles.actionButton} onClick={handleAddTopic}>Add Topic</button>
+            <div className="modalFooter">
+              <button className="actionButton" onClick={handleAddTopic}>Add Topic</button>
             </div>
           </div>
         </>
@@ -185,18 +310,18 @@ const TutorTopic = () => {
 
       {isEditModalOpen && (
         <>
-          <div style={styles.overlay} onClick={() => setIsEditModalOpen(false)} />
-          <div style={styles.modal}>
-            <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>Edit Topic</h2>
-              <button style={styles.closeButton} onClick={() => setIsEditModalOpen(false)}>✖</button>
+          <div className="overlay" onClick={() => setIsEditModalOpen(false)} />
+          <div className="modal">
+            <div className="modalHeader">
+              <h2 className="modalTitle">Edit Topic</h2>
+              <button className="closeButton" onClick={() => setIsEditModalOpen(false)}>✖</button>
             </div>
-            <div style={styles.modalBody}>
-              <input style={styles.input} value={topicName} onChange={(e) => setTopicName(e.target.value)} placeholder="Topic Name" />
-              <textarea style={styles.input} value={topicDescription} onChange={(e) => setTopicDescription(e.target.value)} placeholder="Topic Description" />
+            <div className="modalBody">
+              <input className="input" value={topicName} onChange={(e) => setTopicName(e.target.value)} placeholder="Topic Name" />
+              <textarea className="input" value={topicDescription} onChange={(e) => setTopicDescription(e.target.value)} placeholder="Topic Description" />
             </div>
-            <div style={styles.modalFooter}>
-              <button style={styles.actionButton} onClick={handleEditTopic}>Save Changes</button>
+            <div className="modalFooter">
+              <button className="actionButton" onClick={handleEditTopic}>Save Changes</button>
             </div>
           </div>
         </>

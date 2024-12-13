@@ -64,7 +64,7 @@ const Notifications = () => {
   };
 
   const StudentCard = ({ student }) => (
-    <div style={cardStyle}>
+    <div className="card">
       <p>
         <strong>Student Name:</strong> {student.studentName}
       </p>
@@ -72,7 +72,7 @@ const Notifications = () => {
         <strong>Course-Year:</strong> {student.courseYear}
       </p>
       <button
-        style={buttonStyle('#007bff', '#0056b3')}
+        className="button"
         onClick={() => handleChat(student)}
       >
         Chat <FaComments />
@@ -80,41 +80,70 @@ const Notifications = () => {
     </div>
   );
 
-  const cardStyle = {
-    border: '1px solid #ddd',
-    padding: '20px',
-    marginBottom: '10px',
-    borderRadius: '10px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    backgroundColor: '#fff',
-  };
-
-  const buttonStyle = (color, hoverColor) => ({
-    padding: '10px 15px',
-    border: 'none',
-    borderRadius: '5px',
-    backgroundColor: color,
-    color: '#fff',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '5px',
-    marginBottom: '10px',
-  });
-
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="container">
       <ToastContainer />
-      <h1 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>
+      <h1 className="title">
         Students Who Chose You as a Tutor
       </h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
       {students.length === 0 ? (
         <p>No students have selected you yet.</p>
       ) : (
         students.map((student) => <StudentCard key={student.id} student={student} />)
       )}
+      <style>
+        {`
+          .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: rgba(255, 255, 255, 0);
+            border-radius: 25px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.6);
+          }
+          .title {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #000000;
+            font-size: 2em;
+            font-weight: bold;
+          }
+          .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 20px;
+          }
+          .card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            transition: transform 0.3s;
+          }
+          .card:hover {
+            transform: translateY(-5px);
+          }
+          .button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+          }
+          .button:hover {
+            background-color: #0056b3;
+          }
+        `}
+      </style>
     </div>
   );
 };

@@ -27,9 +27,9 @@ const Navbar = () => {
 
   return (
     <nav>
-      <div className="nav-logo-container">
+      <div className="nav-logo-container fancy-logo">
         <Link to="/">
-        <img src={Logo} alt="KnowledgeForge Logo" />
+          <img src={Logo} alt="KnowledgeForge Logo" className="nav-logo" />
         </Link>
       </div>
       <div className="navbar-links-container">
@@ -62,6 +62,42 @@ const Navbar = () => {
           <Divider />
         </Box>
       </Drawer>
+      <style>{`
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 90px;
+      }
+      .nav-logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+      }
+
+      .navbar-links-container a {
+        margin-right: 6rem;
+        text-decoration: none;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .fancy-logo {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .fancy-logo:hover {
+        transform: scale(1.5);
+      }
+
+      .nav-logo {
+        width: 150px;
+        height: auto;
+        padding: 5px;
+      }
+      `}</style>
     </nav>
   );
 };

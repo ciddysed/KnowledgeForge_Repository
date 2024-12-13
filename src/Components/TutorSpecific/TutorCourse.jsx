@@ -3,13 +3,18 @@ import React, { useEffect, useState } from 'react';
 const styles = {
   container: {
     maxWidth: '800px',
-    margin: '0 auto',
+    margin: '75px auto 0',
     padding: '20px',
     fontFamily: 'Arial, sans-serif',
+    backgroundColor: 'rgba(255, 255, 255, 0)',
+    borderRadius: '25px',
+    boxShadow: '0 0 50px rgba(0, 0, 0, 0.6)',
   },
   header: {
     textAlign: 'center',
-    color: '#2c3e50',
+    color: '#000000',
+    marginBottom: '20px',
+    fontSize: '2em',
   },
   form: {
     display: 'flex',
@@ -22,6 +27,7 @@ const styles = {
     borderRadius: '4px',
     border: '1px solid #ddd',
     flex: '1',
+    fontSize: '1em',
   },
   button: {
     padding: '10px 20px',
@@ -30,6 +36,11 @@ const styles = {
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
+    fontSize: '1em',
+    transition: 'background-color 0.3s',
+  },
+  buttonHover: {
+    backgroundColor: '#2980b9',
   },
   courseList: {
     listStyleType: 'none',
@@ -40,13 +51,15 @@ const styles = {
     marginBottom: '10px',
     border: '1px solid #ddd',
     borderRadius: '4px',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#ffffff',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
   },
   courseName: {
     fontWeight: 'bold',
+    fontSize: '1.2em',
   },
   courseActions: {
     display: 'flex',
@@ -59,6 +72,10 @@ const styles = {
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
+    transition: 'background-color 0.3s',
+  },
+  editButtonHover: {
+    backgroundColor: '#2980b9',
   },
   deleteButton: {
     padding: '5px 10px',
@@ -67,6 +84,10 @@ const styles = {
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
+    transition: 'background-color 0.3s',
+  },
+  deleteButtonHover: {
+    backgroundColor: '#c0392b',
   },
   modal: {
     position: 'fixed',
@@ -78,6 +99,8 @@ const styles = {
     borderRadius: '4px',
     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
     zIndex: 1000,
+    width: '90%',
+    maxWidth: '500px',
   },
   overlay: {
     position: 'fixed',
@@ -214,7 +237,12 @@ const TutorCourse = () => {
           placeholder="Course Name"
           style={styles.input}
         />
-        <button onClick={handleAddCourse} style={styles.button}>
+        <button
+          onClick={handleAddCourse}
+          style={styles.button}
+          onMouseOver={(e) => (e.target.style.backgroundColor = styles.buttonHover.backgroundColor)}
+          onMouseOut={(e) => (e.target.style.backgroundColor = styles.button.backgroundColor)}
+        >
           Add Course
         </button>
       </div>
@@ -224,10 +252,20 @@ const TutorCourse = () => {
           <li key={course.courseID} style={styles.courseItem}>
             <span style={styles.courseName}>{course.courseName}</span>
             <div style={styles.courseActions}>
-              <button onClick={() => openEditModal(course)} style={styles.editButton}>
+              <button
+                onClick={() => openEditModal(course)}
+                style={styles.editButton}
+                onMouseOver={(e) => (e.target.style.backgroundColor = styles.editButtonHover.backgroundColor)}
+                onMouseOut={(e) => (e.target.style.backgroundColor = styles.editButton.backgroundColor)}
+              >
                 Edit
               </button>
-              <button onClick={() => openDeleteModal(course)} style={styles.deleteButton}>
+              <button
+                onClick={() => openDeleteModal(course)}
+                style={styles.deleteButton}
+                onMouseOver={(e) => (e.target.style.backgroundColor = styles.deleteButtonHover.backgroundColor)}
+                onMouseOut={(e) => (e.target.style.backgroundColor = styles.deleteButton.backgroundColor)}
+              >
                 Delete
               </button>
             </div>
@@ -246,10 +284,18 @@ const TutorCourse = () => {
               onChange={(e) => setNewCourseName(e.target.value)}
               style={styles.input}
             />
-            <button onClick={handleEditCourse} style={styles.button}>
+            <button
+              onClick={handleEditCourse}
+              style={styles.button}
+              onMouseOver={(e) => (e.target.style.backgroundColor = styles.buttonHover.backgroundColor)}
+              onMouseOut={(e) => (e.target.style.backgroundColor = styles.button.backgroundColor)}
+            >
               Save
             </button>
-            <button onClick={closeEditModal} style={{ ...styles.button, backgroundColor: 'gray' }}>
+            <button
+              onClick={closeEditModal}
+              style={{ ...styles.button, backgroundColor: 'gray' }}
+            >
               Cancel
             </button>
           </div>
@@ -262,10 +308,18 @@ const TutorCourse = () => {
           <div style={styles.modal}>
             <h2>Confirm Delete</h2>
             <p>Are you sure you want to delete the course "{currentCourse?.courseName}"?</p>
-            <button onClick={handleDeleteCourse} style={styles.deleteButton}>
+            <button
+              onClick={handleDeleteCourse}
+              style={styles.deleteButton}
+              onMouseOver={(e) => (e.target.style.backgroundColor = styles.deleteButtonHover.backgroundColor)}
+              onMouseOut={(e) => (e.target.style.backgroundColor = styles.deleteButton.backgroundColor)}
+            >
               Delete
             </button>
-            <button onClick={closeDeleteModal} style={{ ...styles.button, backgroundColor: 'gray' }}>
+            <button
+              onClick={closeDeleteModal}
+              style={{ ...styles.button, backgroundColor: 'gray' }}
+            >
               Cancel
             </button>
           </div>

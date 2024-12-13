@@ -171,7 +171,7 @@ const RegisterStudent = () => {
             max-width: 800px; /* Ensures it doesnt stretch too wide on larger screens */
             min-width: 300px; /* Ensures it stays readable on smaller screens */
             padding: 20px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
             border-radius: 50px;
             position: absolute;
             top: 57%;

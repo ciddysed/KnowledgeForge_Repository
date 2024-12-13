@@ -99,7 +99,7 @@ const LoginStudent = () => {
                     height: 45vh;
                     width: 25%;
                     padding: 20px;
-                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    box-shadow: 0 0 50px rgba(0, 0, 0, 0.4);
                     border-radius: 50px;
                     position: absolute;
                     top: 40%;

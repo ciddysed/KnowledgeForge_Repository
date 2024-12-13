@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './TutorClasses.css';
 import { useNavigate } from 'react-router-dom';
 
 const TutorClasses = () => {
@@ -91,6 +90,157 @@ const TutorClasses = () => {
 
   return (
     <div className={`tutor-classes-container ${showUpdateModal || showDeleteModal ? 'dimmed' : ''}`}>
+      <style>{`
+        .tutor-classes-container {
+          width: 100%;
+          margin: 25px auto;
+          padding: 50px;
+          box-sizing: border-box;
+          background color: rgba(0, 0, 0, 0.1);
+          border-radius: 25px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+          font-family: 'Arial', sans-serif;
+        }
+        .tutor-classes-header {
+          text-align: center;
+          margin-bottom: 20px;
+          font-size: 2.5em;
+          color: #000000;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .tutor-classes-error {
+          color: red;
+          text-align: center;
+          font-weight: bold;
+        }
+        .course-filter-buttons {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 20px;
+        }
+        .filter-button {
+          margin: 0 10px;
+          padding: 10px 20px;
+          border: none;
+          background-color: #007bff;
+          color: white;
+          cursor: pointer;
+          border-radius: 25px;
+          transition: background-color 0.3s ease;
+        }
+        .filter-button.active {
+          background-color: #0056b3;
+        }
+        .filter-button:hover {
+          background-color: #0056b3;
+        }
+        .tutor-classes-list {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .tutor-classes-card {
+          background-color: rgba(255, 255, 255, 0.9);
+          border: 1px solid #ddd;
+          border-radius: 10px;
+          margin: 10px;
+          padding: 20px;
+          width: 350px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .tutor-classes-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+        }
+        .tutor-classes-card-content {
+          text-align: left;
+        }
+        .tutor-classes-card-content h2 {
+          margin-top: 0;
+          font-size: 1.5em;
+          color: #007bff;
+        }
+        .tutor-classes-card-content p {
+          margin: 5px 0;
+          color: #555;
+        }
+        .tutor-classes-card-content button {
+          margin-right: 10px;
+          padding: 10px 20px;
+          border: none;
+          background-color: #007bff;
+          color: white;
+          cursor: pointer;
+          border-radius: 5px;
+          transition: background-color 0.3s ease;
+        }
+        .tutor-classes-card-content button:last-child {
+          background-color: #28a745;
+        }
+        .tutor-classes-card-content button:hover {
+          background-color: #0056b3;
+        }
+        .modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          animation: fadeIn 0.3s ease;
+        }
+        .modal-content {
+          background-color: white;
+          padding: 20px;
+          border-radius: 10px;
+          width: 400px;
+          text-align: center;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .modal-content h2 {
+          margin-top: 0;
+          font-size: 1.8em;
+          color: #333;
+        }
+        .modal-content label {
+          display: block;
+          margin: 10px 0 5px;
+          font-weight: bold;
+          color: #555;
+        }
+        .modal-content textarea,
+        .modal-content input {
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 10px;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+        }
+        .modal-content button {
+          margin-right: 10px;
+          padding: 10px 20px;
+          border: none;
+          background-color: #007bff;
+          color: white;
+          cursor: pointer;
+          border-radius: 5px;
+          transition: background-color 0.3s ease;
+        }
+        .modal-content button:last-child {
+          background-color: #dc3545;
+        }
+        .modal-content button:hover {
+          background-color: #0056b3;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+      `}</style>
       <h1 className="tutor-classes-header">Your Hosted Classes</h1>
       {error && <p className="tutor-classes-error">{error}</p>}
       

@@ -232,41 +232,41 @@ const ClassView = () => {
   return (
     <>
       <NavbarTutor /> {/* Add the Navbar */}
-      <div className="class-view-container" style={{ padding: '20px', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9' }}>
-        <h1 style={{ textAlign: 'center', color: '#333', marginBottom: '20px' }}>Class View</h1>
-        <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-          <h2 style={{ color: '#555' }}>Course: {hostClass.course.courseName}</h2>
-          <h3 style={{ color: '#777' }}>Topic: {hostClass.topic.topicName}</h3>
+      <div className="class-view-container">
+        <h1>Class View</h1>
+        <div className="class-info">
+          <h2>Course: {hostClass.course.courseName}</h2>
+          <h3>Topic: {hostClass.topic.topicName}</h3>
         </div>
 
-        <div className="modules-section" style={{ marginTop: '20px' }}>
-          <h2 style={{ color: '#333', marginBottom: '10px' }}>Modules</h2>
+        <div className="modules-section">
+          <h2>Modules</h2>
           {modules.map((module) => (
-            <div key={module.moduleID} className="module-card" style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', marginBottom: '15px', backgroundColor: '#fff', boxShadow: '0 0 10px rgba(0, 0, 0, 0.05)' }}>
+            <div key={module.moduleID} className="module-card">
               {editingModuleId === module.moduleID ? (
                 <div>
                   <input
                     type="text"
                     value={editingModuleName}
                     onChange={(e) => setEditingModuleName(e.target.value)}
-                    style={{ padding: '10px', marginBottom: '10px', width: '100%', borderRadius: '4px', border: '1px solid #ccc' }}
+                    className="module-input"
                   />
-                  <button onClick={() => handleUpdateModule(module.moduleID)} style={{ marginRight: '10px', padding: '10px 20px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Save</button>
-                  <button onClick={() => setEditingModuleId(null)} style={{ padding: '10px 20px', backgroundColor: '#f44336', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
+                  <button onClick={() => handleUpdateModule(module.moduleID)} className="save-button">Save</button>
+                  <button onClick={() => setEditingModuleId(null)} className="cancel-button">Cancel</button>
                 </div>
               ) : (
                 <div>
-                  <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#333' }}>{module.moduleName} <FaPen onClick={() => handleEditModule(module)} style={{ cursor: 'pointer', color: '#007BFF', marginLeft: '10px' }} /></p>
+                  <p className="module-name">{module.moduleName} <FaPen onClick={() => handleEditModule(module)} className="edit-icon" /></p>
                 </div>
               )}
               {uploadedFiles[module.moduleID] && (
                 <p>
-                  Uploaded Files: <a href={`http://localhost:8080/api/modules/uploads/${uploadedFiles[module.moduleID]}`} download target="_blank" rel="noopener noreferrer" style={{ color: '#007BFF' }}>{uploadedFiles[module.moduleID]}</a>
+                  Uploaded Files: <a href={`http://localhost:8080/api/modules/uploads/${uploadedFiles[module.moduleID]}`} download target="_blank" rel="noopener noreferrer" className="file-link">{uploadedFiles[module.moduleID]}</a>
                 </p>
               )}
-              <input type="file" onChange={handleFileChange} style={{ marginBottom: '10px' }} />
-              <button onClick={() => handleUploadFile(module.moduleID)} style={{ marginRight: '10px', padding: '10px 20px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Upload File</button>
-              <button onClick={() => handleDeleteModule(module.moduleID)} style={{ padding: '10px 20px', backgroundColor: '#f44336', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Delete Module</button>
+              <input type="file" onChange={handleFileChange} className="file-input" />
+              <button onClick={() => handleUploadFile(module.moduleID)} className="upload-button">Upload File</button>
+              <button onClick={() => handleDeleteModule(module.moduleID)} className="delete-button">Delete Module</button>
             </div>
           ))}
           <input
@@ -274,37 +274,194 @@ const ClassView = () => {
             value={newModuleName}
             onChange={(e) => setNewModuleName(e.target.value)}
             placeholder="New Module Name"
-            style={{ padding: '10px', marginBottom: '20px', width: '100%', borderRadius: '4px', border: '1px solid #ccc' }}
+            className="new-module-input"
           />
-          <button onClick={handleAddModule} style={{ padding: '10px 20px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Add Module</button>
+          <button onClick={handleAddModule} className="add-button">Add Module</button>
         </div>
 
-        <div className="students-section" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-          <div className="accepted-students" style={{ width: '45%', border: '1px solid #ccc', padding: '20px', borderRadius: '8px', backgroundColor: '#fff', boxShadow: '0 0 10px rgba(0, 0, 0, 0.05)' }}>
-            <h3 style={{ color: '#333', marginBottom: '10px' }}>Accepted Students</h3>
+        <div className="students-section">
+          <div className="accepted-students">
+            <h3>Accepted Students</h3>
             {students.filter(student => student.accepted).map((student) => (
-              <div key={student.id} className="student-card" style={{ marginBottom: '15px', padding: '15px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
-                <p style={{ marginBottom: '10px', color: '#555' }}>{student.studentName}</p>
-                <div className="progress-bar" style={{ width: '100%', backgroundColor: '#f3f3f3', borderRadius: '4px' }}>
-                  <div style={{ width: `${studentProgress[student.id] || 0}%`, backgroundColor: '#4CAF50', height: '10px', borderRadius: '4px' }}></div>
+              <div key={student.id} className="student-card">
+                <p>{student.studentName}</p>
+                <div className="progress-bar">
+                  <div style={{ width: `${studentProgress[student.id] || 0}%` }} className="progress"></div>
                 </div>
               </div>
             ))}
           </div>
-          <div className="pending-students" style={{ width: '45%', border: '1px solid #ccc', padding: '20px', borderRadius: '8px', backgroundColor: '#fff', boxShadow: '0 0 10px rgba(0, 0, 0, 0.05)' }}>
-            <h3 style={{ color: '#333', marginBottom: '10px' }}>Pending Students</h3>
+          <div className="pending-students">
+            <h3>Pending Students</h3>
             {students.filter(student => !student.accepted).map((student) => (
-              <div key={student.id} className="student-card" style={{ marginBottom: '15px', padding: '15px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
-                <p style={{ marginBottom: '10px', color: '#555' }}>{student.studentName}</p>
-                <button onClick={() => handleAcceptStudent(student)} style={{ marginRight: '10px', padding: '10px 20px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Accept</button>
-                <button onClick={() => handleDeclineStudent(student)} style={{ padding: '10px 20px', backgroundColor: '#f44336', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Decline</button>
+              <div key={student.id} className="student-card">
+                <p>{student.studentName}</p>
+                <button onClick={() => handleAcceptStudent(student)} className="accept-button">Accept</button>
+                <button onClick={() => handleDeclineStudent(student)} className="decline-button">Decline</button>
               </div>
             ))}
           </div>
         </div>
 
-        {error && <p className="error-message" style={{ color: 'red', marginTop: '20px' }}>{error}</p>}
+        {error && <p className="error-message">{error}</p>}
       </div>
+      <style jsx>{`
+        .class-view-container {
+          margin: 50px auto;
+          padding: 20px;
+          font-family: 'Roboto', sans-serif;
+          background-color: rgba(255, 255, 255, 0);
+          border-radius: 25px;
+          box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.8);
+        }
+        h1 {
+          text-align: center;
+          color: #000000;
+          margin-bottom: 20px;
+          font-size: 2.5em;
+          font-weight: 700;
+        }
+        .class-info {
+          background-color: #ffffff;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+          margin-bottom: 20px;
+        }
+        .class-info h2, .class-info h3 {
+          text-align: center;
+          color: #000000;
+        }
+        .modules-section {
+          margin-top: 20px;
+        }
+        .module-card {
+          border: 1px solid #e0e0e0;
+          padding: 20px;
+          border-radius: 10px;
+          margin-bottom: 20px;
+          background-color: #ffffff;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+          transition: transform 0.2s;
+        }
+        .module-card:hover {
+          transform: translateY(-5px);
+        }
+        .module-input, .new-module-input {
+          padding: 12px;
+          margin-bottom: 10px;
+          width: 100%;
+          border-radius: 5px;
+          border: 1px solid #bdc3c7;
+          font-size: 1em;
+        }
+        .save-button, .cancel-button, .upload-button, .delete-button, .add-button, .accept-button, .decline-button {
+          padding: 12px 25px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 1em;
+          transition: background-color 0.3s;
+        }
+        .save-button {
+          background-color: #27ae60;
+          color: white;
+          margin-right: 10px;
+        }
+        .save-button:hover {
+          background-color: #2ecc71;
+        }
+        .cancel-button {
+          background-color: #e74c3c;
+          color: white;
+        }
+        .cancel-button:hover {
+          background-color: #c0392b;
+        }
+        .upload-button {
+          background-color: #3498db;
+          color: white;
+          margin-right: 10px;
+        }
+        .upload-button:hover {
+          background-color: #2980b9;
+        }
+        .delete-button {
+          background-color: #e74c3c;
+          color: white;
+        }
+        .delete-button:hover {
+          background-color: #c0392b;
+        }
+        .add-button {
+          background-color: #27ae60;
+          color: white;
+        }
+        .add-button:hover {
+          background-color: #2ecc71;
+        }
+        .accept-button {
+          background-color: #27ae60;
+          color: white;
+          margin-right: 10px;
+        }
+        .accept-button:hover {
+          background-color: #2ecc71;
+        }
+        .decline-button {
+          background-color: #e74c3c;
+          color: white;
+        }
+        .decline-button:hover {
+          background-color: #c0392b;
+        }
+        .edit-icon {
+          cursor: pointer;
+          color: #2980b9;
+          margin-left: 10px;
+        }
+        .file-link {
+          color: #2980b9;
+        }
+        .file-input {
+          margin-bottom: 10px;
+        }
+        .students-section {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 20px;
+        }
+        .accepted-students, .pending-students {
+          width: 45%;
+          border: 1px solid #e0e0e0;
+          padding: 20px;
+          border-radius: 10px;
+          background-color: #ffffff;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        .student-card {
+          margin-bottom: 15px;
+          padding: 20px;
+          border: 1px solid #e0e0e0;
+          border-radius: 10px;
+          background-color: #f9f9f9;
+        }
+        .progress-bar {
+          width: 100%;
+          background-color: #ecf0f1;
+          border-radius: 5px;
+        }
+        .progress {
+          background-color: #27ae60;
+          height: 12px;
+          border-radius: 5px;
+        }
+        .error-message {
+          color: #e74c3c;
+          margin-top: 20px;
+          font-weight: 600;
+        }
+      `}</style>
     </>
   );
 };

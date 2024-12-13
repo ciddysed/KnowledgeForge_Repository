@@ -57,12 +57,13 @@ function App() {
       || location.pathname === "/work"
       || location.pathname === "/testimonial"
       || location.pathname === "/contact") {
-      return <Navbar />; // Navbar only for Home.jsx
+      return <Navbar />; // Navbar only for Home
     }
     if (location.pathname === "/studentHome" 
       || location.pathname === "/Search"
-      || location.pathname === "/studentClassList") {
-      return <NavbarStudent />; // NavbarStudent for Home1 and Students
+      || location.pathname === "/studentClassList"
+      || location.pathname === "/bookedTutors") {
+      return <NavbarStudent />; // NavbarStudent
     }
     if (location.pathname === "/tutorHome"
       || location.pathname === "/tutorCourse"
@@ -71,7 +72,7 @@ function App() {
       || location.pathname === "/hostClass"
       || location.pathname === "/TutorClasses"
       || location.pathname === "/classView") {
-      return <NavbarTutor />; // NavbarTutor for Home2
+      return <NavbarTutor />; // NavbarTutor
     }
     return null; // No Navbar for other components
   };
